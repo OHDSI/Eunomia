@@ -1,0 +1,105 @@
+# @file PackageMaintenance
+#
+# Copyright 2019 Observational Health Data Sciences and Informatics
+#
+# This file is part of Eunomia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+library(DatabaseConnector)
+library(SqlRender)
+
+options(fftempdir = "s:/fftemp")
+
+remoteConnDetails <- createConnectionDetails(dbms = "pdw",
+                                             server = Sys.getenv("PDW_SERVER"),
+                                             user = NULL,
+                                             password = NULL,
+                                             port = Sys.getenv("PDW_PORT"))
+cdmDatabaseSchema <- "cdm_synpuf_v667.dbo"
+
+remoteConn <- connect(remoteConnDetails)
+sql <- readSql("extras/SamplePersonsAndConcepts.sql")
+sql <- renderSql(sql,
+                 cdm_database_schema = cdmDatabaseSchema,
+                 person_sample_size = 2500,
+                 concept_sample_size = 100)$sql
+sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
+executeSql(remoteConn, sql)
+
+library(RSQLite)
+
+localConn <- DBI::dbConnect(RSQLite::SQLite(), "inst/sqlLite/cdm")
+
+extractTable <- function(tableName, restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = TRUE) {
+  ParallelLogger::logInfo("Fetching and storing table ", tableName)
+  sql <- "SELECT @table_name.*
+  FROM @cdm_database_schema.@table_name
+  {@restrict_concepts} ? {
+  INNER JOIN #concept_sample concept_sample
+    ON concept_sample.concept_id = @table_name.@concept_field
+  }
+  {@restrict_person} ? {
+  INNER JOIN #person_sample person_sample
+    ON person_sample.person_id = @table_name.person_id
+  };"
+  sql <- renderSql(sql,
+                   cdm_database_schema = cdmDatabaseSchema,
+                   table_name = tableName,
+                   restrict_concepts = restrictConcepts,
+                   concept_field = conceptField,
+                   restrict_person = restrictPersons)$sql
+  sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
+  table <- querySql(remoteConn, sql)
+  dbWriteTable(localConn, tableName, table)
+  ParallelLogger::logInfo("- Added ", nrow(table), " rows")
+}
+
+extractTable(tableName = "concept", restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = FALSE)
+extractTable(tableName = "concept_ancestor", restrictConcepts = TRUE, conceptField = "descendant_concept_id", restrictPersons = FALSE)
+extractTable(tableName = "drug_era", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "drug_exposure", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "condition_era", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "condition_occurrence", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "procedure_occurrence", restrictConcepts = TRUE, conceptField = "procedure_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "measurement", restrictConcepts = TRUE, conceptField = "measurement_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "observation", restrictConcepts = TRUE, conceptField = "observation_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "person", restrictConcepts = FALSE, restrictPersons = TRUE)
+extractTable(tableName = "observation_period", restrictConcepts = FALSE, restrictPersons = TRUE)
+extractTable(tableName = "visit_occurrence", restrictConcepts = FALSE, restrictPersons = TRUE)
+extractTable(tableName = "cdm_source", restrictConcepts = FALSE, restrictPersons = FALSE)
+
+
+DBI::dbDisconnect(localConn)
+
+dbGetQuery(localConn, 'SELECT * FROM main.concept_ancestor WHERE ancestor_concept_id = 192671')
+x <- dbGetQuery(localConn, 'SELECT DISTINCT condition_concept_id, concept_name FROM main.condition_occurrence INNER JOIN main.concept ON condition_concept_id = concept_id')
+
+
+sql <- "SELECT 3, -- Outcome
+	condition_start_date,
+	condition_end_date,
+	condition_occurrence.person_id
+FROM @cdmDatabaseSchema.condition_occurrence
+INNER JOIN @cdmDatabaseSchema.visit_occurrence
+	ON condition_occurrence.visit_occurrence_id = visit_occurrence.visit_occurrence_id
+WHERE condition_concept_id IN (
+		SELECT descendant_concept_id
+		FROM @cdmDatabaseSchema.concept_ancestor
+		WHERE ancestor_concept_id = 192671 -- GI - Gastrointestinal haemorrhage
+		)
+	AND visit_occurrence.visit_concept_id IN (9201, 9203);"
+sql <- renderSql(sql,
+                 cdmDatabaseSchema = "main")$sql
+# sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
+dbGetQuery(localConn, sql)
