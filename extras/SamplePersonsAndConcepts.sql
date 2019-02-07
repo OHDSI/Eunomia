@@ -65,6 +65,19 @@ WHERE concept_id != 0
 ORDER BY - person_count;
 
 SELECT TOP @concept_sample_size concept_id
+INTO #device_concept
+FROM (
+	SELECT COUNT(DISTINCT person_sample.person_id) AS person_count,
+	  device_concept_id AS concept_id
+	FROM @cdm_database_schema.device_exposure
+	INNER JOIN #person_sample person_sample
+		ON person_sample.person_id = device_exposure.person_id
+	GROUP BY device_concept_id
+	) tmp
+WHERE concept_id != 0
+ORDER BY - person_count;
+
+SELECT TOP @concept_sample_size concept_id
 INTO #procedure_concept
 FROM (
 	SELECT COUNT(DISTINCT person_sample.person_id) AS person_count,
@@ -123,6 +136,11 @@ FROM (
 	UNION ALL
 
 	SELECT concept_id
+	FROM  #device_concept
+
+	UNION ALL
+
+	SELECT concept_id
 	FROM  #procedure_concept
 
 	UNION ALL
@@ -147,6 +165,10 @@ DROP TABLE  #drug_concept;
 TRUNCATE TABLE #condition_concept;
 
 DROP TABLE  #condition_concept;
+
+TRUNCATE TABLE #device_concept;
+
+DROP TABLE  #device_concept;
 
 TRUNCATE TABLE #procedure_concept;
 

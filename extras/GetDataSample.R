@@ -1,5 +1,3 @@
-# @file PackageMaintenance
-#
 # Copyright 2019 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
@@ -37,9 +35,7 @@ sql <- renderSql(sql,
 sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
 executeSql(remoteConn, sql)
 
-library(RSQLite)
-
-localConn <- DBI::dbConnect(RSQLite::SQLite(), "inst/sqlLite/cdm")
+localConn <- connect(dbms = "sqlite", server = "inst/sqlLite/cdm")
 
 extractTable <- function(tableName, restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = TRUE) {
   ParallelLogger::logInfo("Fetching and storing table ", tableName)
@@ -61,14 +57,16 @@ extractTable <- function(tableName, restrictConcepts = TRUE, conceptField = "con
                    restrict_person = restrictPersons)$sql
   sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
   table <- querySql(remoteConn, sql)
-  dbWriteTable(localConn, tableName, table)
+  insertTable(localConn, tableName, table)
   ParallelLogger::logInfo("- Added ", nrow(table), " rows")
 }
 
 extractTable(tableName = "concept", restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = FALSE)
 extractTable(tableName = "concept_ancestor", restrictConcepts = TRUE, conceptField = "descendant_concept_id", restrictPersons = FALSE)
+extractTable(tableName = "concept_relationship", restrictConcepts = TRUE, conceptField = "concept_id_2", restrictPersons = FALSE)
 extractTable(tableName = "drug_era", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
 extractTable(tableName = "drug_exposure", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "device_exposure", restrictConcepts = TRUE, conceptField = "device_concept_id", restrictPersons = TRUE)
 extractTable(tableName = "condition_era", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
 extractTable(tableName = "condition_occurrence", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
 extractTable(tableName = "procedure_occurrence", restrictConcepts = TRUE, conceptField = "procedure_concept_id", restrictPersons = TRUE)
@@ -80,26 +78,6 @@ extractTable(tableName = "visit_occurrence", restrictConcepts = FALSE, restrictP
 extractTable(tableName = "cdm_source", restrictConcepts = FALSE, restrictPersons = FALSE)
 
 
-DBI::dbDisconnect(localConn)
+disconnect(remoteConn)
+disconnect(localConn)
 
-dbGetQuery(localConn, 'SELECT * FROM main.concept_ancestor WHERE ancestor_concept_id = 192671')
-x <- dbGetQuery(localConn, 'SELECT DISTINCT condition_concept_id, concept_name FROM main.condition_occurrence INNER JOIN main.concept ON condition_concept_id = concept_id')
-
-
-sql <- "SELECT 3, -- Outcome
-	condition_start_date,
-	condition_end_date,
-	condition_occurrence.person_id
-FROM @cdmDatabaseSchema.condition_occurrence
-INNER JOIN @cdmDatabaseSchema.visit_occurrence
-	ON condition_occurrence.visit_occurrence_id = visit_occurrence.visit_occurrence_id
-WHERE condition_concept_id IN (
-		SELECT descendant_concept_id
-		FROM @cdmDatabaseSchema.concept_ancestor
-		WHERE ancestor_concept_id = 192671 -- GI - Gastrointestinal haemorrhage
-		)
-	AND visit_occurrence.visit_concept_id IN (9201, 9203);"
-sql <- renderSql(sql,
-                 cdmDatabaseSchema = "main")$sql
-# sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
-dbGetQuery(localConn, sql)
