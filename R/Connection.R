@@ -17,6 +17,13 @@
 
 #' Get Eunomia Connection Details
 #'
+#' @description
+#' Creates a copy of the Eunomia database, and provides details for connecting to that copy.
+#'
+#' @param databaseFile  The path where the database file will be copied to. By default, the
+#'                      dataabase will be copied to a temporary folder, and will be deleted
+#'                      at the end of the R session.
+#'
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
@@ -27,7 +34,10 @@
 #' disconnect(connection)
 #'
 #' @export
-getEunomiaConnectionDetails <- function() {
-  return(DatabaseConnector::createConnectionDetails(dbms = "sqlite",
-                                                    server = system.file("sqlLite" ,"cdm", package = "Eunomia")))
+getEunomiaConnectionDetails <- function(databaseFile = tempfile()) {
+  file.copy(from = system.file("sqlLite" ,"cdm", package = "Eunomia"),
+            to = databaseFile)
+  details <- DatabaseConnector::createConnectionDetails(dbms = "sqlite",
+                                                        server = databaseFile)
+  return(details)
 }

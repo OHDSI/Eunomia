@@ -4,13 +4,18 @@
 \alias{getEunomiaConnectionDetails}
 \title{Get Eunomia Connection Details}
 \usage{
-getEunomiaConnectionDetails()
+getEunomiaConnectionDetails(databaseFile = tempfile())
+}
+\arguments{
+\item{databaseFile}{The path where the database file will be copied to. By default, the
+dataabase will be copied to a temporary folder, and will be deleted
+at the end of the R session.}
 }
 \value{
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 }
 \description{
-Get Eunomia Connection Details
+Creates a copy of the Eunomia database, and provides details for connecting to that copy.
 }
 \examples{
 connectionDetails <- getEunomiaConnectionDetails()
