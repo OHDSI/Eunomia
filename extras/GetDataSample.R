@@ -33,10 +33,8 @@ sql <- renderSql(sql,
 sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
 executeSql(remoteConn, sql)
 
-if (!file.exists("inst/sqlLite")) {
-  dir.create("inst/sqlLite", recursive = TRUE)
-}
-localConn <- connect(dbms = "sqlite", server = "inst/sqlLite/cdm")
+tempFileName <- file.path(tempdir(), "cdm.sqlite")
+localConn <- connect(dbms = "sqlite", server = tempFileName)
 
 extractTable <- function(tableName,
                          restrictConcepts = TRUE,
@@ -117,3 +115,8 @@ extractTable(tableName = "cdm_source", restrictConcepts = FALSE, restrictPersons
 disconnect(remoteConn)
 disconnect(localConn)
 
+if (!file.exists("inst/zip")) {
+  dir.create("inst/zip", recursive = TRUE)
+}
+DatabaseConnector::createZipFile(zipFile = "inst/zip/cdm.zip", files = tempFileName, rootFolder = dirname(tempFileName))
+unlink(tempFileName)

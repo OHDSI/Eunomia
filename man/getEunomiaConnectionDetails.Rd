@@ -4,7 +4,7 @@
 \alias{getEunomiaConnectionDetails}
 \title{Get Eunomia Connection Details}
 \usage{
-getEunomiaConnectionDetails(databaseFile = tempfile())
+getEunomiaConnectionDetails(databaseFile = tempfile(fileext = ".sqlite"))
 }
 \arguments{
 \item{databaseFile}{The path where the database file will be copied to. By default, the dataabase

@@ -19,4 +19,4 @@ src/*.dll
 /Debug
 standalone/build/*
 
-inst/sqlLite
+inst/zip

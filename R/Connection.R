@@ -29,13 +29,15 @@
 #'
 #' @examples
 #' connectionDetails <- getEunomiaConnectionDetails()
-#' connection <- connect(connectionDetails)
-#' querySql(connection, "SELECT COUNT(*) FROM person;")
-#' disconnect(connection)
+#' //connection <- connect(connectionDetails)
+#' //querySql(connection, "SELECT COUNT(*) FROM person;")
+#' //disconnect(connection)
 #'
 #' @export
-getEunomiaConnectionDetails <- function(databaseFile = tempfile()) {
-  file.copy(from = system.file("sqlLite", "cdm", package = "Eunomia"), to = databaseFile)
+getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite")) {
+  extractFolder <- tempdir()
+  unzip(zipfile = system.file("zip", "cdm.zip", package = "Eunomia"), exdir = extractFolder)
+  file.rename(from = file.path(extractFolder, "cdm.sqlite"), to = databaseFile)
   details <- DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = databaseFile)
   return(details)
 }
