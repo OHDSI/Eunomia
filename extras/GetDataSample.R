@@ -17,8 +17,6 @@
 library(DatabaseConnector)
 library(SqlRender)
 
-options(fftempdir = "s:/fftemp")
-
 remoteConnDetails <- createConnectionDetails(dbms = "pdw",
                                              server = Sys.getenv("PDW_SERVER"),
                                              user = NULL,
@@ -35,19 +33,25 @@ sql <- renderSql(sql,
 sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
 executeSql(remoteConn, sql)
 
+if (!file.exists("inst/sqlLite")) {
+  dir.create("inst/sqlLite", recursive = TRUE)
+}
 localConn <- connect(dbms = "sqlite", server = "inst/sqlLite/cdm")
 
-extractTable <- function(tableName, restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = TRUE) {
+extractTable <- function(tableName,
+                         restrictConcepts = TRUE,
+                         conceptField = "concept_id",
+                         restrictPersons = TRUE) {
   ParallelLogger::logInfo("Fetching and storing table ", tableName)
   sql <- "SELECT @table_name.*
   FROM @cdm_database_schema.@table_name
   {@restrict_concepts} ? {
   INNER JOIN #concept_sample concept_sample
-    ON concept_sample.concept_id = @table_name.@concept_field
+  ON concept_sample.concept_id = @table_name.@concept_field
   }
   {@restrict_person} ? {
   INNER JOIN #person_sample person_sample
-    ON person_sample.person_id = @table_name.person_id
+  ON person_sample.person_id = @table_name.person_id
   };"
   sql <- renderSql(sql,
                    cdm_database_schema = cdmDatabaseSchema,
@@ -61,22 +65,54 @@ extractTable <- function(tableName, restrictConcepts = TRUE, conceptField = "con
   ParallelLogger::logInfo("- Added ", nrow(table), " rows")
 }
 
-extractTable(tableName = "concept", restrictConcepts = TRUE, conceptField = "concept_id", restrictPersons = FALSE)
-extractTable(tableName = "concept_ancestor", restrictConcepts = TRUE, conceptField = "descendant_concept_id", restrictPersons = FALSE)
-extractTable(tableName = "concept_relationship", restrictConcepts = TRUE, conceptField = "concept_id_2", restrictPersons = FALSE)
-extractTable(tableName = "drug_era", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "drug_exposure", restrictConcepts = TRUE, conceptField = "drug_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "device_exposure", restrictConcepts = TRUE, conceptField = "device_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "condition_era", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "condition_occurrence", restrictConcepts = TRUE, conceptField = "condition_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "procedure_occurrence", restrictConcepts = TRUE, conceptField = "procedure_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "measurement", restrictConcepts = TRUE, conceptField = "measurement_concept_id", restrictPersons = TRUE)
-extractTable(tableName = "observation", restrictConcepts = TRUE, conceptField = "observation_concept_id", restrictPersons = TRUE)
+extractTable(tableName = "concept",
+             restrictConcepts = TRUE,
+             conceptField = "concept_id",
+             restrictPersons = FALSE)
+extractTable(tableName = "concept_ancestor",
+             restrictConcepts = TRUE,
+             conceptField = "descendant_concept_id",
+             restrictPersons = FALSE)
+extractTable(tableName = "concept_relationship",
+             restrictConcepts = TRUE,
+             conceptField = "concept_id_2",
+             restrictPersons = FALSE)
+extractTable(tableName = "drug_era",
+             restrictConcepts = TRUE,
+             conceptField = "drug_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "drug_exposure",
+             restrictConcepts = TRUE,
+             conceptField = "drug_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "device_exposure",
+             restrictConcepts = TRUE,
+             conceptField = "device_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "condition_era",
+             restrictConcepts = TRUE,
+             conceptField = "condition_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "condition_occurrence",
+             restrictConcepts = TRUE,
+             conceptField = "condition_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "procedure_occurrence",
+             restrictConcepts = TRUE,
+             conceptField = "procedure_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "measurement",
+             restrictConcepts = TRUE,
+             conceptField = "measurement_concept_id",
+             restrictPersons = TRUE)
+extractTable(tableName = "observation",
+             restrictConcepts = TRUE,
+             conceptField = "observation_concept_id",
+             restrictPersons = TRUE)
 extractTable(tableName = "person", restrictConcepts = FALSE, restrictPersons = TRUE)
 extractTable(tableName = "observation_period", restrictConcepts = FALSE, restrictPersons = TRUE)
 extractTable(tableName = "visit_occurrence", restrictConcepts = FALSE, restrictPersons = TRUE)
 extractTable(tableName = "cdm_source", restrictConcepts = FALSE, restrictPersons = FALSE)
-
 
 disconnect(remoteConn)
 disconnect(localConn)

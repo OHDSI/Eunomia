@@ -12,7 +12,11 @@ conn <- DatabaseConnector::connect(connectionDetails)
 ### Populate cohort table ###
 sql <- "IF OBJECT_ID('@cohort_database_schema.@cohort_table', 'U') IS NOT NULL
 DROP TABLE @cohort_database_schema.@cohort_table;
-SELECT 1 AS cohort_definition_id, person_id AS subject_id, drug_era_start_date AS cohort_start_date, drug_era_end_date AS cohort_end_date, ROW_NUMBER() OVER (ORDER BY person_id, drug_era_start_date) AS row_id
+SELECT 1 AS cohort_definition_id,
+  person_id AS subject_id,
+  drug_era_start_date AS cohort_start_date,
+  drug_era_end_date AS cohort_end_date,
+  ROW_NUMBER() OVER (ORDER BY person_id, drug_era_start_date) AS row_id
 INTO @cohort_database_schema.@cohort_table FROM @cdm_database_schema.drug_era
 WHERE drug_concept_id = 1118084;"
 sql <- SqlRender::renderSql(sql,
@@ -31,7 +35,8 @@ DatabaseConnector::querySql(conn, sql)
 DatabaseConnector::disconnect(conn)
 
 
-settings <- FeatureExtraction::createDefaultCovariateSettings(excludedCovariateConceptIds = 1118084, addDescendantsToExclude = TRUE)
+settings <- FeatureExtraction::createDefaultCovariateSettings(excludedCovariateConceptIds = 1118084,
+                                                              addDescendantsToExclude = TRUE)
 covs <- FeatureExtraction::getDbCovariateData(connectionDetails = connectionDetails,
                                               oracleTempSchema = oracleTempSchema,
                                               cdmDatabaseSchema = cdmDatabaseSchema,
@@ -57,3 +62,31 @@ achilles(connectionDetails,
          runHeel = TRUE,
          runCostAnalysis = FALSE)
 
+# Circe cohort definition -----------------------------
+conn <- DatabaseConnector::connect(connectionDetails)
+
+### Create cohort table ###
+sql <- "IF OBJECT_ID('@cohort_database_schema.@cohort_table', 'U') IS NOT NULL
+DROP TABLE @cohort_database_schema.@cohort_table;
+
+CREATE TABLE @cohort_database_schema.@cohort_table (
+  cohort_definition_id INT,
+  subject_id BIGINT,
+  cohort_start_date DATE,
+  cohort_end_date DATE
+);"
+sql <- SqlRender::renderSql(sql,
+                            cohort_database_schema = cohortDatabaseSchema,
+                            cohort_table = cohortTable)$sql
+sql <- SqlRender::translateSql(sql, targetDialect = connectionDetails$dbms)$sql
+DatabaseConnector::executeSql(conn, sql)
+
+sql <- SqlRender::readSql("extras/ZoledronicAcid.sql")
+sql <- SqlRender::renderSql(sql,
+                            cdm_database_schema = cdmDatabaseSchema,
+                            vocabulary_database_schema = cdmDatabaseSchema,
+                            target_database_schema = cohortDatabaseSchema,
+                            target_cohort_table = cohortTable,
+                            target_cohort_id = 1)$sql
+sql <- SqlRender::translateSql(sql, targetDialect = conn@dbms)$sql
+DatabaseConnector::executeSql(conn, sql)

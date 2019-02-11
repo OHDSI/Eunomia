@@ -1,6 +1,8 @@
 Eunomia
 =======
 
+[![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
+
 Eunomia is a standard dataset in the Common Data Model for testing and demonstration purposes
 
 
