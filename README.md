@@ -8,6 +8,17 @@ Features
 ========
 - To add
 
+Examples
+========
+
+```R
+library(Eunomia)
+connectionDetails <- getEunomiaConnectionDetails()
+connection <- connect(connectionDetails)
+querySql(connection, "SELECT COUNT(*) FROM person;")
+# 12345
+disconnect(connection)
+```
 
 Technology
 ============

@@ -1,15 +1,13 @@
-library(Eunomia)
 options(fftempdir = "s:/fftemp")
 
-connectionDetails <- getEunomiaConnectionDetails()
+connectionDetails <- Eunomia::getEunomiaConnectionDetails()
 cdmDatabaseSchema <- "main"
 cohortDatabaseSchema <- "main"
 oracleTempSchema <- NULL
 cohortTable <- "my_cohort"
 
-
+# FeatureExtraction -------------------------------
 conn <- DatabaseConnector::connect(connectionDetails)
-
 
 ### Populate cohort table ###
 sql <- "IF OBJECT_ID('@cohort_database_schema.@cohort_table', 'U') IS NOT NULL
@@ -45,3 +43,17 @@ covs <- FeatureExtraction::getDbCovariateData(connectionDetails = connectionDeta
                                               covariateSettings = settings,
                                               aggregated = FALSE)
 summary(covs)
+
+# Achilles -------------------------------------------
+
+library(Achilles)
+achilles(connectionDetails,
+         cdmDatabaseSchema = cdmDatabaseSchema,
+         resultsDatabaseSchema = cohortDatabaseSchema,
+         vocabDatabaseSchema = cdmDatabaseSchema,
+         numThreads = 1,
+         sourceName = "Eunomia",
+         cdmVersion = "5.0.0",
+         runHeel = TRUE,
+         runCostAnalysis = FALSE)
+
