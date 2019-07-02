@@ -29,9 +29,9 @@
 #'
 #' @examples
 #' connectionDetails <- getEunomiaConnectionDetails()
-#' //connection <- connect(connectionDetails)
-#' //querySql(connection, "SELECT COUNT(*) FROM person;")
-#' //disconnect(connection)
+#' connection <- connect(connectionDetails)
+#' querySql(connection, "SELECT COUNT(*) FROM person;")
+#' disconnect(connection)
 #'
 #' @export
 getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite")) {

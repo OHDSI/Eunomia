@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This code is obsolete
+
 library(DatabaseConnector)
 library(SqlRender)
 
@@ -25,13 +27,12 @@ remoteConnDetails <- createConnectionDetails(dbms = "pdw",
 cdmDatabaseSchema <- "cdm_synpuf_v667.dbo"
 
 remoteConn <- connect(remoteConnDetails)
+
 sql <- readSql("extras/SamplePersonsAndConcepts.sql")
-sql <- renderSql(sql,
-                 cdm_database_schema = cdmDatabaseSchema,
-                 person_sample_size = 2500,
-                 concept_sample_size = 100)$sql
-sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
-executeSql(remoteConn, sql)
+renderTranslateExecuteSql(connection = remoteConn,
+                          sql = sql,
+                          cdm_database_schema = cdmDatabaseSchema,
+                          person_sample_size = 10000)
 
 tempFileName <- file.path(tempdir(), "cdm.sqlite")
 localConn <- connect(dbms = "sqlite", server = tempFileName)
@@ -39,6 +40,7 @@ localConn <- connect(dbms = "sqlite", server = tempFileName)
 extractTable <- function(tableName,
                          restrictConcepts = TRUE,
                          conceptField = "concept_id",
+                         conceptField2 = NULL,
                          restrictPersons = TRUE) {
   ParallelLogger::logInfo("Fetching and storing table ", tableName)
   sql <- "SELECT @table_name.*
@@ -47,18 +49,23 @@ extractTable <- function(tableName,
   INNER JOIN #concept_sample concept_sample
   ON concept_sample.concept_id = @table_name.@concept_field
   }
+  {@restrict_concepts_2} ? {
+  INNER JOIN #concept_sample concept_sample_2
+  ON concept_sample_2.concept_id = @table_name.@concept_field_2
+  }
   {@restrict_person} ? {
   INNER JOIN #person_sample person_sample
   ON person_sample.person_id = @table_name.person_id
   };"
-  sql <- renderSql(sql,
-                   cdm_database_schema = cdmDatabaseSchema,
-                   table_name = tableName,
-                   restrict_concepts = restrictConcepts,
-                   concept_field = conceptField,
-                   restrict_person = restrictPersons)$sql
-  sql <- translateSql(sql, targetDialect = remoteConnDetails$dbms)$sql
-  table <- querySql(remoteConn, sql)
+  table <- renderTranslateQuerySql(connection = remoteConn,
+                                   sql = sql,
+                                   cdm_database_schema = cdmDatabaseSchema,
+                                   table_name = tableName,
+                                   restrict_concepts = restrictConcepts,
+                                   concept_field = conceptField,
+                                   restrict_concepts_2 = !is.null(conceptField2),
+                                   concept_field_2 = conceptField2,
+                                   restrict_person = restrictPersons)
   insertTable(localConn, tableName, table)
   ParallelLogger::logInfo("- Added ", nrow(table), " rows")
 }
@@ -70,10 +77,12 @@ extractTable(tableName = "concept",
 extractTable(tableName = "concept_ancestor",
              restrictConcepts = TRUE,
              conceptField = "descendant_concept_id",
+             conceptField2 = "ancestor_concept_id",
              restrictPersons = FALSE)
 extractTable(tableName = "concept_relationship",
              restrictConcepts = TRUE,
-             conceptField = "concept_id_2",
+             conceptField = "concept_id_1",
+             conceptField2 = "concept_id_2",
              restrictPersons = FALSE)
 extractTable(tableName = "drug_era",
              restrictConcepts = TRUE,

@@ -2,9 +2,10 @@ Package: Eunomia
 Type: Package
 Title: A Standard Common Data Model Dataset
 Version: 0.0.1
-Date: 2019-02-06
+Date: 2019-07-02
 Authors@R: c(
-  person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut", "cre"))
+  person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut", "cre")),
+  person("Frank", "DeFalco", role = c("aut"))
   )
 Maintainer: Martijn Schuemie <schuemie@ohdsi.org>
 Description: A standard CDM dataset for testing and demonstration purposes.

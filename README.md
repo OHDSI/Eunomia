@@ -3,22 +3,24 @@ Eunomia
 
 [![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
 
-Eunomia is a standard dataset in the Common Data Model for testing and demonstration purposes
-
+Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes
 
 Features
 ========
-- To add
+- Provides a small simulated dataset in the CDM.
+- Also includes a subset of the Standardized Vocabularies.
+- Interfaces with the DatabaseConnector and SqlRender packages.
 
-Examples
-========
+Example
+=======
 
 ```R
 library(Eunomia)
 connectionDetails <- getEunomiaConnectionDetails()
 connection <- connect(connectionDetails)
 querySql(connection, "SELECT COUNT(*) FROM person;")
-# 12345
+#  COUNT(*)
+#1     2694
 disconnect(connection)
 ```
 
@@ -37,6 +39,10 @@ Installation
 2. In R, use the following commands to download and install CohortMethod:
 
   ```r
+  # The development version of RSQLite is required for some SQL functions:
+  install.packages("devtools")
+  devtools::install_github("r-dbi/RSQLite")
+  
   install.packages("drat")
   drat::addRepo("OHDSI")
   install.packages("Eunomia")

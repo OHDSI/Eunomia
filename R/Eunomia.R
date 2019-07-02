@@ -19,4 +19,5 @@
 #' @docType package
 #' @name Eunomia
 #' @import DatabaseConnector
+#' @importFrom utils unzip
 NULL

@@ -2,3 +2,4 @@
 
 export(getEunomiaConnectionDetails)
 import(DatabaseConnector)
+importFrom(utils,unzip)
