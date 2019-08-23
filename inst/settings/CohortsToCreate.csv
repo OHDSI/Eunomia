@@ -1,0 +1,5 @@
+cohortId,name,description
+1,Celecoxib,"A simplified cohort definition for new users of celecoxib, designed specifically for Eunomia."
+2,Diclofenac,"A simplified cohort definition for new users ofdiclofenac, designed specifically for Eunomia."
+3,GiBleed,"A simplified cohort definition for gastrointestinal bleeding, designed specifically for Eunomia."
+4,NSAIDs,"A simplified cohort definition for new users of NSAIDs, designed specifically for Eunomia."
