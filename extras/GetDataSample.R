@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+connectionDetails <- Eunomia::getEunomiaConnectionDetails("c:/temp/cdm.sqlite")
+conn <- DatabaseConnector::connect(connectionDetails)
+DatabaseConnector::renderTranslateExecuteSql(conn, "DROP TABLE coxibvsnonselvsgibleed;")
+DatabaseConnector::executeSql(conn, "VACUUM main;")
+DatabaseConnector::disconnect(conn)
+
+
+
 # This code is obsolete
 
 library(DatabaseConnector)
