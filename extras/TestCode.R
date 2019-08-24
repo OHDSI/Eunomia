@@ -1,6 +1,6 @@
-options(fftempdir = "s:/fftemp")
+options(fftempdir = "c:/fftemp")
 
-connectionDetails <- Eunomia::getEunomiaConnectionDetails()
+connectionDetails <- Eunomia::getEunomiaConnectionDetails("c:/temp/cdm.sqlite")
 cdmDatabaseSchema <- "main"
 cohortDatabaseSchema <- "main"
 oracleTempSchema <- NULL
@@ -60,6 +60,20 @@ result <- achilles(connectionDetails,
                    cdmVersion = "5.3.0",
                    runHeel = TRUE,
                    runCostAnalysis = FALSE)
+
+# file.copy(connectionDetails$server, "c:/temp/achilles.sqlite")
+# connectionDetails <- DatabaseConnector::createConnectionDetails(server = "c:/temp/achilles.sqlite",
+#                                                                 dbms = "sqlite")
+
+heel <- fetchAchillesHeelResults(connectionDetails,
+                         resultsDatabaseSchema = cdmDatabaseSchema)
+write.csv(heel, "c:/temp/EunomiaHeel.csv", row.names = FALSE)
+head(heel)
+
+exportToJson(connectionDetails,
+             cdmDatabaseSchema = cdmDatabaseSchema,
+             resultsDatabaseSchema = cdmDatabaseSchema,
+             outputPath = "c:/temp/achillesOut")
 
 # Circe cohort definition -----------------------------
 conn <- DatabaseConnector::connect(connectionDetails)
