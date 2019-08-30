@@ -4,13 +4,14 @@ Eunomia
 [![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
 [![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=master)](https://codecov.io/github/OHDSI/Eunomia?branch=master)
 
-Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes
+Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](http://book.ohdsi.org).
 
 Features
 ========
 - Provides a small simulated dataset in the CDM.
 - Also includes a subset of the Standardized Vocabularies.
 - Interfaces with the DatabaseConnector and SqlRender packages.
+- No need to set up a database server. Eunomia runs in your R instance (using SQLite).
 
 Example
 =======

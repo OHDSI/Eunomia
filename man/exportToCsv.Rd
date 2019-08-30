@@ -10,8 +10,8 @@ exportToCsv(outputFolder = file.path(getwd(), "csv"),
 \arguments{
 \item{outputFolder}{A folder where the CSV files will be written.}
 
-\item{connectionDetails}{Connection details for the Eunomia database.
-Defaults to a fresh Eunomia database.}
+\item{connectionDetails}{Connection details for the Eunomia database. Defaults to a fresh Eunomia
+database.}
 }
 \description{
 Extract the Eunomia database to CSV files

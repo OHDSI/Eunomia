@@ -22,7 +22,6 @@ A data frame listing all created cohorts.
 }
 \description{
 Creates a set of predefined cohorts in a cohort table.
-
 WARNING: this will delete all existing cohorts in the table!
 }
 \examples{
