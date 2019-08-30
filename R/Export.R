@@ -17,9 +17,9 @@
 
 #' Extract the Eunomia database to CSV files
 #'
-#' @param outputFolder       A folder where the CSV files will be written.
-#' @param connectionDetails  Connection details for the Eunomia database.
-#'                           Defaults to a fresh Eunomia database.
+#' @param outputFolder        A folder where the CSV files will be written.
+#' @param connectionDetails   Connection details for the Eunomia database. Defaults to a fresh Eunomia
+#'                            database.
 #'
 #'
 #' @examples
@@ -36,12 +36,10 @@ exportToCsv <- function(outputFolder = file.path(getwd(), "csv"),
   conn <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(conn))
   tables <- DatabaseConnector::getTableNames(conn, "main")
-  saveCsv <- function(table){
+  saveCsv <- function(table) {
     fileName <- file.path(outputFolder, sprintf("%s.csv", table))
     writeLines(sprintf("Saving table %s to file %s", table, fileName))
-    data <- renderTranslateQuerySql(conn,
-                                    "SELECT * FROM @table;",
-                                    table = table)
+    data <- renderTranslateQuerySql(conn, "SELECT * FROM @table;", table = table)
     write.csv(data, fileName, row.names = FALSE, na = "")
     return(NULL)
   }

@@ -47,9 +47,8 @@ covs <- FeatureExtraction::getDbCovariateData(connectionDetails = connectionDeta
                                               aggregated = FALSE)
 summary(covs)
 
-# Achilles -------------------------------------------
-# Note: requires development version of SqlRender
-# devtools::install_github("ohdsi/SqlRender", ref = "develop")
+# Achilles ------------------------------------------- Note: requires development version of
+# SqlRender devtools::install_github('ohdsi/SqlRender', ref = 'develop')
 library(Achilles)
 result <- achilles(connectionDetails,
                    cdmDatabaseSchema = cdmDatabaseSchema,
@@ -61,12 +60,10 @@ result <- achilles(connectionDetails,
                    runHeel = TRUE,
                    runCostAnalysis = FALSE)
 
-# file.copy(connectionDetails$server, "c:/temp/achilles.sqlite")
-# connectionDetails <- DatabaseConnector::createConnectionDetails(server = "c:/temp/achilles.sqlite",
-#                                                                 dbms = "sqlite")
+# file.copy(connectionDetails$server, 'c:/temp/achilles.sqlite') connectionDetails <-
+# DatabaseConnector::createConnectionDetails(server = 'c:/temp/achilles.sqlite', dbms = 'sqlite')
 
-heel <- fetchAchillesHeelResults(connectionDetails,
-                         resultsDatabaseSchema = cdmDatabaseSchema)
+heel <- fetchAchillesHeelResults(connectionDetails, resultsDatabaseSchema = cdmDatabaseSchema)
 write.csv(heel, "c:/temp/EunomiaHeel.csv", row.names = FALSE)
 head(heel)
 
@@ -185,14 +182,11 @@ table1 <- createCmTable1(balance)
 print(table1, row.names = FALSE, right = FALSE)
 plotCovariateBalanceScatterPlot(balance, showCovariateCountLabel = TRUE, showMaxLabel = TRUE)
 
-outcomeModel <- fitOutcomeModel(population = studyPop,
-                                modelType = "cox",
-                                stratified = FALSE)
+outcomeModel <- fitOutcomeModel(population = studyPop, modelType = "cox", stratified = FALSE)
 outcomeModel
 
 
-outcomeModel <- fitOutcomeModel(population = matchedPop,
-                                modelType = "cox")
+outcomeModel <- fitOutcomeModel(population = matchedPop, modelType = "cox")
 
 outcomeModel
 
@@ -222,7 +216,10 @@ renderTranslateExecuteSql(connection = connection,
 
 # Target: NSAID new use
 sql <- "
-INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id, subject_id, cohort_start_date, cohort_end_date)
+INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id,
+                                                   subject_id,
+                                                   cohort_start_date,
+                                                   cohort_end_date)
 SELECT 1 AS cohort_definition_id,
   person_id AS subject_id,
   MIN(drug_exposure_start_date) AS cohort_start_date,
@@ -240,7 +237,10 @@ renderTranslateExecuteSql(connection = connection,
 
 # Outcome: GI Bleed
 sql <- "
-INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id, subject_id, cohort_start_date, cohort_end_date)
+INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id,
+                                                   subject_id,
+                                                   cohort_start_date,
+                                                   cohort_end_date)
 SELECT 2 AS cohort_definition_id,
   person_id AS subject_id,
   MIN(condition_start_date) AS cohort_start_date,
@@ -257,7 +257,10 @@ renderTranslateExecuteSql(connection = connection,
                           cohort_table = cohortTable)
 
 sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
-renderTranslateQuerySql(connection, sql,  cohort_database_schema = cohortDatabaseSchema, cohort_table = cohortTable)
+renderTranslateQuerySql(connection,
+                        sql,
+                        cohort_database_schema = cohortDatabaseSchema,
+                        cohort_table = cohortTable)
 
 
 
@@ -307,7 +310,7 @@ lassoModel <- setLassoLogisticRegression(variance = 0.1, seed = 1234)
 lassoResults <- runPlp(population = population,
                        plpData = plpData,
                        modelSettings = lassoModel,
-                       testSplit = 'person',
+                       testSplit = "person",
                        testFraction = 0.25,
                        nfold = 2,
                        splitSeed = 1234)

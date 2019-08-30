@@ -19,14 +19,13 @@
 #'
 #' @description
 #' Creates a set of predefined cohorts in a cohort table.
-#'
 #' WARNING: this will delete all existing cohorts in the table!
 #'
-#' @param connectionDetails     The connection details to connect to the (Eunomia) database.
-#' @param cdmDatabaseSchema     The name of the database schema holding the CDM data.
-#' @param cohortDatabaseSchema  The name of the database schema where the cohorts will be written.
-#' @param cohortTable           The name of the table in the cohortDatabaseSchema where the cohorts
-#'                              will be written.
+#' @param connectionDetails      The connection details to connect to the (Eunomia) database.
+#' @param cdmDatabaseSchema      The name of the database schema holding the CDM data.
+#' @param cohortDatabaseSchema   The name of the database schema where the cohorts will be written.
+#' @param cohortTable            The name of the table in the cohortDatabaseSchema where the cohorts
+#'                               will be written.
 #'
 #' @return
 #' A data frame listing all created cohorts.
@@ -78,7 +77,11 @@ createCohorts <- function(connectionDetails,
 
   # Fetch cohort counts:
   sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
-  counts <- DatabaseConnector::renderTranslateQuerySql(connection, sql, cohort_database_schema = cohortDatabaseSchema, cohort_table = cohortTable, snakeCaseToCamelCase = TRUE)
+  counts <- DatabaseConnector::renderTranslateQuerySql(connection,
+                                                       sql,
+                                                       cohort_database_schema = cohortDatabaseSchema,
+                                                       cohort_table = cohortTable,
+                                                       snakeCaseToCamelCase = TRUE)
   counts <- merge(cohortsToCreate, counts, by.x = "cohortId", by.y = "cohortDefinitionId")
   writeLines(sprintf("Cohorts created in table %s.%s", cohortDatabaseSchema, cohortTable))
   return(counts)

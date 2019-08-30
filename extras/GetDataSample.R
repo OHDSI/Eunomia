@@ -135,5 +135,7 @@ disconnect(localConn)
 if (!file.exists("inst/zip")) {
   dir.create("inst/zip", recursive = TRUE)
 }
-DatabaseConnector::createZipFile(zipFile = "inst/zip/cdm.zip", files = tempFileName, rootFolder = dirname(tempFileName))
+DatabaseConnector::createZipFile(zipFile = "inst/zip/cdm.zip",
+                                 files = tempFileName,
+                                 rootFolder = dirname(tempFileName))
 unlink(tempFileName)
