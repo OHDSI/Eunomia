@@ -1,8 +1,8 @@
 Package: Eunomia
 Type: Package
 Title: A Standard Common Data Model Dataset
-Version: 0.0.1
-Date: 2019-07-02
+Version: 1.0.0
+Date: 2019-08-30
 Authors@R: c(
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut", "cre")),
   person("Frank", "DeFalco", role = c("aut"))

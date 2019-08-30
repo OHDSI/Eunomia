@@ -313,3 +313,13 @@ lassoResults <- runPlp(population = population,
                        splitSeed = 1234)
 
 viewPlp(lassoResults)
+
+# Source codes -------------------------------------------------------------------
+library(DatabaseConnector)
+conn <- connect(connectionDetails)
+renderTranslateQuerySql(conn, "SELECT TOP 10 * FROM condition_occurrence;")
+
+
+renderTranslateQuerySql(conn, "SELECT * FROM concept WHERE concept_id = 192671;")
+
+disconnect(conn)

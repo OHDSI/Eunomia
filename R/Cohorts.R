@@ -36,7 +36,13 @@
 #' createCohorts(connectionDetails)
 #'
 #' connection <- connect(connectionDetails)
-#' renderTranslateQuerySql(connection, "SELECT COUNT(*) FROM main.cohort WHERE cohort_definition_id = 1;")
+#'
+#' sql <- "SELECT COUNT(*)
+#' FROM main.cohort
+#' WHERE cohort_definition_id = 1;"
+#'
+#' renderTranslateQuerySql(connection, sql)
+#'
 #' disconnect(connection)
 #'
 #' @export

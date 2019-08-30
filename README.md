@@ -2,6 +2,7 @@ Eunomia
 =======
 
 [![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
+[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=master)](https://codecov.io/github/OHDSI/Eunomia?branch=master)
 
 Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes
 
@@ -39,10 +40,6 @@ Installation
 2. In R, use the following commands to download and install CohortMethod:
 
   ```r
-  # The development version of RSQLite is required for some SQL functions:
-  install.packages("devtools")
-  devtools::install_github("r-dbi/RSQLite")
-  
   install.packages("drat")
   drat::addRepo("OHDSI")
   install.packages("Eunomia")
@@ -67,4 +64,4 @@ Eunomia is being developed in R Studio.
 
 ### Development status
 
-Under development. Do not use.
+Ready for use

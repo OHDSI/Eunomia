@@ -19,5 +19,5 @@
 #' @docType package
 #' @name Eunomia
 #' @import DatabaseConnector
-#' @importFrom utils unzip
+#' @importFrom utils unzip read.csv write.csv
 NULL
