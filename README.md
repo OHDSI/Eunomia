@@ -4,7 +4,7 @@ Eunomia
 [![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
 [![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=master)](https://codecov.io/github/OHDSI/Eunomia?branch=master)
 
-Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](http://book.ohdsi.org).
+Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](http://book.ohdsi.org). For functions that require schema name, use 'main'.
 
 Features
 ========
@@ -23,6 +23,8 @@ connection <- connect(connectionDetails)
 querySql(connection, "SELECT COUNT(*) FROM person;")
 #  COUNT(*)
 #1     2694
+
+getTableNames(connection,databaseSchema = 'main')
 disconnect(connection)
 ```
 
