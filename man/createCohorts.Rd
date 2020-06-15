@@ -4,8 +4,12 @@
 \alias{createCohorts}
 \title{Construct cohorts}
 \usage{
-createCohorts(connectionDetails, cdmDatabaseSchema = "main",
-  cohortDatabaseSchema = "main", cohortTable = "cohort")
+createCohorts(
+  connectionDetails,
+  cdmDatabaseSchema = "main",
+  cohortDatabaseSchema = "main",
+  cohortTable = "cohort"
+)
 }
 \arguments{
 \item{connectionDetails}{The connection details to connect to the (Eunomia) database.}

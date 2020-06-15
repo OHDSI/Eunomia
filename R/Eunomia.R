@@ -1,4 +1,4 @@
-# Copyright 2019 Observational Health Data Sciences and Informatics
+# Copyright 2020 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Eunomia
-#'
-#' @docType package
-#' @name Eunomia
+#' @keywords internal
+"_PACKAGE"
+
 #' @import DatabaseConnector
 #' @importFrom utils unzip read.csv write.csv
 NULL

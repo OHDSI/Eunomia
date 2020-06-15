@@ -7,7 +7,7 @@
 getEunomiaConnectionDetails(databaseFile = tempfile(fileext = ".sqlite"))
 }
 \arguments{
-\item{databaseFile}{The path where the database file will be copied to. By default, the dataabase
+\item{databaseFile}{The path where the database file will be copied to. By default, the database
 will be copied to a temporary folder, and will be deleted at the end of the R
 session.}
 }

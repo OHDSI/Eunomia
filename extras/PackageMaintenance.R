@@ -1,4 +1,4 @@
-# Copyright 2019 Observational Health Data Sciences and Informatics
+# Copyright 2020 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -19,9 +19,11 @@
 OhdsiRTools::formatRFolder()
 OhdsiRTools::checkUsagePackage("Eunomia")
 OhdsiRTools::updateCopyrightYearFolder()
+devtools::spell_check()
 
 # Create manual -----------------------------------------------------------
-shell("rm extras/Eunomia.pdf")
+unlink("extras/Eunomia.pdf")
 shell("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
 
 pkgdown::build_site()
+OhdsiRTools::fixHadesLogo()

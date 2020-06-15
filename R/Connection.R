@@ -1,4 +1,4 @@
-# Copyright 2019 Observational Health Data Sciences and Informatics
+# Copyright 2020 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -20,7 +20,7 @@
 #' @description
 #' Creates a copy of the Eunomia database, and provides details for connecting to that copy.
 #'
-#' @param databaseFile   The path where the database file will be copied to. By default, the dataabase
+#' @param databaseFile   The path where the database file will be copied to. By default, the database
 #'                       will be copied to a temporary folder, and will be deleted at the end of the R
 #'                       session.
 #'

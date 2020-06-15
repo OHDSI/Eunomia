@@ -4,8 +4,10 @@
 \alias{exportToCsv}
 \title{Extract the Eunomia database to CSV files}
 \usage{
-exportToCsv(outputFolder = file.path(getwd(), "csv"),
-  connectionDetails = getEunomiaConnectionDetails())
+exportToCsv(
+  outputFolder = file.path(getwd(), "csv"),
+  connectionDetails = getEunomiaConnectionDetails()
+)
 }
 \arguments{
 \item{outputFolder}{A folder where the CSV files will be written.}
