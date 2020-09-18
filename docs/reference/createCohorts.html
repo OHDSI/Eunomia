@@ -73,7 +73,7 @@ WARNING: this will delete all existing cohorts in the table!" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Eunomia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -126,10 +126,10 @@ WARNING: this will delete all existing cohorts in the table!</p>
     </div>
 
     <pre class="usage"><span class='fu'>createCohorts</span>(
-  <span class='no'>connectionDetails</span>,
-  <span class='kw'>cdmDatabaseSchema</span> <span class='kw'>=</span> <span class='st'>"main"</span>,
-  <span class='kw'>cohortDatabaseSchema</span> <span class='kw'>=</span> <span class='st'>"main"</span>,
-  <span class='kw'>cohortTable</span> <span class='kw'>=</span> <span class='st'>"cohort"</span>
+  <span class='kw'>connectionDetails</span>,
+  cdmDatabaseSchema = <span class='st'>"main"</span>,
+  cohortDatabaseSchema = <span class='st'>"main"</span>,
+  cohortTable = <span class='st'>"cohort"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -159,43 +159,20 @@ will be written.</p></td>
     <p>A data frame listing all created cohorts.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>connectionDetails</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getEunomiaConnectionDetails.html'>getEunomiaConnectionDetails</a></span>()
-<span class='fu'>createCohorts</span>(<span class='no'>connectionDetails</span>)</div><div class='output co'>#&gt; Connecting using SQLite driver
-#&gt; Creating cohort: Celecoxib
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; Executing SQL took 0.0189 secs
-#&gt; Creating cohort: Diclofenac
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; Executing SQL took 0 secs
-#&gt; Creating cohort: GiBleed
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; Executing SQL took 0.0156 secs
-#&gt; Creating cohort: NSAIDs
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; Executing SQL took 0.0841 secs
-#&gt; Cohorts created in table main.cohort</div><div class='output co'>#&gt;   cohortId       name
-#&gt; 1        1  Celecoxib
-#&gt; 2        2 Diclofenac
-#&gt; 3        3    GiBleed
-#&gt; 4        4     NSAIDs
-#&gt;                                                                                        description
-#&gt; 1    A simplified cohort definition for new users of celecoxib, designed specifically for Eunomia.
-#&gt; 2    A simplified cohort definition for new users ofdiclofenac, designed specifically for Eunomia.
-#&gt; 3 A simplified cohort definition for gastrointestinal bleeding, designed specifically for Eunomia.
-#&gt; 4       A simplified cohort definition for new users of NSAIDs, designed specifically for Eunomia.
-#&gt;   count
-#&gt; 1  1844
-#&gt; 2   850
-#&gt; 3   479
-#&gt; 4  2694</div><div class='input'>
-<span class='no'>connection</span> <span class='kw'>&lt;-</span> <span class='fu'>connect</span>(<span class='no'>connectionDetails</span>)</div><div class='output co'>#&gt; Connecting using SQLite driver</div><div class='input'>
-<span class='no'>sql</span> <span class='kw'>&lt;-</span> <span class='st'>"SELECT COUNT(*)
+    <pre class="examples"><span class='kw'>connectionDetails</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEunomiaConnectionDetails.html'>getEunomiaConnectionDetails</a></span>()
+<span class='fu'>createCohorts</span>(<span class='kw'>connectionDetails</span>)
+
+<span class='kw'>connection</span> <span class='op'>&lt;-</span> <span class='fu'>connect</span>(<span class='kw'>connectionDetails</span>)
+
+<span class='kw'>sql</span> <span class='op'>&lt;-</span> <span class='st'>"SELECT COUNT(*)
 FROM main.cohort
 WHERE cohort_definition_id = 1;"</span>
 
-<span class='fu'>renderTranslateQuerySql</span>(<span class='no'>connection</span>, <span class='no'>sql</span>)</div><div class='output co'>#&gt;   COUNT(*)
-#&gt; 1     1844</div><div class='input'>
-<span class='fu'>disconnect</span>(<span class='no'>connection</span>)</div></pre>
+<span class='fu'>renderTranslateQuerySql</span>(<span class='kw'>connection</span>, <span class='kw'>sql</span>)
+
+<span class='fu'>disconnect</span>(<span class='kw'>connection</span>)
+
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -211,7 +188,7 @@ WHERE cohort_definition_id = 1;"</span>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

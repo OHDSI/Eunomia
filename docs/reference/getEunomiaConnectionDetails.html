@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Eunomia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@
     <p>Creates a copy of the Eunomia database, and provides details for connecting to that copy.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getEunomiaConnectionDetails</span>(<span class='kw'>databaseFile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".sqlite"</span>))</pre>
+    <pre class="usage"><span class='fu'>getEunomiaConnectionDetails</span>(databaseFile = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='st'>".sqlite"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,9 +141,12 @@ session.</p></td>
     <p>A ConnectionDetails object, to be used with the <code>DatabaseConnector</code> package.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>connectionDetails</span> <span class='kw'>&lt;-</span> <span class='fu'>getEunomiaConnectionDetails</span>()
-<span class='no'>connection</span> <span class='kw'>&lt;-</span> <span class='fu'>connect</span>(<span class='no'>connectionDetails</span>)</div><div class='output co'>#&gt; Connecting using SQLite driver</div><div class='input'><span class='fu'>querySql</span>(<span class='no'>connection</span>, <span class='st'>"SELECT COUNT(*) FROM person;"</span>)</div><div class='output co'>#&gt;   COUNT(*)
-#&gt; 1     2694</div><div class='input'><span class='fu'>disconnect</span>(<span class='no'>connection</span>)</div></pre>
+    <pre class="examples"><span class='kw'>connectionDetails</span> <span class='op'>&lt;-</span> <span class='fu'>getEunomiaConnectionDetails</span>()
+<span class='kw'>connection</span> <span class='op'>&lt;-</span> <span class='fu'>connect</span>(<span class='kw'>connectionDetails</span>)
+<span class='fu'>querySql</span>(<span class='kw'>connection</span>, <span class='st'>"SELECT COUNT(*) FROM person;"</span>)
+<span class='fu'>disconnect</span>(<span class='kw'>connection</span>)
+
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -159,7 +162,7 @@ session.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
