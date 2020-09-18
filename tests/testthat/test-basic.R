@@ -25,7 +25,7 @@ test_that("Cohort construction", {
   sql <- "SELECT COUNT(*)
   FROM main.cohort
   WHERE cohort_definition_id = 1;"
-  cohortCount <- renderTranslateQuerySql(connection, sql)
+  cohortCount <- DatabaseConnector::renderTranslateQuerySql(connection, sql)
   expect_gt(cohortCount, 0)
 })
 

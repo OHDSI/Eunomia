@@ -6,7 +6,7 @@
 \alias{Eunomia-package}
 \title{Eunomia: A Standard Dataset in the OMOP Common Data Model}
 \description{
-A standard dataset in the `OMOP` (`Observational Medical Outcomes Partnership`) `Common Data Model`, for testing and demonstration purposes.
+A standard dataset in the 'OMOP' ('Observational Medical Outcomes Partnership') 'Common Data Model', for testing and demonstration purposes.
 }
 \seealso{
 Useful links:
