@@ -8,7 +8,7 @@ Eunomia is part of [HADES](https://ohdsi.github.io/Hades).
 
 Introduction
 ============
-Eunomia is a standard dataset in the Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](http://book.ohdsi.org). For functions that require schema name, use 'main'.
+Eunomia is a standard dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](http://book.ohdsi.org). For functions that require schema name, use 'main'.
 
 Features
 ========

@@ -1,5 +1,3 @@
-options(fftempdir = "c:/fftemp")
-
 connectionDetails <- Eunomia::getEunomiaConnectionDetails("c:/temp/cdm.sqlite")
 cdmDatabaseSchema <- "main"
 cohortDatabaseSchema <- "main"

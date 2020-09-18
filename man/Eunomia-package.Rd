@@ -4,9 +4,9 @@
 \name{Eunomia-package}
 \alias{Eunomia}
 \alias{Eunomia-package}
-\title{Eunomia: A Standard Common Data Model Dataset}
+\title{Eunomia: A Standard Dataset in the OMOP Common Data Model}
 \description{
-A standard CDM dataset for testing and demonstration purposes.
+A standard dataset in the `OMOP` (`Observational Medical Outcomes Partnership`) `Common Data Model`, for testing and demonstration purposes.
 }
 \seealso{
 Useful links:
@@ -22,6 +22,11 @@ Useful links:
 Authors:
 \itemize{
   \item Frank DeFalco
+}
+
+Other contributors:
+\itemize{
+  \item Observational Health Data Science and Informatics [copyright holder]
 }
 
 }
