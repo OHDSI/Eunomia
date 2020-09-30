@@ -1,3 +1,5 @@
+# Some random code for testing Eunomia with various OHDSI tools
+
 connectionDetails <- Eunomia::getEunomiaConnectionDetails("c:/temp/cdm.sqlite")
 cdmDatabaseSchema <- "main"
 cohortDatabaseSchema <- "main"
