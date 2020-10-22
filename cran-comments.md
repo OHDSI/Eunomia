@@ -1,3 +1,9 @@
+Updated Date to current Date.
+
+This data package will not be updated frequently.  It is similar to mtcars or iris. The sample data is provided in a standard data format that enables uniform storage of observational health care data, and is widely used for health care analytics. The data does not need to be updated frequently, it has remained static for almost two years.
+
+---
+
 We removed the quotes from OMOP, as it is not a package name but a project (and open source community) name.
 
 We have added more details about the package functionality in your Description text. No literature references are relevant at this point in time.
