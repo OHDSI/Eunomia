@@ -25,5 +25,13 @@ devtools::spell_check()
 unlink("extras/Eunomia.pdf")
 shell("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
 
-pkgdown::build_site()
+pkgdown::build_site(examples = FALSE)
 OhdsiRTools::fixHadesLogo()
+
+# Release package:
+
+devtools::check_win_devel()
+
+devtools::check_rhub()
+
+devtools::release()

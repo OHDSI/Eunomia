@@ -18,5 +18,5 @@
 "_PACKAGE"
 
 #' @import DatabaseConnector
-#' @importFrom utils unzip read.csv write.csv
+#' @importFrom utils unzip read.csv write.csv untar
 NULL
