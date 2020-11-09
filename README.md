@@ -3,6 +3,8 @@ Eunomia
 
 [![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=master)](https://travis-ci.org/OHDSI/Eunomia)
 [![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=master)](https://codecov.io/github/OHDSI/Eunomia?branch=master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/Eunomia)](https://cran.r-project.org/package=Eunomia)
+[![CRAN_Status_Badge](http://cranlogs.r-pkg.org/badges/Eunomia)](https://cran.r-project.org/package=Eunomia)
 
 Eunomia is part of [HADES](https://ohdsi.github.io/Hades/).
 
