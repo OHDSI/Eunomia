@@ -33,3 +33,8 @@ test_that("Disconnect", {
   DatabaseConnector::disconnect(connection)
   expect_false(DatabaseConnector::dbIsValid(connection))
 })
+
+test_that("exportToCsv works", {
+  outputFolder = file.path(tempdir(), "csv")
+  expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
+})
