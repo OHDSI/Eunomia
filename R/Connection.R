@@ -41,6 +41,6 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
   close(file)
   # unzip(zipfile = system.file("zip", "cdm.zip", package = "Eunomia"), exdir = extractFolder)
   file.rename(from = file.path(extractFolder, "cdm.sqlite"), to = databaseFile)
-  details <- DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = databaseFile)
+  details <- DatabaseConnector::createConnectionDetails(dbms = "sqlite extended", server = databaseFile)
   return(details)
 }
