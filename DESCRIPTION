@@ -17,12 +17,12 @@ Depends:
   DatabaseConnector (>= 5.0.0)
 Imports:
   SqlRender (>= 1.8.0),
-  RSQLite (> 2.2.7)
+  RSQLite (>= 2.2.7)
 Suggests:
   testthat
 Remotes:
-  ohdsi/DatabaseConnector,
-  ohdsi/SqlRender
+  ohdsi/DatabaseConnector@develop,
+  ohdsi/SqlRender@develop
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
