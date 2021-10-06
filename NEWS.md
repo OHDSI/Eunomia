@@ -1,3 +1,9 @@
+Eunomia 1.0.2
+=============
+
+- Ensure proper Java version is available.
+
+
 Eunomia 1.0.1
 =============
 

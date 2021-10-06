@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -93,11 +93,11 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://ohdsi.github.io/Hades"><img src='https://ohdsi.github.io/Hades/images/hadesMini.png' width=80 height=17 style='vertical-align: top;'></a>
+  <a href="https://ohdsi.github.io/Hades">hadesLogo</a>
 </li>
 <li>
   <a href="https://github.com/OHDSI/Eunomia/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,71 +144,15 @@ database.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><span class='co'># \donttest{</span>
 <span class='co'># For this example we'll create a temp folder:</span>
 <span class='va'>folder</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>folder</span><span class='op'>)</span>
 
 <span class='fu'>exportToCsv</span><span class='op'>(</span><span class='va'>folder</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Connecting using SQLite driver
-#&gt; Saving table CARE_SITE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CARE_SITE.csv
-#&gt; Saving table CDM_SOURCE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CDM_SOURCE.csv
-#&gt; Saving table COHORT to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/COHORT.csv
-#&gt; Saving table COHORT_ATTRIBUTE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/COHORT_ATTRIBUTE.csv
-#&gt; Saving table CONCEPT to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONCEPT.csv
-#&gt; Saving table CONCEPT_ANCESTOR to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONCEPT_ANCESTOR.csv
-#&gt; Saving table CONCEPT_CLASS to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONCEPT_CLASS.csv
-#&gt; Saving table CONCEPT_RELATIONSHIP to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONCEPT_RELATIONSHIP.csv
-#&gt; Saving table CONCEPT_SYNONYM to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONCEPT_SYNONYM.csv
-#&gt; Saving table CONDITION_ERA to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONDITION_ERA.csv
-#&gt; Saving table CONDITION_OCCURRENCE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/CONDITION_OCCURRENCE.csv
-#&gt; Saving table COST to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/COST.csv
-#&gt; Saving table DEATH to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DEATH.csv
-#&gt; Saving table DEVICE_EXPOSURE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DEVICE_EXPOSURE.csv
-#&gt; Saving table DOMAIN to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DOMAIN.csv
-#&gt; Saving table DOSE_ERA to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DOSE_ERA.csv
-#&gt; Saving table DRUG_ERA to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DRUG_ERA.csv
-#&gt; Saving table DRUG_EXPOSURE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DRUG_EXPOSURE.csv
-#&gt; Saving table DRUG_STRENGTH to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/DRUG_STRENGTH.csv
-#&gt; Saving table FACT_RELATIONSHIP to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/FACT_RELATIONSHIP.csv
-#&gt; Saving table LOCATION to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/LOCATION.csv
-#&gt; Saving table MEASUREMENT to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/MEASUREMENT.csv
-#&gt; Saving table METADATA to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/METADATA.csv
-#&gt; Saving table NOTE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/NOTE.csv
-#&gt; Saving table NOTE_NLP to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/NOTE_NLP.csv
-#&gt; Saving table OBSERVATION to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/OBSERVATION.csv
-#&gt; Saving table OBSERVATION_PERIOD to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/OBSERVATION_PERIOD.csv
-#&gt; Saving table PAYER_PLAN_PERIOD to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/PAYER_PLAN_PERIOD.csv
-#&gt; Saving table PERSON to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/PERSON.csv
-#&gt; Saving table PROCEDURE_OCCURRENCE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/PROCEDURE_OCCURRENCE.csv
-#&gt; Saving table PROVIDER to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/PROVIDER.csv
-#&gt; Saving table RELATIONSHIP to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/RELATIONSHIP.csv
-#&gt; Saving table SOURCE_TO_CONCEPT_MAP to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/SOURCE_TO_CONCEPT_MAP.csv
-#&gt; Saving table SPECIMEN to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/SPECIMEN.csv
-#&gt; Saving table VISIT_DETAIL to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/VISIT_DETAIL.csv
-#&gt; Saving table VISIT_OCCURRENCE to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/VISIT_OCCURRENCE.csv
-#&gt; Saving table VOCABULARY to file D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede/VOCABULARY.csv
-#&gt; Done writing CSV files to D:\Users\fdefalco\AppData\Local\Temp\1\RtmpsXntZB\file235c613b4ede.</div><div class='input'>
+
 <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span><span class='va'>folder</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "CARE_SITE.csv"             "CDM_SOURCE.csv"           
-#&gt;  [3] "COHORT.csv"                "COHORT_ATTRIBUTE.csv"     
-#&gt;  [5] "CONCEPT.csv"               "CONCEPT_ANCESTOR.csv"     
-#&gt;  [7] "CONCEPT_CLASS.csv"         "CONCEPT_RELATIONSHIP.csv" 
-#&gt;  [9] "CONCEPT_SYNONYM.csv"       "CONDITION_ERA.csv"        
-#&gt; [11] "CONDITION_OCCURRENCE.csv"  "COST.csv"                 
-#&gt; [13] "DEATH.csv"                 "DEVICE_EXPOSURE.csv"      
-#&gt; [15] "DOMAIN.csv"                "DOSE_ERA.csv"             
-#&gt; [17] "DRUG_ERA.csv"              "DRUG_EXPOSURE.csv"        
-#&gt; [19] "DRUG_STRENGTH.csv"         "FACT_RELATIONSHIP.csv"    
-#&gt; [21] "LOCATION.csv"              "MEASUREMENT.csv"          
-#&gt; [23] "METADATA.csv"              "NOTE.csv"                 
-#&gt; [25] "NOTE_NLP.csv"              "OBSERVATION.csv"          
-#&gt; [27] "OBSERVATION_PERIOD.csv"    "PAYER_PLAN_PERIOD.csv"    
-#&gt; [29] "PERSON.csv"                "PROCEDURE_OCCURRENCE.csv" 
-#&gt; [31] "PROVIDER.csv"              "RELATIONSHIP.csv"         
-#&gt; [33] "SOURCE_TO_CONCEPT_MAP.csv" "SPECIMEN.csv"             
-#&gt; [35] "VISIT_DETAIL.csv"          "VISIT_OCCURRENCE.csv"     
-#&gt; [37] "VOCABULARY.csv"           </div><div class='input'>
+
  <span class='co'>#  [1] "CARE_SITE.csv"             "CDM_SOURCE.csv"            "COHORT.csv"</span>
  <span class='co'>#  [4] "COHORT_ATTRIBUTE.csv"      "CONCEPT.csv"               "CONCEPT_ANCESTOR.csv"</span>
  <span class='co'>#  [7] "CONCEPT_CLASS.csv"         "CONCEPT_RELATIONSHIP.csv"  "CONCEPT_SYNONYM.csv"</span>
@@ -227,7 +171,7 @@ database.</p></td>
  <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>folder</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
  <span class='co'># }</span>
 
-</div></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

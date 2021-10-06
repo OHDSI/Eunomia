@@ -1,4 +1,4 @@
-# Copyright 2020 Observational Health Data Sciences and Informatics
+# Copyright 2021 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -18,8 +18,8 @@
 #' Construct cohorts
 #'
 #' @description
-#' Creates a set of predefined cohorts in a cohort table.
-#' WARNING: this will delete all existing cohorts in the table!
+#' Creates a set of predefined cohorts in a cohort table. WARNING: this will delete all existing
+#' cohorts in the table!
 #'
 #' @param connectionDetails      The connection details to connect to the (Eunomia) database.
 #' @param cdmDatabaseSchema      The name of the database schema holding the CDM data.

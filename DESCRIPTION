@@ -1,8 +1,8 @@
 Package: Eunomia
 Type: Package
 Title: A Standard Dataset in the OMOP Common Data Model
-Version: 1.0.1
-Date: 2020-10-21
+Version: 1.0.2
+Date: 2021-10-06
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
