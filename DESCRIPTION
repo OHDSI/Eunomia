@@ -17,7 +17,8 @@ Depends:
   DatabaseConnector (>= 2.2.0)
 Imports:
   SqlRender,
-  RSQLite (> 2.1.1)
+  RSQLite (> 2.1.1),
+  rJava
 Suggests:
   testthat
 Encoding: UTF-8
