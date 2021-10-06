@@ -35,7 +35,7 @@ test_that("Disconnect", {
 })
 
 test_that("exportToCsv works", {
-  outputFolder = file.path(tempdir(), "csv")
+  outputFolder <- file.path(tempdir(), "csv")
   expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
 })
 
