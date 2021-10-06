@@ -38,3 +38,7 @@ test_that("exportToCsv works", {
   outputFolder <- file.path(tempdir(), "csv")
   expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
 })
+
+test_that("System has Java 8", {
+  expect_true(supportsJava8())
+})

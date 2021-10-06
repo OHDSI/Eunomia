@@ -20,7 +20,8 @@ Imports:
   RSQLite (> 2.1.1),
   rJava
 Suggests:
-  testthat
+  testthat,
+  rcmdcheck
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
