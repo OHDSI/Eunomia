@@ -1,3 +1,7 @@
+Resolved check errors.
+
+---
+
 Updated Date to current Date.
 
 This data package will not be updated frequently.  It is similar to mtcars or iris. The sample data is provided in a standard data format that enables uniform storage of observational health care data, and is widely used for health care analytics. The data does not need to be updated frequently, it has remained static for almost two years.

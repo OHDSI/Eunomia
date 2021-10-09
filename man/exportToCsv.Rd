@@ -28,22 +28,18 @@ exportToCsv(folder)
 
 list.files(folder)
 
- #  [1] "CARE_SITE.csv"             "CDM_SOURCE.csv"            "COHORT.csv"
- #  [4] "COHORT_ATTRIBUTE.csv"      "CONCEPT.csv"               "CONCEPT_ANCESTOR.csv"
- #  [7] "CONCEPT_CLASS.csv"         "CONCEPT_RELATIONSHIP.csv"  "CONCEPT_SYNONYM.csv"
- # [10] "CONDITION_ERA.csv"         "CONDITION_OCCURRENCE.csv"  "COST.csv"
- # [13] "DEATH.csv"                 "DEVICE_EXPOSURE.csv"       "DOMAIN.csv"
- # [16] "DOSE_ERA.csv"              "DRUG_ERA.csv"              "DRUG_EXPOSURE.csv"
- # [19] "DRUG_STRENGTH.csv"         "FACT_RELATIONSHIP.csv"     "LOCATION.csv"
- # [22] "MEASUREMENT.csv"           "METADATA.csv"              "NOTE.csv"
- # [25] "NOTE_NLP.csv"              "OBSERVATION.csv"           "OBSERVATION_PERIOD.csv"
- # [28] "PAYER_PLAN_PERIOD.csv"     "PERSON.csv"                "PROCEDURE_OCCURRENCE.csv"
- # [31] "PROVIDER.csv"              "RELATIONSHIP.csv"          "SOURCE_TO_CONCEPT_MAP.csv"
- # [34] "SPECIMEN.csv"              "VISIT_DETAIL.csv"          "VISIT_OCCURRENCE.csv"
- # [37] "VOCABULARY.csv"
+# [1] 'CARE_SITE.csv' 'CDM_SOURCE.csv' 'COHORT.csv' [4] 'COHORT_ATTRIBUTE.csv' 'CONCEPT.csv'
+# 'CONCEPT_ANCESTOR.csv' [7] 'CONCEPT_CLASS.csv' 'CONCEPT_RELATIONSHIP.csv' 'CONCEPT_SYNONYM.csv'
+# [10] 'CONDITION_ERA.csv' 'CONDITION_OCCURRENCE.csv' 'COST.csv' [13] 'DEATH.csv'
+# 'DEVICE_EXPOSURE.csv' 'DOMAIN.csv' [16] 'DOSE_ERA.csv' 'DRUG_ERA.csv' 'DRUG_EXPOSURE.csv' [19]
+# 'DRUG_STRENGTH.csv' 'FACT_RELATIONSHIP.csv' 'LOCATION.csv' [22] 'MEASUREMENT.csv' 'METADATA.csv'
+# 'NOTE.csv' [25] 'NOTE_NLP.csv' 'OBSERVATION.csv' 'OBSERVATION_PERIOD.csv' [28]
+# 'PAYER_PLAN_PERIOD.csv' 'PERSON.csv' 'PROCEDURE_OCCURRENCE.csv' [31] 'PROVIDER.csv'
+# 'RELATIONSHIP.csv' 'SOURCE_TO_CONCEPT_MAP.csv' [34] 'SPECIMEN.csv' 'VISIT_DETAIL.csv'
+# 'VISIT_OCCURRENCE.csv' [37] 'VOCABULARY.csv'
 
- # Cleaning up the temp folder used in this example:
- unlink(folder, recursive = TRUE)
- }
+# Cleaning up the temp folder used in this example:
+unlink(folder, recursive = TRUE)
+}
 
 }
