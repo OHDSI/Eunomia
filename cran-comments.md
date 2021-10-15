@@ -1,3 +1,7 @@
+Removed LazyData setting.
+
+---
+
 Resolved check errors.
 
 ---
