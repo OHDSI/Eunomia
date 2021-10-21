@@ -9,8 +9,9 @@
 #' Returns TRUE if JVM supports Java >= 8.
 #'
 #' @examples
+#' \dontrun{
 #' supportsJava8()
-#'
+#' }
 #' @export
 supportsJava8 <- function() {
   # return(FALSE)
