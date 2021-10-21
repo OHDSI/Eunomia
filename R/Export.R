@@ -23,7 +23,7 @@
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # For this example we'll create a temp folder:
 #' folder <- tempfile()
 #' dir.create(folder)

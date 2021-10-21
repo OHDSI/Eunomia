@@ -31,6 +31,7 @@
 #' A data frame listing all created cohorts.
 #'
 #' @examples
+#' \dontrun{
 #' connectionDetails <- getEunomiaConnectionDetails()
 #' createCohorts(connectionDetails)
 #'
@@ -43,7 +44,7 @@
 #' renderTranslateQuerySql(connection, sql)
 #'
 #' disconnect(connection)
-#'
+#'}
 #' @export
 createCohorts <- function(connectionDetails,
                           cdmDatabaseSchema = "main",
