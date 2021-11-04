@@ -12,7 +12,3 @@ Returns TRUE if JVM supports Java >= 8.
 \description{
 Tests Java virtual machine (JVM) java.version system property to check if version >= 8.
 }
-\examples{
-supportsJava8()
-
-}

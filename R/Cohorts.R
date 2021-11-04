@@ -30,21 +30,6 @@
 #' @return
 #' A data frame listing all created cohorts.
 #'
-#' @examples
-#' \dontrun{
-#' connectionDetails <- getEunomiaConnectionDetails()
-#' createCohorts(connectionDetails)
-#'
-#' connection <- connect(connectionDetails)
-#'
-#' sql <- "SELECT COUNT(*)
-#' FROM main.cohort
-#' WHERE cohort_definition_id = 1;"
-#'
-#' renderTranslateQuerySql(connection, sql)
-#'
-#' disconnect(connection)
-#'}
 #' @export
 createCohorts <- function(connectionDetails,
                           cdmDatabaseSchema = "main",
