@@ -16,7 +16,7 @@ BugReports: https://github.com/OHDSI/Eunomia/issues
 Depends:
   DatabaseConnector (>= 2.2.0)
 Imports:
-  SqlRender,♪
+  SqlRender,
   RSQLite (> 2.1.1),
   rJava
 Suggests:
