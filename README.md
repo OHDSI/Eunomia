@@ -2,7 +2,7 @@ Eunomia
 =======
 
 [![Build Status](https://github.com/OHDSI/Eunomia/workflows/R-CMD-check/badge.svg)](https://github.com/OHDSI/Eunomia/actions?query=workflow%3AR-CMD-check)
-[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=master)](https://codecov.io/github/OHDSI/Eunomia?branch=master)
+[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=main)](https://codecov.io/github/OHDSI/Eunomia?branch=main)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/Eunomia)](https://cran.r-project.org/package=Eunomia)
 [![CRAN_Status_Badge](http://cranlogs.r-pkg.org/badges/Eunomia)](https://cran.r-project.org/package=Eunomia)
 
@@ -60,7 +60,7 @@ User Documentation
 Documentation can be found on the [package website](https://ohdsi.github.io/Eunomia/).
 
 PDF versions of the documentation are also available:
-* Package manual: [Eunomia.pdf](https://raw.githubusercontent.com/OHDSI/Eunomia/master/extras/Eunomia.pdf)
+* Package manual: [Eunomia.pdf](https://raw.githubusercontent.com/OHDSI/Eunomia/main/extras/Eunomia.pdf)
 
 Support
 =======
