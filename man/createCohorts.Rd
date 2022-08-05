@@ -25,21 +25,6 @@ will be written.}
 A data frame listing all created cohorts.
 }
 \description{
-Creates a set of predefined cohorts in a cohort table.
-WARNING: this will delete all existing cohorts in the table!
-}
-\examples{
-connectionDetails <- getEunomiaConnectionDetails()
-createCohorts(connectionDetails)
-
-connection <- connect(connectionDetails)
-
-sql <- "SELECT COUNT(*)
-FROM main.cohort
-WHERE cohort_definition_id = 1;"
-
-renderTranslateQuerySql(connection, sql)
-
-disconnect(connection)
-
+Creates a set of predefined cohorts in a cohort table. WARNING: this will delete all existing
+cohorts in the table!
 }

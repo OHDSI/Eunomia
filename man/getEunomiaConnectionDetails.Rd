@@ -17,10 +17,3 @@ A ConnectionDetails object, to be used with the \code{DatabaseConnector} package
 \description{
 Creates a copy of the Eunomia database, and provides details for connecting to that copy.
 }
-\examples{
-connectionDetails <- getEunomiaConnectionDetails()
-connection <- connect(connectionDetails)
-querySql(connection, "SELECT COUNT(*) FROM person;")
-disconnect(connection)
-
-}
