@@ -40,35 +40,33 @@ createCohorts <- function(connectionDetails,
     on.exit(DatabaseConnector::disconnect(connection))
 
     # Create study cohort table structure:
-    sql <-
-      SqlRender::loadRenderTranslateSql(
-        sqlFilename = "CreateCohortTable.sql",
-        packageName = "Eunomia",
-        dbms = connectionDetails$dbms,
-        cohort_database_schema = cohortDatabaseSchema,
-        cohort_table = cohortTable
-      )
+    pathToSql <- system.file(file.path("sql", "sql_server", "CreateCohortTable.sql"),
+                             package = "Eunomia", mustWork = TRUE)
+    sql <- readChar(pathToSql, file.info(pathToSql)$size)
+    sql <- SqlRender::render(sql,
+                             cohort_database_schema = cohortDatabaseSchema,
+                             cohort_table = cohortTable)
+    sql <- SqlRender::translate(sql, connectionDetails$dbms)
+
     DatabaseConnector::executeSql(connection,
                                   sql,
                                   progressBar = FALSE,
                                   reportOverallTime = FALSE)
 
     # Instantiate cohorts:
-    pathToCsv <-
-      system.file("settings", "CohortsToCreate.csv", package = "Eunomia")
+    pathToCsv <- system.file("settings", "CohortsToCreate.csv", package = "Eunomia")
     cohortsToCreate <- read.csv(pathToCsv)
     for (i in 1:nrow(cohortsToCreate)) {
       writeLines(paste("Creating cohort:", cohortsToCreate$name[i]))
-      sql <-
-        SqlRender::loadRenderTranslateSql(
-          sqlFilename = paste0(cohortsToCreate$name[i], ".sql"),
-          packageName = "Eunomia",
-          dbms = connectionDetails$dbms,
-          cdm_database_schema = cdmDatabaseSchema,
-          cohort_database_schema = cohortDatabaseSchema,
-          cohort_table = cohortTable,
-          cohort_definition_id = cohortsToCreate$cohortId[i]
-        )
+      pathToSql <- system.file(file.path("sql", "sql_server", paste0(cohortsToCreate$name[i], ".sql")),
+                               package = "Eunomia", mustWork = TRUE)
+      sql <- readChar(pathToSql, file.info(pathToSql)$size)
+      sql <- SqlRender::render(sql,
+                               cdm_database_schema = cdmDatabaseSchema,
+                               cohort_database_schema = cohortDatabaseSchema,
+                               cohort_table = cohortTable,
+                               cohort_definition_id = cohortsToCreate$cohortId[i])
+      sql <- SqlRender::translate(sql, connectionDetails$dbms)
       DatabaseConnector::executeSql(connection, sql)
     }
 
