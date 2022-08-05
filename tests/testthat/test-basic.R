@@ -23,13 +23,19 @@ if (Eunomia::supportsJava8()) {
   })
 
   test_that("Cohort construction", {
-    createCohorts(connectionDetails)
+    capture.output(createCohorts(connectionDetails))
+
     sql <- "SELECT COUNT(*)
-  FROM main.cohort
-  WHERE cohort_definition_id = 1;"
-    cohortCount <-
-      DatabaseConnector::renderTranslateQuerySql(connection, sql)
+            FROM main.cohort
+            WHERE cohort_definition_id = 1;"
+    cohortCount <- DatabaseConnector::renderTranslateQuerySql(connection, sql)
     expect_gt(cohortCount, 0)
+
+    cohort <- DatabaseConnector::dbGetQuery(connection, "SELECT * FROM main.cohort;")
+    expect_false(any(is.na(cohort$cohort_definition_id)))
+    expect_false(any(is.na(cohort$subject_id)))
+    expect_false(any(is.na(cohort$cohort_start_date)))
+    expect_false(any(is.na(cohort$cohort_end_date)))
   })
 
   test_that("Disconnect", {
@@ -41,4 +47,7 @@ if (Eunomia::supportsJava8()) {
     outputFolder <- file.path(tempdir(), "csv")
     expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
   })
+
 }
+
+
