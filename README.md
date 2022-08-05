@@ -50,8 +50,6 @@ Installation
 2. In R, use the following commands to download and install Eunomia:
 
   ```r
-  install.packages("drat")
-  drat::addRepo("OHDSI")
   install.packages("Eunomia")
   ```
 

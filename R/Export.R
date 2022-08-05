@@ -34,7 +34,7 @@ exportToCsv <- function(outputFolder = file.path(getwd(), "csv"),
     fileName <- file.path(outputFolder, sprintf("%s.csv", table))
     writeLines(sprintf("Saving table %s to file %s", table, fileName))
     data <- DatabaseConnector::renderTranslateQuerySql(conn, "SELECT * FROM @table;", table = table)
-    write.csv(data, fileName, row.names = FALSE, na = "")
+    write_csv(data, fileName, na = "")
     return(NULL)
   }
   lapply(tables, saveCsv)

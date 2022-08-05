@@ -19,4 +19,5 @@
 
 #' @import DatabaseConnector
 #' @importFrom utils unzip read.csv write.csv untar
+#' @importFrom readr write_csv
 NULL

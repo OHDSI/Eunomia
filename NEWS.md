@@ -1,8 +1,9 @@
 Eunomia 1.0.2
 =============
 
-- Ensure proper Java version is available.
-
+Changes
+- switch to readr::write_csv for proper concept_id handling
+- added gender concepts to concept table
 
 Eunomia 1.0.1
 =============
