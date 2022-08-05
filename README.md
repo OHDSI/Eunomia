@@ -1,7 +1,7 @@
 Eunomia
 =======
 
-[![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=main)](https://travis-ci.org/OHDSI/Eunomia)
+[![Build Status](https://github.com/OHDSI/Eunomia/workflows/R-CMD-check/badge.svg)](https://github.com/OHDSI/Eunomia/actions?query=workflow%3AR-CMD-check)
 [![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=main)](https://codecov.io/github/OHDSI/Eunomia?branch=main)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/Eunomia)](https://cran.r-project.org/package=Eunomia)
 [![CRAN_Status_Badge](http://cranlogs.r-pkg.org/badges/Eunomia)](https://cran.r-project.org/package=Eunomia)
@@ -36,11 +36,11 @@ disconnect(connection)
 
 Technology
 ==========
-Eunomia is an R package containing a SQLite database. 
+Eunomia is an R package containing a SQLite database.
 
 System Requirements
 ===================
-Requires R. Some of the packages required by Eunomia require Java. 
+Requires R. Some of the packages required by Eunomia require Java.
 
 Installation
 ============
@@ -52,7 +52,7 @@ Installation
   ```r
   install.packages("Eunomia")
   ```
-  
+
 User Documentation
 ==================
 Documentation can be found on the [package website](https://ohdsi.github.io/Eunomia/).

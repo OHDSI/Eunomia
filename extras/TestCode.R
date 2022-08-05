@@ -217,9 +217,9 @@ renderTranslateExecuteSql(connection = connection,
 # Target: NSAID new use
 sql <- "
 INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id,
-                                                   subject_id,
-                                                   cohort_start_date,
-                                                   cohort_end_date)
+                           subject_id,
+                           cohort_start_date,
+                           cohort_end_date)
 SELECT 1 AS cohort_definition_id,
   person_id AS subject_id,
   MIN(drug_exposure_start_date) AS cohort_start_date,
@@ -238,9 +238,9 @@ renderTranslateExecuteSql(connection = connection,
 # Outcome: GI Bleed
 sql <- "
 INSERT INTO @cohort_database_schema.@cohort_table (cohort_definition_id,
-                                                   subject_id,
-                                                   cohort_start_date,
-                                                   cohort_end_date)
+                           subject_id,
+                           cohort_start_date,
+                           cohort_end_date)
 SELECT 2 AS cohort_definition_id,
   person_id AS subject_id,
   MIN(condition_start_date) AS cohort_start_date,

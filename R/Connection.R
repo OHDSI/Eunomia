@@ -1,4 +1,4 @@
-# Copyright 2020 Observational Health Data Sciences and Informatics
+# Copyright 2021 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -26,12 +26,6 @@
 #'
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
-#'
-#' @examples
-#' connectionDetails <- getEunomiaConnectionDetails()
-#' connection <- connect(connectionDetails)
-#' querySql(connection, "SELECT COUNT(*) FROM person;")
-#' disconnect(connection)
 #'
 #' @export
 getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite")) {
