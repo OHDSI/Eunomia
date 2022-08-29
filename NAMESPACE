@@ -3,6 +3,7 @@
 export(createCohorts)
 export(exportToCsv)
 export(getEunomiaConnectionDetails)
+export(listCdmSamples)
 import(DatabaseConnector)
 importFrom(readr,write_csv)
 importFrom(utils,read.csv)
