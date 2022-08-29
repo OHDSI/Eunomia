@@ -20,6 +20,8 @@
 #' @description
 #' Creates a copy of the Eunomia database, and provides details for connecting to that copy.
 #'
+#' @param cdmName  The name of CDM formatted data sample that has been added to the package
+#'
 #' @param databaseFile   The path where the database file will be copied to. By default, the database
 #'                       will be copied to a temporary folder, and will be deleted at the end of the R
 #'                       session.
@@ -34,9 +36,19 @@
 #' disconnect(connection)
 #'
 #' @export
-getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite")) {
+getEunomiaConnectionDetails <- function(cdmName = 'cdm', databaseFile = tempfile(fileext = ".sqlite")) {
+  cdms <- read.csv(system.file("csv", "cdmSamples.csv", package = "Eunomia"))[,'cdm_name']
+  if (!(cdmName %in% cdms)) {
+    abort(paste0(
+      "Cannot find '",
+      cdmName,
+      "' in existing cdm samples '"
+    ))
+  }
   extractFolder <- tempdir()
-  file <- xzfile(system.file("sqlite", "cdm.tar.xz", package = "Eunomia"), open = "rb")
+  download.file(paste0('https://github.com/Tsemharb/Eunomia/blob/multiple_cdm/extras/cdm/', cdmName, '.tar.xz?raw=true'),
+                        file.path(extractFolder, paste0(cdmName, '.tar.xz')), mode = "wb")
+  file <- xzfile(file.path(extractFolder, paste0(cdmName, '.tar.xz')), open = "rb")
   untar(file, exdir = extractFolder)
   close(file)
   file.rename(from = file.path(extractFolder, "cdm.sqlite"), to = databaseFile)

@@ -4,9 +4,14 @@
 \alias{getEunomiaConnectionDetails}
 \title{Get Eunomia Connection Details}
 \usage{
-getEunomiaConnectionDetails(databaseFile = tempfile(fileext = ".sqlite"))
+getEunomiaConnectionDetails(
+  cdmName = "cdm",
+  databaseFile = tempfile(fileext = ".sqlite")
+)
 }
 \arguments{
+\item{cdmName}{The name of CDM formatted data sample that has been added to the package}
+
 \item{databaseFile}{The path where the database file will be copied to. By default, the database
 will be copied to a temporary folder, and will be deleted at the end of the R
 session.}

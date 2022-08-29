@@ -18,6 +18,7 @@
 "_PACKAGE"
 
 #' @import DatabaseConnector
-#' @importFrom utils unzip read.csv write.csv untar
+#' @importFrom utils unzip read.csv write.csv untar download.file
 #' @importFrom readr write_csv
+#' @importFrom rlang abort
 NULL
