@@ -1,35 +1,53 @@
-library(testthat)
-library(Eunomia)
+if (Eunomia::supportsJava8()) {
+  library(testthat)
+  library(Eunomia)
 
-connectionDetails <- getEunomiaConnectionDetails()
+  connectionDetails <- getEunomiaConnectionDetails()
 
-test_that("Get connection details", {
-  expect_s3_class(connectionDetails, "connectionDetails")
-})
+  test_that("Get connection details", {
+    expect_s3_class(connectionDetails, "connectionDetails")
+  })
 
-test_that("Connect", {
+  test_that("Connect", {
+    connection <- DatabaseConnector::connect(connectionDetails)
+    expect_s4_class(connection, "DatabaseConnectorDbiConnection")
+    DatabaseConnector::disconnect(connection)
+  })
+
   connection <- DatabaseConnector::connect(connectionDetails)
-  expect_s4_class(connection, "DatabaseConnectorDbiConnection")
-  DatabaseConnector::disconnect(connection)
-})
 
-connection <- DatabaseConnector::connect(connectionDetails)
+  test_that("Query", {
+    personCount <-
+      DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
+    expect_gt(personCount, 0)
+  })
 
-test_that("Query", {
-  personCount <- DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
-  expect_gt(personCount, 0)
-})
+  test_that("Cohort construction", {
+    capture.output(createCohorts(connectionDetails))
 
-test_that("Cohort construction", {
-  createCohorts(connectionDetails)
-  sql <- "SELECT COUNT(*)
-  FROM main.cohort
-  WHERE cohort_definition_id = 1;"
-  cohortCount <- DatabaseConnector::renderTranslateQuerySql(connection, sql)
-  expect_gt(cohortCount, 0)
-})
+    sql <- "SELECT COUNT(*)
+            FROM main.cohort
+            WHERE cohort_definition_id = 1;"
+    cohortCount <- DatabaseConnector::renderTranslateQuerySql(connection, sql)
+    expect_gt(cohortCount, 0)
 
-test_that("Disconnect", {
-  DatabaseConnector::disconnect(connection)
-  expect_false(DatabaseConnector::dbIsValid(connection))
-})
+    cohort <- DatabaseConnector::dbGetQuery(connection, "SELECT * FROM main.cohort;")
+    expect_false(any(is.na(cohort$cohort_definition_id)))
+    expect_false(any(is.na(cohort$subject_id)))
+    expect_false(any(is.na(cohort$cohort_start_date)))
+    expect_false(any(is.na(cohort$cohort_end_date)))
+  })
+
+  test_that("Disconnect", {
+    DatabaseConnector::disconnect(connection)
+    expect_false(DatabaseConnector::dbIsValid(connection))
+  })
+
+  test_that("exportToCsv works", {
+    outputFolder <- file.path(tempdir(), "csv")
+    expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
+  })
+
+}
+
+
