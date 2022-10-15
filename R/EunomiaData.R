@@ -1,0 +1,105 @@
+#' Download Eunomia data files
+#'
+#' Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
+#'
+#' @param datasetName The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The data
+#'                    set name corresponds to the folder with the data set ZIP files
+#' @param cdmVersion The OMOP CDM version. This version will appear in the suffix of the data file, for
+#'                   example: <datasetName>_<cdmVersion>.zip. Default: '5.3'
+#' @param pathToData The path where the Eunomia data is stored on the file system.,
+#'  By default the value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
+#' @param method The method used for downloading files. See \code{?download.file} for details and options.
+#' @return Invisibly returns the destination if the download was successful.
+#' @examples
+#' \dontrun{
+#' downloadJdbcDrivers("GiBleed")
+#' }
+#' @export
+downloadEunomiaData <- function(datasetName, cdmVersion = "5.3", pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"), method = "auto") {
+  if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
+    stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
+  }
+
+  if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
+    if (Sys.getenv("EUNOMIA_DATA_FOLDER") != pathToData) {
+      rlang::inform(paste0(
+        "Consider adding `EUNOMIA_DATA_FOLDER='",
+        pathToData,
+        "'` to ",
+        path.expand("~/.Renviron"), " and restarting R."
+      ))
+    }
+  }
+
+  if (!dir.exists(pathToData)) {
+    dir.create(pathToData, recursive = TRUE)
+  }
+
+  #baseUrl <- "https://github.com/OHDSI/EunomiaDatasets/blob/main/datasets"
+  baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
+
+  datasetNameVersion <- paste0(datasetName, "_", cdmVersion)
+  zipName <- paste0(datasetNameVersion, ".zip")
+  # downloads the file from github
+  result <- download.file(
+    #url = paste(baseUrl, datasetName, paste0(zipName, "?raw=true"), sep = "/"),
+    url = paste(baseUrl, datasetName, zipName, sep = "/"),
+    destfile = file.path(pathToData, zipName),
+    method = method
+  )
+
+  invisible(pathToData)
+}
+
+#' Extract the Eunomia data files and load into a SQLite database
+#'
+#' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then
+#' stored in the same directory as the .ZIP file.
+#'
+#' @param dataFileName The path to the .ZIP file that contains the data
+#' @examples
+#' \dontrun{
+#' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
+#' }
+#' @seealso
+#' \code{\link[Eunomia]{downloadEunomiaData}}
+#' @export
+extractLoadData <- function(dataFileName) {
+  if (!file.exists(dataFileName)) {
+    stop(paste0("dataFileName: ", dataFileName, " - NOT FOUND!"))
+  }
+  tempFileLocation <- tempfile()
+  message(paste0("Unzipping ", dataFileName))
+  utils::unzip(zipfile = dataFileName, exdir = tempFileLocation)
+  on.exit(unlink(tempFileLocation))
+
+  # get list of files in directory and load them into the SQLite database
+  dataFiles <- list.files(path = tempFileLocation, pattern = "*.csv")
+  if (length(dataFiles) <= 0) {
+    stop("Data file does not contain .CSV files to load into the database.")
+  }
+  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFileName)), ".sqlite")
+  databaseFilePath <- file.path(tempFileLocation, databaseFileName)
+  connection <- DatabaseConnector::connect(dbms = "sqlite", server = databaseFilePath)
+
+  message(paste0("Loading database ", databaseFileName))
+  for (i in 1:length(dataFiles)) {
+    tableData <- readr:::read_csv(file = file.path(tempFileLocation, dataFiles[i]),
+                                  col_types = readr::cols(),
+                                  lazy = FALSE)
+
+    tableName <- tools::file_path_sans_ext(toupper(dataFiles[i]))
+    rlang::inform(paste0(" -- Loading, ", tableName))
+    DatabaseConnector::insertTable(
+      connection = connection,
+      tableName = tableName,
+      data = tableData)
+  }
+
+  # Move the database to the location where the dataFileName exists
+  file.copy(from = databaseFilePath,
+            to = file.path(dirname(dataFileName), databaseFileName),
+            overwrite = TRUE)
+
+  message("Database load complete")
+}
