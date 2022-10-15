@@ -15,7 +15,7 @@
 #' downloadJdbcDrivers("GiBleed")
 #' }
 #' @export
-getEunomiaData <- function(datasetName, cdmVersion = "5.3", pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"), method = "auto") {
+downloadEunomiaData <- function(datasetName, cdmVersion = "5.3", pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"), method = "auto") {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
@@ -35,13 +35,15 @@ getEunomiaData <- function(datasetName, cdmVersion = "5.3", pathToData = Sys.get
     dir.create(pathToData, recursive = TRUE)
   }
 
-  baseUrl <- "https://github.com/OHDSI/EunomiaDatasets/blob/main/datasets"
+  #baseUrl <- "https://github.com/OHDSI/EunomiaDatasets/blob/main/datasets"
+  baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
 
   datasetNameVersion <- paste0(datasetName, "_", cdmVersion)
   zipName <- paste0(datasetNameVersion, ".zip")
   # downloads the file from github
   result <- download.file(
-    url = paste(baseUrl, datasetName, paste0(zipName, "?raw=true"), sep = "/"),
+    #url = paste(baseUrl, datasetName, paste0(zipName, "?raw=true"), sep = "/"),
+    url = paste(baseUrl, datasetName, zipName, sep = "/"),
     destfile = file.path(pathToData, zipName),
     method = method
   )
@@ -49,45 +51,55 @@ getEunomiaData <- function(datasetName, cdmVersion = "5.3", pathToData = Sys.get
   invisible(pathToData)
 }
 
+#' Extract the Eunomia data files and load into a SQLite database
+#'
+#' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then
+#' stored in the same directory as the .ZIP file.
+#'
+#' @param dataFileName The path to the .ZIP file that contains the data
+#' @examples
+#' \dontrun{
+#' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
+#' }
+#' @seealso
+#' \code{\link[Eunomia]{downloadEunomiaData}}
+#' @export
 extractLoadData <- function(dataFileName) {
   if (!file.exists(dataFileName)) {
     stop(paste0("dataFileName: ", dataFileName, " - NOT FOUND!"))
   }
   tempFileLocation <- tempfile()
-  dir.create(tempFileLocation)
-  utils::unzip(zipfile = dataFileName)
+  message(paste0("Unzipping ", dataFileName))
+  utils::unzip(zipfile = dataFileName, exdir = tempFileLocation)
+  on.exit(unlink(tempFileLocation))
 
-  # lists all the csv files and import
-  temp <- list.files(path = tempFileLocation, pattern = "*.csv")
-  for (i in 1:length(temp)) assign(temp[i], read.csv(temp[i]))
+  # get list of files in directory and load them into the SQLite database
+  dataFiles <- list.files(path = tempFileLocation, pattern = "*.csv")
+  if (length(dataFiles) <= 0) {
+    stop("Data file does not contain .CSV files to load into the database.")
+  }
+  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFileName)), ".sqlite")
+  databaseFilePath <- file.path(tempFileLocation, databaseFileName)
+  connection <- DatabaseConnector::connect(dbms = "sqlite", server = databaseFilePath)
 
-  unzipSuccess <- extracteddatasetName[1] == temp[1]
+  message(paste0("Loading database ", databaseFileName))
+  for (i in 1:length(dataFiles)) {
+    tableData <- readr:::read_csv(file = file.path(tempFileLocation, dataFiles[i]),
+                                  col_types = readr::cols(),
+                                  lazy = FALSE)
 
-  if (result == 0) {
-    inform(paste0("Eunomia datasets downloaded and datasets imported"))
-  } else {
-    abort(paste0("Download and import have failed."))
+    tableName <- tools::file_path_sans_ext(toupper(dataFiles[i]))
+    rlang::inform(paste0(" -- Loading, ", tableName))
+    DatabaseConnector::insertTable(
+      connection = connection,
+      tableName = tableName,
+      data = tableData)
   }
 
-  # FROM FRANK
-  # options(connectionObserver = NULL)
-  # options(useFancyQuotes = FALSE)
+  # Move the database to the location where the dataFileName exists
+  file.copy(from = databaseFilePath,
+            to = file.path(dirname(dataFileName), databaseFileName),
+            overwrite = TRUE)
 
-  # install.packages("RSQLite")
-
-  connection <- DatabaseConnector::connect(dbms = "sqlite", server = "/Users/fjd/OHDSI/testload.sqlite")
-
-  # get list of files in directory and loop through them all
-  dataset_root <- "/Users/fjd/git/EunomiaDatasets/datasets/GiBleed/GiBleed_5.3"
-  dataset_file <- file.path(dataset_root,"CDM_SOURCE.csv")
-  dataset_tibble <- readr:::read_csv(dataset_file)
-
-  DatabaseConnector::insertTable(
-    connection = connection,
-    tableName="CDM_SOURCE",
-    data = dataset_tibble)
-
-  DatabaseConnector::querySql(connection,"select * from CDM_SOURCE")
-
-
+  message("Database load complete")
 }
