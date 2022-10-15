@@ -3,6 +3,7 @@
 export(createCohorts)
 export(exportToCsv)
 export(getEunomiaConnectionDetails)
+export(getEunomiaData)
 export(supportsJava8)
 import(DatabaseConnector)
 importFrom(readr,write_csv)
