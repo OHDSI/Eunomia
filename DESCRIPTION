@@ -18,7 +18,8 @@ Depends:
 Imports:
   SqlRender,
   readr,
-  rJava
+  rJava,
+  readr
 Suggests:
   testthat
 Encoding: UTF-8
