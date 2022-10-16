@@ -1,15 +1,18 @@
 Package: Eunomia
 Type: Package
-Title: A Standard Dataset in the OMOP Common Data Model
-Version: 1.0.2
-Date: 2022-03-25
+Title: Standard dataset manager for OMOP CDM sample datasets
+Version: 2.0
+Date: 2022-10-16
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
+  person("Anthony", "Sena", , "sena@ohdsi.org", role=c("aut")),
+  person("Natthawut", "Adulyanukosol", , "na339@unc.edu", role=c("aut")),
+  person("Star", "Liu", , "sliu197@jhmi.edu", role=c("aut")),
   person("Observational Health Data Science and Informatics", role = c("cph"))
   )
 Maintainer: Frank DeFalco <fdefalco@ohdsi.org>
-Description: A sample dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) format. The CDM enables uniform storage of observational health care data, and is widely used for health care analytics. 'Eunomia' contains simulated data as well as a subset of the OMOP Vocabulary, and enables testing of additional packages and is used for educational and demonstration purposes.
+Description: Facilitates access to sample datasets from the EunomiaDatasets repository (https://github.com/ohdsi/EunomiaDatasets).
 License: Apache License 2.0
 URL: https://github.com/OHDSI/Eunomia
 BugReports: https://github.com/OHDSI/Eunomia/issues
@@ -19,7 +22,7 @@ Imports:
   SqlRender,
   readr,
   rJava,
-  readr
+  rlang
 Suggests:
   testthat
 Encoding: UTF-8

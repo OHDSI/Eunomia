@@ -17,8 +17,7 @@ if (Eunomia::supportsJava8()) {
   connection <- DatabaseConnector::connect(connectionDetails)
 
   test_that("Query", {
-    personCount <-
-      DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
+    personCount <- DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
     expect_gt(personCount, 0)
   })
 
@@ -42,12 +41,6 @@ if (Eunomia::supportsJava8()) {
     DatabaseConnector::disconnect(connection)
     expect_false(DatabaseConnector::dbIsValid(connection))
   })
-
-  test_that("exportToCsv works", {
-    outputFolder <- file.path(tempdir(), "csv")
-    expect_output(exportToCsv(outputFolder), regexp = "Done writing CSV files")
-  })
-
 }
 
 

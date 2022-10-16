@@ -2,35 +2,42 @@
 % Please edit documentation in R/EunomiaData.R
 \name{downloadEunomiaData}
 \alias{downloadEunomiaData}
-\title{Download Eunomia data files}
+\title{Download Eunomia data files
+Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets}
 \usage{
 downloadEunomiaData(
   datasetName,
   cdmVersion = "5.3",
   pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-  method = "auto"
+  method = "auto",
+  overwrite = FALSE
 )
 }
 \arguments{
-\item{datasetName}{The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The data
-set name corresponds to the folder with the data set ZIP files}
+\item{datasetName}{The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
+data set name corresponds to the folder with the data set ZIP files}
 
-\item{cdmVersion}{The OMOP CDM version. This version will appear in the suffix of the data file, for
-example: <datasetName>_<cdmVersion>.zip. Default: '5.3'}
+\item{cdmVersion}{The OMOP CDM version. This version will appear in the suffix of the data file,
+for example: <datasetName>_<cdmVersion>.zip. Default: '5.3'}
 
-\item{pathToData}{The path where the Eunomia data is stored on the file system.,
-By default the value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
+\item{pathToData}{The path where the Eunomia data is stored on the file system., By default the
+value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
 
-\item{method}{The method used for downloading files. See \code{?download.file} for details and options.}
+\item{method}{The method used for downloading files. See \code{?download.file} for details
+and options.}
+
+\item{overwrite}{Control whether the existing archive file will be overwritten should it already
+exist.}
 }
 \value{
 Invisibly returns the destination if the download was successful.
 }
 \description{
+Download Eunomia data files
 Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
 }
 \examples{
 \dontrun{
-downloadJdbcDrivers("GiBleed")
+downloadEunomiaData("GiBleed")
 }
 }
