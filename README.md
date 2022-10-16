@@ -10,14 +10,14 @@ Eunomia is part of [HADES](https://ohdsi.github.io/Hades/).
 
 Introduction
 ============
-Eunomia is a standard dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](https://ohdsi.github.io/TheBookOfOhdsi/). For functions that require schema name, use 'main'.
+Eunomia is a standard dataset manager for sample OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) datasets. Eunomia facilitates access to sample datasets from the [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets). Eunomia is used for testing and demonstration purposes, including many of the exercises in [the Book of OHDSI](https://ohdsi.github.io/TheBookOfOhdsi/). For functions that require schema name, use 'main'.
 
 Features
 ========
-- Provides a small simulated dataset in the CDM.
-- Also includes a subset of the Standardized Vocabularies.
+- Download selected sample datasets from [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets), which includes a subset of the Standardized Vocabularies.
 - Interfaces with the DatabaseConnector and SqlRender packages.
-- No need to set up a database server. Eunomia runs in your R instance (using SQLite).
+- No need to set up a database server. Eunomia runs in your R instance (currently using SQLite). 
+- (planned) supports for other databases
 
 Example
 =======
@@ -36,7 +36,7 @@ disconnect(connection)
 
 Technology
 ==========
-Eunomia is an R package containing a SQLite database.
+Eunomia is an R package providing access to sample datasets at [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets).
 
 System Requirements
 ===================
