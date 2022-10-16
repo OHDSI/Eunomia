@@ -9,8 +9,6 @@
 #'                      value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
 #' @param overwrite     Control whether the existing archive file will be overwritten should it already
 #'                      exist.
-#' @param method        The method used for downloading files. See \code{?download.file} for details
-#'                      and options.
 #' @return
 #' Invisibly returns the destination if the download was successful.
 #' @examples
@@ -21,8 +19,7 @@
 downloadEunomiaData <- function(datasetName,
                                 cdmVersion = "5.3",
                                 pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-
-  method = "auto", overwrite = FALSE) {
+                                overwrite = FALSE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
@@ -55,7 +52,7 @@ downloadEunomiaData <- function(datasetName,
     baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
     result <- utils::download.file(url = paste(baseUrl, datasetName, zipName, sep = "/"),
                                    destfile = file.path(pathToData,
-      zipName), method = method)
+      zipName))
 
     invisible(pathToData)
   }

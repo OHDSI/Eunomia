@@ -9,7 +9,6 @@ downloadEunomiaData(
   datasetName,
   cdmVersion = "5.3",
   pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-  method = "auto",
   overwrite = FALSE
 )
 }
@@ -22,9 +21,6 @@ for example: <datasetName>_<cdmVersion>.zip. Default: '5.3'}
 
 \item{pathToData}{The path where the Eunomia data is stored on the file system., By default the
 value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
-
-\item{method}{The method used for downloading files. See \code{?download.file} for details
-and options.}
 
 \item{overwrite}{Control whether the existing archive file will be overwritten should it already
 exist.}
