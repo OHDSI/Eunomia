@@ -17,15 +17,16 @@ License: Apache License 2.0
 URL: https://github.com/OHDSI/Eunomia
 BugReports: https://github.com/OHDSI/Eunomia/issues
 Depends:
-  DatabaseConnector (>= 2.2.0),
-  RSQLite
+  DatabaseConnector (>= 2.2.0)
 Imports:
   readr,
   rJava,
   rlang,
+  RSQLite,
   SqlRender
 Suggests:
-  testthat
+  testthat,
+  withr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
