@@ -1,5 +1,4 @@
 # Set the EUNOMIA_DATA_FOLDER environment variable for tests
-
 if (Sys.getenv("EUNOMIA_DATA_FOLDER", "") == "") {
   Sys.setenv("EUNOMIA_DATA_FOLDER" = tempfile("eunomiaData"))
   dir.create(Sys.getenv("EUNOMIA_DATA_FOLDER"))
@@ -11,3 +10,6 @@ if (Sys.getenv("EUNOMIA_DATA_FOLDER", "") == "") {
     testthat::teardown_env()
   )
 }
+
+# Create a shared connection details
+connectionDetails <- getEunomiaConnectionDetails()

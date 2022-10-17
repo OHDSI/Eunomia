@@ -24,6 +24,10 @@ downloadEunomiaData <- function(datasetName,
     stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
 
+  if (is.null(datasetName) || is.na(datasetName) || datasetName == "") {
+    stop("The datasetName argument must be specified.")
+  }
+
   if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
     if (Sys.getenv("EUNOMIA_DATA_FOLDER") != pathToData) {
       rlang::inform(paste0("Consider adding `EUNOMIA_DATA_FOLDER='",
