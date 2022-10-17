@@ -36,3 +36,26 @@ test_that("Disconnect", {
   DatabaseConnector::disconnect(connection)
   expect_false(DatabaseConnector::dbIsValid(connection))
 })
+
+# getConnectionDetails Tests --------
+test_that("datasetName missing error", {
+  expect_error(getConnectionDetails(pathToData = ""))
+})
+
+test_that("Dataset not downloaded and not loaded into SQLite", {
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"))
+  }
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
+  }
+  expect_warning(getConnectionDetails(datasetName = "GiBleed"))
+})
+
+test_that("Dataset downloaded but not loaded into SQLite", {
+  downloadEunomiaData(datasetName = "GiBleed")
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
+  }
+  expect_warning(getConnectionDetails(datasetName = "GiBleed"))
+})
