@@ -66,7 +66,7 @@ downloadEunomiaData <- function(datasetName,
 #' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
 #' same directory as the .ZIP file.
 #'
-#' @param dataFileName   The path to the .ZIP file that contains the data
+#' @param dataFilePath   The path to the .ZIP file that contains the data
 #' @examples
 #' \dontrun{
 #' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
@@ -74,13 +74,13 @@ downloadEunomiaData <- function(datasetName,
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(dataFileName) {
-  if (!file.exists(dataFileName)) {
-    stop(paste0("dataFileName: ", dataFileName, " - NOT FOUND!"))
+extractLoadData <- function(dataFilePath) {
+  if (!file.exists(dataFilePath)) {
+    stop(paste0("dataFilePath: ", dataFilePath, " - NOT FOUND!"))
   }
   tempFileLocation <- tempfile()
-  cat(paste0("Unzipping ", dataFileName))
-  utils::unzip(zipfile = dataFileName, exdir = tempFileLocation)
+  cat(paste0("Unzipping ", dataFilePath))
+  utils::unzip(zipfile = dataFilePath, exdir = tempFileLocation)
   on.exit(unlink(tempFileLocation))
 
   # get list of files in directory and load them into the SQLite database
@@ -88,7 +88,7 @@ extractLoadData <- function(dataFileName) {
   if (length(dataFiles) <= 0) {
     stop("Data file does not contain .CSV files to load into the database.")
   }
-  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFileName)), ".sqlite")
+  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFilePath)), ".sqlite")
   databaseFilePath <- file.path(tempFileLocation, databaseFileName)
   connection <- DatabaseConnector::connect(dbms = "sqlite", server = databaseFilePath)
 
@@ -103,8 +103,8 @@ extractLoadData <- function(dataFileName) {
     DatabaseConnector::insertTable(connection = connection, tableName = tableName, data = tableData)
   }
 
-  # Move the database to the location where the dataFileName exists
-  file.copy(from = databaseFilePath, to = file.path(dirname(dataFileName),
+  # Move the database to the location where the dataFilePath exists
+  file.copy(from = databaseFilePath, to = file.path(dirname(dataFilePath),
                                                     databaseFileName), overwrite = TRUE)
 
   cat("Database load complete")

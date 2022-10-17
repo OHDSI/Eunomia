@@ -78,7 +78,7 @@ getConnectionDetails <- function(datasetName,
 
   if (!datasetAvailable & archiveAvailable) {
     writeLines(paste("attempting to extract and load", archiveLocation))
-    Eunomia::extractLoadData(dataFileName = archiveLocation)
+    Eunomia::extractLoadData(dataFilePath = archiveLocation)
     datasetAvailable <- T
   }
 

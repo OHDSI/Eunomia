@@ -6,10 +6,10 @@
 Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
 same directory as the .ZIP file.}
 \usage{
-extractLoadData(dataFileName)
+extractLoadData(dataFilePath)
 }
 \arguments{
-\item{dataFileName}{The path to the .ZIP file that contains the data}
+\item{dataFilePath}{The path to the .ZIP file that contains the data}
 }
 \description{
 Extract the Eunomia data files and load into a SQLite database
