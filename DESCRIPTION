@@ -20,7 +20,6 @@ Depends:
   DatabaseConnector (>= 2.2.0)
 Imports:
   readr,
-  rJava,
   rlang,
   RSQLite,
   SqlRender
