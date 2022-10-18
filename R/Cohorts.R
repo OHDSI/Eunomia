@@ -34,20 +34,20 @@
 createCohorts <- function(connectionDetails,
                           cdmDatabaseSchema = "main",
                           cohortDatabaseSchema = "main",
-
-  cohortTable = "cohort") {
+                          cohortTable = "cohort") {
   connection <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection))
 
   # Create study cohort table structure:
   pathToSql <- system.file(file.path("sql", "sql_server", "CreateCohortTable.sql"),
-                           package = "Eunomia",
-
-    mustWork = TRUE)
+    package = "Eunomia",
+    mustWork = TRUE
+  )
   sql <- readChar(pathToSql, file.info(pathToSql)$size)
   sql <- SqlRender::render(sql,
-                           cohort_database_schema = cohortDatabaseSchema,
-                           cohort_table = cohortTable)
+    cohort_database_schema = cohortDatabaseSchema,
+    cohort_table = cohortTable
+  )
   sql <- SqlRender::translate(sql, connectionDetails$dbms)
 
   DatabaseConnector::executeSql(connection, sql, progressBar = FALSE, reportOverallTime = FALSE)
@@ -57,16 +57,19 @@ createCohorts <- function(connectionDetails,
   cohortsToCreate <- read.csv(pathToCsv)
   for (i in 1:nrow(cohortsToCreate)) {
     writeLines(paste("Creating cohort:", cohortsToCreate$name[i]))
-    pathToSql <- system.file(file.path("sql",
-                                       "sql_server",
-                                       paste0(cohortsToCreate$name[i], ".sql")),
-      package = "Eunomia", mustWork = TRUE)
+    pathToSql <- system.file(file.path(
+      "sql",
+      "sql_server",
+      paste0(cohortsToCreate$name[i], ".sql")
+    ),
+    package = "Eunomia", mustWork = TRUE
+    )
     sql <- readChar(pathToSql, file.info(pathToSql)$size)
     sql <- SqlRender::render(sql,
-                             cdm_database_schema = cdmDatabaseSchema,
-                             cohort_database_schema = cohortDatabaseSchema,
-
-      cohort_table = cohortTable, cohort_definition_id = cohortsToCreate$cohortId[i])
+      cdm_database_schema = cdmDatabaseSchema,
+      cohort_database_schema = cohortDatabaseSchema,
+      cohort_table = cohortTable, cohort_definition_id = cohortsToCreate$cohortId[i]
+    )
     sql <- SqlRender::translate(sql, connectionDetails$dbms)
     DatabaseConnector::executeSql(connection, sql)
   }
@@ -74,10 +77,10 @@ createCohorts <- function(connectionDetails,
   # Fetch cohort counts:
   sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
   counts <- DatabaseConnector::renderTranslateQuerySql(connection,
-                                                       sql,
-                                                       cohort_database_schema = cohortDatabaseSchema,
-
-    cohort_table = cohortTable, snakeCaseToCamelCase = TRUE)
+    sql,
+    cohort_database_schema = cohortDatabaseSchema,
+    cohort_table = cohortTable, snakeCaseToCamelCase = TRUE
+  )
   counts <- merge(cohortsToCreate, counts, by.x = "cohortId", by.y = "cohortDefinitionId")
   writeLines(sprintf("Cohorts created in table %s.%s", cohortDatabaseSchema, cohortTable))
   return(counts)

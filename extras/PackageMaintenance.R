@@ -20,6 +20,7 @@ OhdsiRTools::formatRFolder()
 OhdsiRTools::checkUsagePackage("Eunomia")
 OhdsiRTools::updateCopyrightYearFolder()
 devtools::spell_check()
+styler::style_pkg()
 
 # Create manual -----------------------------------------------------------
 unlink("extras/Eunomia.pdf")

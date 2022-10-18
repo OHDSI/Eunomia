@@ -30,12 +30,13 @@ downloadEunomiaData <- function(datasetName,
 
   if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
     if (Sys.getenv("EUNOMIA_DATA_FOLDER") != pathToData) {
-      rlang::inform(paste0("Consider adding `EUNOMIA_DATA_FOLDER='",
-                           pathToData,
-                           "'` to ",
-                           path.expand("~/.Renviron"),
-
-        " and restarting R."))
+      rlang::inform(paste0(
+        "Consider adding `EUNOMIA_DATA_FOLDER='",
+        pathToData,
+        "'` to ",
+        path.expand("~/.Renviron"),
+        " and restarting R."
+      ))
     }
   }
 
@@ -47,16 +48,22 @@ downloadEunomiaData <- function(datasetName,
   zipName <- paste0(datasetNameVersion, ".zip")
 
   if (file.exists(file.path(pathToData, zipName)) & !overwrite) {
-    cat(paste0("Dataset already exists (",
-               file.path(pathToData, zipName),
-               "). Specify overwrite=T to overwrite existing zip archive."))
+    cat(paste0(
+      "Dataset already exists (",
+      file.path(pathToData, zipName),
+      "). Specify overwrite=T to overwrite existing zip archive."
+    ))
     invisible()
   } else {
     # downloads the file from github
     baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
-    result <- utils::download.file(url = paste(baseUrl, datasetName, zipName, sep = "/"),
-                                   destfile = file.path(pathToData,
-      zipName))
+    result <- utils::download.file(
+      url = paste(baseUrl, datasetName, zipName, sep = "/"),
+      destfile = file.path(
+        pathToData,
+        zipName
+      )
+    )
 
     invisible(pathToData)
   }
@@ -94,9 +101,13 @@ extractLoadData <- function(dataFilePath) {
 
   cat(paste0("Loading database ", databaseFileName))
   for (i in 1:length(dataFiles)) {
-    tableData <- readr::read_csv(file = file.path(tempFileLocation,
-                                                  dataFiles[i]), col_types = readr::cols(),
-      lazy = FALSE)
+    tableData <- readr::read_csv(
+      file = file.path(
+        tempFileLocation,
+        dataFiles[i]
+      ), col_types = readr::cols(),
+      lazy = FALSE
+    )
 
     tableName <- tools::file_path_sans_ext(toupper(dataFiles[i]))
     cat(paste0(" -- Loading, ", tableName))
@@ -104,8 +115,10 @@ extractLoadData <- function(dataFilePath) {
   }
 
   # Move the database to the location where the dataFilePath exists
-  file.copy(from = databaseFilePath, to = file.path(dirname(dataFilePath),
-                                                    databaseFileName), overwrite = TRUE)
+  file.copy(from = databaseFilePath, to = file.path(
+    dirname(dataFilePath),
+    databaseFileName
+  ), overwrite = TRUE)
 
   cat("Database load complete")
 }
