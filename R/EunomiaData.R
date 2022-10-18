@@ -9,8 +9,6 @@
 #'                      value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
 #' @param overwrite     Control whether the existing archive file will be overwritten should it already
 #'                      exist.
-#' @param method        The method used for downloading files. See \code{?download.file} for details
-#'                      and options.
 #' @return
 #' Invisibly returns the destination if the download was successful.
 #' @examples
@@ -21,20 +19,24 @@
 downloadEunomiaData <- function(datasetName,
                                 cdmVersion = "5.3",
                                 pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-
-  method = "auto", overwrite = FALSE) {
+                                overwrite = FALSE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
 
+  if (is.null(datasetName) || is.na(datasetName) || datasetName == "") {
+    stop("The datasetName argument must be specified.")
+  }
+
   if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
     if (Sys.getenv("EUNOMIA_DATA_FOLDER") != pathToData) {
-      rlang::inform(paste0("Consider adding `EUNOMIA_DATA_FOLDER='",
-                           pathToData,
-                           "'` to ",
-                           path.expand("~/.Renviron"),
-
-        " and restarting R."))
+      rlang::inform(paste0(
+        "Consider adding `EUNOMIA_DATA_FOLDER='",
+        pathToData,
+        "'` to ",
+        path.expand("~/.Renviron"),
+        " and restarting R."
+      ))
     }
   }
 
@@ -46,16 +48,22 @@ downloadEunomiaData <- function(datasetName,
   zipName <- paste0(datasetNameVersion, ".zip")
 
   if (file.exists(file.path(pathToData, zipName)) & !overwrite) {
-    cat(paste0("Dataset already exists (",
-               file.path(pathToData, zipName),
-               "). Specify overwrite=T to overwrite existing zip archive."))
+    cat(paste0(
+      "Dataset already exists (",
+      file.path(pathToData, zipName),
+      "). Specify overwrite=T to overwrite existing zip archive."
+    ))
     invisible()
   } else {
     # downloads the file from github
     baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
-    result <- utils::download.file(url = paste(baseUrl, datasetName, zipName, sep = "/"),
-                                   destfile = file.path(pathToData,
-      zipName), method = method)
+    result <- utils::download.file(
+      url = paste(baseUrl, datasetName, zipName, sep = "/"),
+      destfile = file.path(
+        pathToData,
+        zipName
+      )
+    )
 
     invisible(pathToData)
   }
@@ -65,7 +73,7 @@ downloadEunomiaData <- function(datasetName,
 #' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
 #' same directory as the .ZIP file.
 #'
-#' @param dataFileName   The path to the .ZIP file that contains the data
+#' @param dataFilePath   The path to the .ZIP file that contains the data
 #' @examples
 #' \dontrun{
 #' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
@@ -73,13 +81,13 @@ downloadEunomiaData <- function(datasetName,
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(dataFileName) {
-  if (!file.exists(dataFileName)) {
-    stop(paste0("dataFileName: ", dataFileName, " - NOT FOUND!"))
+extractLoadData <- function(dataFilePath) {
+  if (!file.exists(dataFilePath)) {
+    stop(paste0("dataFilePath: ", dataFilePath, " - NOT FOUND!"))
   }
   tempFileLocation <- tempfile()
-  cat(paste0("Unzipping ", dataFileName))
-  utils::unzip(zipfile = dataFileName, exdir = tempFileLocation)
+  cat(paste0("Unzipping ", dataFilePath))
+  utils::unzip(zipfile = dataFilePath, exdir = tempFileLocation)
   on.exit(unlink(tempFileLocation))
 
   # get list of files in directory and load them into the SQLite database
@@ -87,24 +95,30 @@ extractLoadData <- function(dataFileName) {
   if (length(dataFiles) <= 0) {
     stop("Data file does not contain .CSV files to load into the database.")
   }
-  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFileName)), ".sqlite")
+  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFilePath)), ".sqlite")
   databaseFilePath <- file.path(tempFileLocation, databaseFileName)
   connection <- DatabaseConnector::connect(dbms = "sqlite", server = databaseFilePath)
 
   cat(paste0("Loading database ", databaseFileName))
   for (i in 1:length(dataFiles)) {
-    tableData <- readr::read_csv(file = file.path(tempFileLocation,
-                                                  dataFiles[i]), col_types = readr::cols(),
-      lazy = FALSE)
+    tableData <- readr::read_csv(
+      file = file.path(
+        tempFileLocation,
+        dataFiles[i]
+      ), col_types = readr::cols(),
+      lazy = FALSE
+    )
 
     tableName <- tools::file_path_sans_ext(toupper(dataFiles[i]))
     cat(paste0(" -- Loading, ", tableName))
     DatabaseConnector::insertTable(connection = connection, tableName = tableName, data = tableData)
   }
 
-  # Move the database to the location where the dataFileName exists
-  file.copy(from = databaseFilePath, to = file.path(dirname(dataFileName),
-                                                    databaseFileName), overwrite = TRUE)
+  # Move the database to the location where the dataFilePath exists
+  file.copy(from = databaseFilePath, to = file.path(
+    dirname(dataFilePath),
+    databaseFileName
+  ), overwrite = TRUE)
 
   cat("Database load complete")
 }

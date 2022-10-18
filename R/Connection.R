@@ -55,9 +55,7 @@ getEunomiaConnectionDetails <- function() {
 getConnectionDetails <- function(datasetName,
                                  cdmVersion = "5.3",
                                  pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-
-  dbms = "sqlite", autoDownload = TRUE) {
-
+                                 dbms = "sqlite", autoDownload = TRUE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
@@ -78,7 +76,7 @@ getConnectionDetails <- function(datasetName,
 
   if (!datasetAvailable & archiveAvailable) {
     writeLines(paste("attempting to extract and load", archiveLocation))
-    Eunomia::extractLoadData(dataFileName = archiveLocation)
+    Eunomia::extractLoadData(dataFilePath = archiveLocation)
     datasetAvailable <- T
   }
 

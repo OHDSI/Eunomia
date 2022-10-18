@@ -4,9 +4,9 @@
 \name{Eunomia-package}
 \alias{Eunomia}
 \alias{Eunomia-package}
-\title{Eunomia: A Standard Dataset in the OMOP Common Data Model}
+\title{Eunomia: Standard dataset manager for OMOP CDM sample datasets}
 \description{
-A sample dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) format. The CDM enables uniform storage of observational health care data, and is widely used for health care analytics. 'Eunomia' contains simulated data as well as a subset of the OMOP Vocabulary, and enables testing of additional packages and is used for educational and demonstration purposes.
+Facilitates access to sample datasets from the EunomiaDatasets repository (https://github.com/ohdsi/EunomiaDatasets).
 }
 \seealso{
 Useful links:

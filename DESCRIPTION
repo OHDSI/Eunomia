@@ -19,12 +19,13 @@ BugReports: https://github.com/OHDSI/Eunomia/issues
 Depends:
   DatabaseConnector (>= 2.2.0)
 Imports:
-  SqlRender,
   readr,
-  rJava,
-  rlang
+  rlang,
+  RSQLite,
+  SqlRender
 Suggests:
-  testthat
+  testthat,
+  withr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
