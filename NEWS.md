@@ -1,3 +1,12 @@
+Eunomia 2.0
+=============
+Changes
+- Updated package to no longer contain a dataset rather facilite access to sample datasets
+  stored in the https://github.com/OHDSI/EunomiaDatasets repository.
+- Backward compatibility maintained with getEunomiaConnectionDetails function.
+- New function added for getConnectionDetails
+- Embedded sample dataset removed.
+
 Eunomia 1.0.2
 =============
 

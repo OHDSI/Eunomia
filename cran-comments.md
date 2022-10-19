@@ -1,3 +1,7 @@
+Release of 2.0 version of package.
+
+---
+
 Wrapped additional test code with java support checks.
 
 ---
