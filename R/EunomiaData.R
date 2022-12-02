@@ -108,7 +108,9 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
     on.exit(DBI::dbDisconnect(connection), add = TRUE)
   } else if (dbms == "duckdb") {
     connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = databaseFilePath)
-    on.exit(DBI::dbDisconnect(connection, shutdown = TRUE), add = TRUE)
+    # If the function is successful dbDisconnect will be called twice generating a warning.
+    # If this function is unsuccessful, still close connection on exit.
+    on.exit(suppressWarnings(DBI::dbDisconnect(connection, shutdown = TRUE)), add = TRUE)
   }
 
   on.exit(unlink(tempFileLocation), add = TRUE)
@@ -130,7 +132,9 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
     DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
     if (verbose) cli::cat_bullet(tableName, bullet = 1)
   }
+  # An open duckdb database file cannot be copied on windows
+  if (dbms == "duckdb") DBI::dbDisconnect(connection, shutdown = TRUE)
   rc <- file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
-  if (!rc) stop(paste("File copy from", databaseLocation, "to", to, "failed!"))
+  if (isFALSE(rc)) rlang::abort(paste("File copy from", databaseLocation, "to", to, "failed!"))
   if (verbose) cli::cat_line("Database load complete", col = "grey")
 }
