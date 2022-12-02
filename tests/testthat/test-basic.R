@@ -1,5 +1,4 @@
 connection <- DatabaseConnector::connect(connectionDetails)
-on.exit(connection)
 
 test_that("Get connection details", {
   expect_s3_class(connectionDetails, "connectionDetails")
@@ -40,6 +39,8 @@ test_that("Disconnect", {
 # getConnectionDetails Tests --------
 test_that("datasetName missing error", {
   expect_error(getConnectionDetails(pathToData = ""))
+  expect_error(getConnectionDetails("GiBleed", dbms = "duckdb")) # not yet supported
+  expect_error(getConnectionDetails("GiBleed", dbms = ""))
 })
 
 test_that("Dataset not downloaded and not loaded into SQLite", {
@@ -49,7 +50,7 @@ test_that("Dataset not downloaded and not loaded into SQLite", {
   if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
     unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
   }
-  expect_warning(getConnectionDetails(datasetName = "GiBleed"))
+  expect_error(getConnectionDetails(datasetName = "GiBleed"), NA)
 })
 
 test_that("Dataset downloaded but not loaded into SQLite", {
@@ -57,5 +58,6 @@ test_that("Dataset downloaded but not loaded into SQLite", {
   if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
     unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
   }
-  expect_warning(getConnectionDetails(datasetName = "GiBleed"))
+  expect_error(getConnectionDetails(datasetName = "GiBleed"), NA)
 })
+
