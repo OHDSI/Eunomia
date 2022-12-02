@@ -149,6 +149,7 @@ eunomiaDir <- function(datasetName,
     datasetAvailable <- TRUE
   }
 
-  file.copy(from = datasetLocation, to = databaseFile)
+  rc <- file.copy(from = datasetLocation, to = databaseFile)
+  if (!rc) stop(paste("File copy from", databaseLocation, "to", databaseFile, "failed!"))
   return(databaseFile)
 }

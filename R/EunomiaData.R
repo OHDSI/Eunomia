@@ -130,6 +130,7 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
     DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
     if (verbose) cli::cat_bullet(tableName, bullet = 1)
   }
-  file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
+  rc <- file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
+  if (!rc) stop(paste("File copy from", databaseLocation, "to", to, "failed!"))
   if (verbose) cli::cat_line("Database load complete", col = "grey")
 }
