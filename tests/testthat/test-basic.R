@@ -2,7 +2,10 @@ connection <- DatabaseConnector::connect(connectionDetails)
 on.exit(connection)
 
 test_that("Get connection details", {
-  expect_s3_class(connectionDetails, "connectionDetails")
+  if (is(connectionDetails, "connectionDetails"))
+    expect_s3_class(connectionDetails, "connectionDetails")
+  else
+    expect_s3_class(connectionDetails, "ConnectionDetails")
 })
 
 test_that("Connect", {
