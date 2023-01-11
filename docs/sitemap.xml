@@ -13,16 +13,16 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/Eunomia-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Eunomia.html</loc>
-  </url>
-  <url>
     <loc>/reference/createCohorts.html</loc>
   </url>
   <url>
     <loc>/reference/downloadEunomiaData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Eunomia-package.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Eunomia.html</loc>
   </url>
   <url>
     <loc>/reference/exportToCsv.html</loc>

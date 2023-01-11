@@ -32,7 +32,7 @@ Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets"><
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://ohdsi.github.io/Hades" class="external-link">hadesLogo</a>
+  <a href="https://ohdsi.github.io/Hades" class="external-link"><img src='https://ohdsi.github.io/Hades/images/hadesMini.png' width=80 height=17 style='vertical-align: top;'></a>
 </li>
 <li>
   <a href="https://github.com/OHDSI/Eunomia/" class="external-link">
@@ -65,7 +65,6 @@ Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets</p
 <span>  <span class="va">datasetName</span>,</span>
 <span>  cdmVersion <span class="op">=</span> <span class="st">"5.3"</span>,</span>
 <span>  pathToData <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"EUNOMIA_DATA_FOLDER"</span><span class="op">)</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -85,11 +84,6 @@ for example: &lt;datasetName&gt;_&lt;cdmVersion&gt;.zip. Default: '5.3'</p></dd>
 <dt>pathToData</dt>
 <dd><p>The path where the Eunomia data is stored on the file system., By default the
 value of the environment variable "EUNOMIA_DATA_FOLDER" is used.</p></dd>
-
-
-<dt>method</dt>
-<dd><p>The method used for downloading files. See <code><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">?download.file</a></code> for details
-and options.</p></dd>
 
 
 <dt>overwrite</dt>
