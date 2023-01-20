@@ -1,4 +1,5 @@
 #' Download Eunomia data files
+#'
 #' Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
 #'
 #' @param datasetName   The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
@@ -87,11 +88,17 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
   stopifnot(dbms == "sqlite" || dbms == "duckdb", is.logical(verbose), length(verbose) == 1)
   stopifnot(is.character(from), length(from) == 1, nchar(from) > 0)
   stopifnot(is.character(to), length(to) == 1, nchar(from) > 0)
-  if (tools::file_ext(from) != "zip") stop("Source must be a .zip file")
-  if (!file.exists(from)) stop(paste0("zipped csv archive '", from, "' not found!"))
+  if (tools::file_ext(from) != "zip") {
+    stop("Source must be a .zip file")
+  }
+  if (!file.exists(from)) {
+    stop(paste0("zipped csv archive '", from, "' not found!"))
+  }
 
   tempFileLocation <- tempfile()
-  if(verbose) cli::cat_line(paste0("Unzipping ", from))
+  if(verbose) {
+    cli::cat_line(paste0("Unzipping ", from))
+  }
   utils::unzip(zipfile = from, exdir = tempFileLocation)
 
 
@@ -130,11 +137,20 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
     names(tableData) <- tolower(names(tableData))
     tableName <- tools::file_path_sans_ext(tolower(dataFiles[i]))
     DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
-    if (verbose) cli::cat_bullet(tableName, bullet = 1)
+    if (verbose) {
+      cli::cat_bullet(tableName, bullet = 1)
+    }
   }
   # An open duckdb database file cannot be copied on windows
-  if (dbms == "duckdb") DBI::dbDisconnect(connection, shutdown = TRUE)
+  if (dbms == "duckdb") {
+    DBI::dbDisconnect(connection, shutdown = TRUE)
+  }
   rc <- file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
-  if (isFALSE(rc)) rlang::abort(paste("File copy from", databaseLocation, "to", to, "failed!"))
-  if (verbose) cli::cat_line("Database load complete", col = "grey")
+
+  if (isFALSE(rc)) {
+    rlang::abort(paste("File copy from", databaseFilePath, "to", to, "failed!"))
+  }
+  if (verbose) {
+    cli::cat_line("Database load complete", col = "grey")
+  }
 }
