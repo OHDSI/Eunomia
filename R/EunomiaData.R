@@ -46,7 +46,7 @@ downloadEunomiaData <- function(datasetName,
   datasetNameVersion <- paste0(datasetName, "_", cdmVersion)
   zipName <- paste0(datasetNameVersion, ".zip")
 
-  if (file.exists(file.path(pathToData, zipName)) & !overwrite) {
+  if (file.exists(file.path(pathToData, zipName)) && !overwrite) {
     cat(paste0(
       "Dataset already exists (",
       file.path(pathToData, zipName),
