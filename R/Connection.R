@@ -137,13 +137,13 @@ eunomiaDir <- function(datasetName,
   archiveLocation <- file.path(pathToData, archiveName)
   archiveAvailable <- file.exists(archiveLocation)
 
-  if (!datasetAvailable & !archiveAvailable) {
+  if (!datasetAvailable && !archiveAvailable) {
     writeLines(paste("attempting to download", datasetName))
     downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion)
     archiveAvailable <- TRUE
   }
 
-  if (!datasetAvailable & archiveAvailable) {
+  if (!datasetAvailable && archiveAvailable) {
     writeLines(paste("attempting to extract and load", archiveLocation))
     extractLoadData(from = archiveLocation, to = datasetLocation, dbms = dbms)
     datasetAvailable <- TRUE
