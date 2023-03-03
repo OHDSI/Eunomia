@@ -1,4 +1,4 @@
-# Copyright 2020 Observational Health Data Sciences and Informatics
+# Copyright 2023 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -18,6 +18,7 @@
 "_PACKAGE"
 
 #' @import DatabaseConnector
-#' @importFrom utils unzip read.csv write.csv untar
-#' @importFrom readr write_csv
+#' @import RSQLite
+#' @importFrom utils unzip read.csv write.csv untar download.file
+#' @importFrom readr read_csv
 NULL

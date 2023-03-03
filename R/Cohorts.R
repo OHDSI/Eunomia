@@ -1,4 +1,4 @@
-# Copyright 2020 Observational Health Data Sciences and Informatics
+# Copyright 2023 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -18,8 +18,8 @@
 #' Construct cohorts
 #'
 #' @description
-#' Creates a set of predefined cohorts in a cohort table.
-#' WARNING: this will delete all existing cohorts in the table!
+#' Creates a set of predefined cohorts in a cohort table. WARNING: this will delete all existing
+#' cohorts in the table!
 #'
 #' @param connectionDetails      The connection details to connect to the (Eunomia) database.
 #' @param cdmDatabaseSchema      The name of the database schema holding the CDM data.
@@ -30,20 +30,6 @@
 #' @return
 #' A data frame listing all created cohorts.
 #'
-#' @examples
-#' connectionDetails <- getEunomiaConnectionDetails()
-#' createCohorts(connectionDetails)
-#'
-#' connection <- connect(connectionDetails)
-#'
-#' sql <- "SELECT COUNT(*)
-#' FROM main.cohort
-#' WHERE cohort_definition_id = 1;"
-#'
-#' renderTranslateQuerySql(connection, sql)
-#'
-#' disconnect(connection)
-#'
 #' @export
 createCohorts <- function(connectionDetails,
                           cdmDatabaseSchema = "main",
@@ -53,11 +39,17 @@ createCohorts <- function(connectionDetails,
   on.exit(DatabaseConnector::disconnect(connection))
 
   # Create study cohort table structure:
-  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "CreateCohortTable.sql",
-                                           packageName = "Eunomia",
-                                           dbms = connectionDetails$dbms,
-                                           cohort_database_schema = cohortDatabaseSchema,
-                                           cohort_table = cohortTable)
+  pathToSql <- system.file(file.path("sql", "sql_server", "CreateCohortTable.sql"),
+    package = "Eunomia",
+    mustWork = TRUE
+  )
+  sql <- readChar(pathToSql, file.info(pathToSql)$size)
+  sql <- SqlRender::render(sql,
+    cohort_database_schema = cohortDatabaseSchema,
+    cohort_table = cohortTable
+  )
+  sql <- SqlRender::translate(sql, connectionDetails$dbms)
+
   DatabaseConnector::executeSql(connection, sql, progressBar = FALSE, reportOverallTime = FALSE)
 
   # Instantiate cohorts:
@@ -65,23 +57,30 @@ createCohorts <- function(connectionDetails,
   cohortsToCreate <- read.csv(pathToCsv)
   for (i in 1:nrow(cohortsToCreate)) {
     writeLines(paste("Creating cohort:", cohortsToCreate$name[i]))
-    sql <- SqlRender::loadRenderTranslateSql(sqlFilename = paste0(cohortsToCreate$name[i], ".sql"),
-                                             packageName = "Eunomia",
-                                             dbms = connectionDetails$dbms,
-                                             cdm_database_schema = cdmDatabaseSchema,
-                                             cohort_database_schema = cohortDatabaseSchema,
-                                             cohort_table = cohortTable,
-                                             cohort_definition_id = cohortsToCreate$cohortId[i])
+    pathToSql <- system.file(file.path(
+      "sql",
+      "sql_server",
+      paste0(cohortsToCreate$name[i], ".sql")
+    ),
+    package = "Eunomia", mustWork = TRUE
+    )
+    sql <- readChar(pathToSql, file.info(pathToSql)$size)
+    sql <- SqlRender::render(sql,
+      cdm_database_schema = cdmDatabaseSchema,
+      cohort_database_schema = cohortDatabaseSchema,
+      cohort_table = cohortTable, cohort_definition_id = cohortsToCreate$cohortId[i]
+    )
+    sql <- SqlRender::translate(sql, connectionDetails$dbms)
     DatabaseConnector::executeSql(connection, sql)
   }
 
   # Fetch cohort counts:
   sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
   counts <- DatabaseConnector::renderTranslateQuerySql(connection,
-                                                       sql,
-                                                       cohort_database_schema = cohortDatabaseSchema,
-                                                       cohort_table = cohortTable,
-                                                       snakeCaseToCamelCase = TRUE)
+    sql,
+    cohort_database_schema = cohortDatabaseSchema,
+    cohort_table = cohortTable, snakeCaseToCamelCase = TRUE
+  )
   counts <- merge(cohortsToCreate, counts, by.x = "cohortId", by.y = "cohortDefinitionId")
   writeLines(sprintf("Cohorts created in table %s.%s", cohortDatabaseSchema, cohortTable))
   return(counts)
