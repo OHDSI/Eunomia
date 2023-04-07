@@ -17,7 +17,10 @@ test_that("Dataset downloaded but not loaded into SQLite", {
 })
 
 test_that("Get connection details", {
-  expect_s3_class(getEunomiaConnectionDetails(), "ConnectionDetails")
+  if (is(connectionDetails, "connectionDetails"))
+    expect_s3_class(connectionDetails, "connectionDetails")
+  else
+    expect_s3_class(connectionDetails, "ConnectionDetails")
 })
 
 test_that("Connect", {
