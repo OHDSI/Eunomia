@@ -25,6 +25,7 @@ Authors:
   \item Anthony Sena \email{sena@ohdsi.org}
   \item Natthawut Adulyanukosol \email{na339@unc.edu}
   \item Star Liu \email{sliu197@jhmi.edu}
+  \item Adam Black \email{black@ohdsi.org}
 }
 
 Other contributors:
