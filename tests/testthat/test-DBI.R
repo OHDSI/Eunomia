@@ -31,7 +31,6 @@ test_that("dbConnect works with duckdb", {
 })
 
 test_that("MIMIC works with sqlite", {
-  skip("MIMIC not added yet")
   con <- DBI::dbConnect(RSQLite::SQLite(), eunomiaDir("MIMIC", dbms = "sqlite"))
   on.exit(DBI::dbDisconnect(con), add = TRUE)
   expect_true(DBI::dbIsValid(con))
@@ -41,7 +40,6 @@ test_that("MIMIC works with sqlite", {
 })
 
 test_that("MIMIC works with duckdb", {
-  skip("MIMIC not added yet")
   skip_if_not_installed("duckdb")
   con <- DBI::dbConnect(duckdb::duckdb(), eunomiaDir("MIMIC", dbms = "duckdb"))
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
