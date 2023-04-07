@@ -17,6 +17,7 @@ test_that("Dataset downloaded but not loaded into SQLite", {
 })
 
 test_that("Get connection details", {
+  connectionDetails <- getEunomiaConnectionDetails()
   if (is(connectionDetails, "connectionDetails"))
     expect_s3_class(connectionDetails, "connectionDetails")
   else
