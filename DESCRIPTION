@@ -2,13 +2,14 @@ Package: Eunomia
 Type: Package
 Title: Standard dataset manager for OMOP CDM sample datasets
 Version: 2.0.0
-Date: 2022-12-01
+Date: 2023-04-07
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
   person("Anthony", "Sena", , "sena@ohdsi.org", role=c("aut")),
   person("Natthawut", "Adulyanukosol", , "na339@unc.edu", role=c("aut")),
   person("Star", "Liu", , "sliu197@jhmi.edu", role=c("aut")),
+  person("Adam", "Black", , "black@ohdsi.org", role = c("aut")),
   person("Observational Health Data Science and Informatics", role = c("cph"))
   )
 Maintainer: Frank DeFalco <fdefalco@ohdsi.org>
@@ -31,4 +32,4 @@ Suggests:
   duckdb
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
