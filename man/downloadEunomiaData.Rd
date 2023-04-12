@@ -2,8 +2,7 @@
 % Please edit documentation in R/EunomiaData.R
 \name{downloadEunomiaData}
 \alias{downloadEunomiaData}
-\title{Download Eunomia data files
-Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets}
+\title{Download Eunomia data files}
 \usage{
 downloadEunomiaData(
   datasetName,
@@ -29,7 +28,6 @@ exist.}
 Invisibly returns the destination if the download was successful.
 }
 \description{
-Download Eunomia data files
 Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
 }
 \examples{

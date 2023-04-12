@@ -6,10 +6,16 @@
 Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
 same directory as the .ZIP file.}
 \usage{
-extractLoadData(dataFilePath)
+extractLoadData(from, to, dbms = "sqlite", verbose = interactive())
 }
 \arguments{
-\item{dataFilePath}{The path to the .ZIP file that contains the data}
+\item{from}{The path to the .ZIP file that contains the csv CDM source files}
+
+\item{to}{The path to the .sqlite or .duckdb file that will be created}
+
+\item{dbms}{The file based database system to use: 'sqlite' (default) or 'duckdb'}
+
+\item{verbose}{Print progress notes? TRUE or FALSE}
 }
 \description{
 Extract the Eunomia data files and load into a SQLite database

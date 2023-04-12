@@ -23,7 +23,7 @@ test_that("EUNOMIA_DATA_FOLDER different from folder name", {
 })
 
 test_that("Expected path for downloadEunomiaData", {
-  expect_invisible(downloadEunomiaData(datasetName = "GiBleed"))
+  invisible(testthat::capture_output(expect_invisible(downloadEunomiaData(datasetName = "GiBleed"))))
   expect_true(file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip")))
 })
 
@@ -51,7 +51,38 @@ test_that("Stop when ZIP file contains no CSV files", {
 
 
 test_that("Expected path for extractLoadData", {
-  downloadEunomiaData(datasetName = "GiBleed")
-  expect_warning(extractLoadData(dataFilePath = file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip")))
+  invisible(capture_output(downloadEunomiaData(datasetName = "GiBleed")))
+
+  invisible(capture_output(
+    expect_error(extractLoadData(from = file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"),
+                                 to = tempfile(fileext = ".sqlite")), NA)
+  ))
   expect_true(file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip")))
+
+
+  expect_error(extractLoadData(from = file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"),
+                               to = tempfile(fileext = ".duckdb"),
+                               dbms = "duckdb",
+                               verbose = TRUE), NA)
+
+  expect_error(
+    extractLoadData(from = file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.blah"),
+                    to = tempfile(fileext = ".sqlite"))
+  )
+
+  expect_error(
+    extractLoadData(from = file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "blah.zip"),
+                    to = tempfile(fileext = ".sqlite"))
+  )
 })
+
+test_that("Empty zip file produces error", {
+  withr::with_tempdir({
+    zipfile <- tempfile(fileext = ".zip")
+    file.create("tmp")
+    utils::zip(zipfile, files = "tmp")
+    expect_error(extractLoadData(from = zipfile, to = tempfile()), "does not contain .CSV")
+  })
+})
+
+

@@ -10,6 +10,3 @@ if (Sys.getenv("EUNOMIA_DATA_FOLDER", "") == "") {
     testthat::teardown_env()
   )
 }
-
-# Create a shared connection details
-connectionDetails <- getEunomiaConnectionDetails()

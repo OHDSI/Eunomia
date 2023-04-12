@@ -1,4 +1,5 @@
 #' Download Eunomia data files
+#'
 #' Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
 #'
 #' @param datasetName   The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
@@ -29,7 +30,6 @@ downloadEunomiaData <- function(datasetName,
   }
 
   if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
-    if (Sys.getenv("EUNOMIA_DATA_FOLDER") != pathToData) {
       rlang::inform(paste0(
         "Consider adding `EUNOMIA_DATA_FOLDER='",
         pathToData,
@@ -37,7 +37,6 @@ downloadEunomiaData <- function(datasetName,
         path.expand("~/.Renviron"),
         " and restarting R."
       ))
-    }
   }
 
   if (!dir.exists(pathToData)) {
@@ -47,7 +46,7 @@ downloadEunomiaData <- function(datasetName,
   datasetNameVersion <- paste0(datasetName, "_", cdmVersion)
   zipName <- paste0(datasetNameVersion, ".zip")
 
-  if (file.exists(file.path(pathToData, zipName)) & !overwrite) {
+  if (file.exists(file.path(pathToData, zipName)) && !overwrite) {
     cat(paste0(
       "Dataset already exists (",
       file.path(pathToData, zipName),
@@ -73,7 +72,11 @@ downloadEunomiaData <- function(datasetName,
 #' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
 #' same directory as the .ZIP file.
 #'
-#' @param dataFilePath   The path to the .ZIP file that contains the data
+#' @param from The path to the .ZIP file that contains the csv CDM source files
+#' @param to The path to the .sqlite or .duckdb file that will be created
+#' @param dbms The file based database system to use: 'sqlite' (default) or 'duckdb'
+#' @param verbose Print progress notes? TRUE or FALSE
+#' @importFrom tools file_ext
 #' @examples
 #' \dontrun{
 #' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
@@ -81,44 +84,73 @@ downloadEunomiaData <- function(datasetName,
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(dataFilePath) {
-  if (!file.exists(dataFilePath)) {
-    stop(paste0("dataFilePath: ", dataFilePath, " - NOT FOUND!"))
+extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) {
+  stopifnot(dbms == "sqlite" || dbms == "duckdb", is.logical(verbose), length(verbose) == 1)
+  stopifnot(is.character(from), length(from) == 1, nchar(from) > 0)
+  stopifnot(is.character(to), length(to) == 1, nchar(from) > 0)
+  if (tools::file_ext(from) != "zip") {
+    stop("Source must be a .zip file")
   }
+  if (!file.exists(from)) {
+    stop(paste0("zipped csv archive '", from, "' not found!"))
+  }
+
   tempFileLocation <- tempfile()
-  cat(paste0("Unzipping ", dataFilePath))
-  utils::unzip(zipfile = dataFilePath, exdir = tempFileLocation)
-  on.exit(unlink(tempFileLocation))
+  if(verbose) {
+    cli::cat_line(paste0("Unzipping ", from))
+  }
+  utils::unzip(zipfile = from, exdir = tempFileLocation)
+
 
   # get list of files in directory and load them into the SQLite database
-  dataFiles <- list.files(path = tempFileLocation, pattern = "*.csv")
+  dataFiles <- sort(list.files(path = tempFileLocation, pattern = "*.csv"))
   if (length(dataFiles) <= 0) {
     stop("Data file does not contain .CSV files to load into the database.")
   }
-  databaseFileName <- paste0(tools::file_path_sans_ext(basename(dataFilePath)), ".sqlite")
+  databaseFileName <- paste0(tools::file_path_sans_ext(basename(from)), ".", dbms)
   databaseFilePath <- file.path(tempFileLocation, databaseFileName)
-  connection <- DatabaseConnector::connect(dbms = "sqlite", server = databaseFilePath)
 
-  cat(paste0("Loading database ", databaseFileName))
-  for (i in 1:length(dataFiles)) {
-    tableData <- readr::read_csv(
-      file = file.path(
-        tempFileLocation,
-        dataFiles[i]
-      ), col_types = readr::cols(),
-      lazy = FALSE
-    )
-
-    tableName <- tools::file_path_sans_ext(toupper(dataFiles[i]))
-    cat(paste0(" -- Loading, ", tableName))
-    DatabaseConnector::insertTable(connection = connection, tableName = tableName, data = tableData)
+  if (dbms == "sqlite") {
+    connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFilePath)
+    on.exit(DBI::dbDisconnect(connection), add = TRUE)
+  } else if (dbms == "duckdb") {
+    connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = databaseFilePath)
+    # If the function is successful dbDisconnect will be called twice generating a warning.
+    # If this function is unsuccessful, still close connection on exit.
+    on.exit(suppressWarnings(DBI::dbDisconnect(connection, shutdown = TRUE)), add = TRUE)
   }
 
-  # Move the database to the location where the dataFilePath exists
-  file.copy(from = databaseFilePath, to = file.path(
-    dirname(dataFilePath),
-    databaseFileName
-  ), overwrite = TRUE)
+  on.exit(unlink(tempFileLocation), add = TRUE)
 
-  cat("Database load complete")
+  if(verbose) {
+    cli::cat_rule(paste0("Loading database ", databaseFileName), col = "grey")
+  }
+
+  for (i in 1:length(dataFiles)) {
+    tableData <- readr::read_csv(
+      file = file.path(tempFileLocation, dataFiles[i]),
+      col_types = readr::cols(),
+      guess_max = 2e6,
+      lazy = FALSE
+    )
+    # CDM table and column names should be lowercase: https://github.com/OHDSI/CommonDataModel/issues/509#issuecomment-1315754238
+    names(tableData) <- tolower(names(tableData))
+    tableName <- tools::file_path_sans_ext(tolower(dataFiles[i]))
+    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
+    if (verbose) {
+      cli::cat_bullet(tableName, bullet = 1)
+    }
+  }
+  # An open duckdb database file cannot be copied on windows
+  if (dbms == "duckdb") {
+    DBI::dbDisconnect(connection, shutdown = TRUE)
+  }
+  rc <- file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
+
+  if (isFALSE(rc)) {
+    rlang::abort(paste("File copy from", databaseFilePath, "to", to, "failed!"))
+  }
+  if (verbose) {
+    cli::cat_line("Database load complete", col = "grey")
+  }
 }
