@@ -54,8 +54,11 @@ downloadEunomiaData <- function(datasetName,
     ))
     invisible()
   } else {
-    # downloads the file from github
-    baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
+    # downloads the file from github or user specified location
+    baseUrl <- Sys.getenv("EUNOMIA_DATASETS_URL")
+    if (baseUrl == "") {
+      baseUrl <- "https://raw.githubusercontent.com/OHDSI/EunomiaDatasets/main/datasets"
+    }
     result <- utils::download.file(
       url = paste(baseUrl, datasetName, zipName, sep = "/"),
       destfile = file.path(
