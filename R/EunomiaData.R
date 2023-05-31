@@ -102,7 +102,7 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
   if(verbose) {
     cli::cat_line(paste0("Unzipping ", from))
   }
-  utils::unzip(zipfile = from, exdir = tempFileLocation)
+  utils::unzip(zipfile = from, exdir = tempFileLocation, junkpaths = TRUE)
 
 
   # get list of files in directory and load them into the SQLite database
