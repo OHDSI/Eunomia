@@ -32,7 +32,7 @@ test_that("Connect", {
 
 test_that("Table names and column names case", {
   connection <- DatabaseConnector::connect(getEunomiaConnectionDetails())
-  tableNames <- DatabaseConnector::getTableNames(connection)
+  tableNames <- DatabaseConnector::getTableNames(connection, cast = 'none')
   expect_true(identical(tableNames, tolower(tableNames)))
 
   for (tableName in tableNames) {
