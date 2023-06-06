@@ -30,6 +30,17 @@ test_that("Connect", {
   DatabaseConnector::disconnect(connection)
 })
 
+test_that("Table names and column names case", {
+  connection <- DatabaseConnector::connect(getEunomiaConnectionDetails())
+  tableNames <- DatabaseConnector::getTableNames(connection, cast = 'none')
+  expect_true(identical(tableNames, tolower(tableNames)))
+
+  for (tableName in tableNames) {
+    colNames <- DatabaseConnector::dbListFields(connection, tableName)
+    expect_true(identical(colNames, tolower(colNames)))
+  }
+})
+
 test_that("Query", {
   connection <- DatabaseConnector::connect(getEunomiaConnectionDetails())
   personCount <- DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
