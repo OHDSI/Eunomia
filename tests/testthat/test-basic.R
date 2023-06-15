@@ -69,11 +69,16 @@ test_that("Cohort construction", {
   expect_false(DatabaseConnector::dbIsValid(connection))
 })
 
+test_that("deprecated arguments in createCohorts", {
+  connectionDetails <- getEunomiaConnectionDetails()
+  expect_error(createCohorts(connectionDetails, cdmDatabaseSchema = "blah"))
+  expect_error(createCohorts(connectionDetails, cohortDatabaseSchema = "blah"))
+  expect_warning(createCohorts(connectionDetails, cohortTable = "blah"))
+})
+
 # getConnectionDetails Tests --------
 test_that("datasetName missing error", {
   expect_error(getConnectionDetails(pathToData = ""))
   expect_error(getConnectionDetails("GiBleed", dbms = ""))
 })
-
-
 

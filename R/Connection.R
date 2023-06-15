@@ -67,12 +67,20 @@ getConnectionDetails <- function(datasetName,
                                 dbms = dbms,
                                 databaseFile = databaseFile)
 
-  details <- DatabaseConnector::createConnectionDetails(dbms = dbms, server = datasetLocation)
-  return(details)
+  structure(list(
+    dbms = "sqlite",
+    extraSettings = NULL,
+    oracleDriver = "thin",
+    pathToDriver = NULL,
+    user = function() NULL,
+    password = function() NULL,
+    server = function() rlang::eval_tidy(datasetLocation),
+    port = function() NULL,
+    connectionString = function() NULL),
+    class = c("ConnectionDetails", "DefaultConnectionDetails"))
 }
 
-
-
+DatabaseConnector::createConnectionDetails
 #' Create a copy of a Eunomia dataset
 #'
 #' @description
