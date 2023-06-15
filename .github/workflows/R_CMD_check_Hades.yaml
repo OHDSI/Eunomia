@@ -39,6 +39,12 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Install DatabaseConnector for tests
+        run: |
+          install.packages("DatabaseConnector")
+          print(paste("DatabaseConnector version", packageVersion("DatabaseConnector")))
+        shell: Rscript {0}
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -75,7 +81,6 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE, INSTALL_opts=c("--no-multiarch"))
-          install.packages("DatabaseConnector")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
