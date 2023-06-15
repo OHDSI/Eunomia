@@ -1,8 +1,8 @@
 Package: Eunomia
 Type: Package
-Title: Standard dataset manager for OMOP CDM sample datasets
-Version: 2.0.0
-Date: 2023-04-07
+Title: Standard Dataset Manager For OMOP CDM Sample Datasets
+Version: 2.1.0
+Date: 2023-06-15
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
