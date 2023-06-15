@@ -80,7 +80,6 @@ getConnectionDetails <- function(datasetName,
     class = c("ConnectionDetails", "DefaultConnectionDetails"))
 }
 
-DatabaseConnector::createConnectionDetails
 #' Create a copy of a Eunomia dataset
 #'
 #' @description
