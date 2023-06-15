@@ -4,7 +4,7 @@
 \name{Eunomia-package}
 \alias{Eunomia}
 \alias{Eunomia-package}
-\title{Eunomia: Standard dataset manager for OMOP CDM sample datasets}
+\title{Eunomia: Standard Dataset Manager For OMOP CDM Sample Datasets}
 \description{
 Facilitates access to sample datasets from the EunomiaDatasets repository (https://github.com/ohdsi/EunomiaDatasets).
 }

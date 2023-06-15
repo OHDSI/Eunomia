@@ -11,5 +11,5 @@
 R/TC
 statement_*.sql
 errorReport.txt
-/work/
+work/*
 

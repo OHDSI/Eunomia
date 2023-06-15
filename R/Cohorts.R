@@ -34,7 +34,7 @@ createCohorts <- function(connectionDetails,
                           cohortDatabaseSchema = "main",
                           cohortTable = "cohort") {
 
-  if (!methods::is(connectionDetails, "ConnectionDetails")) {
+  if (!("ConnectionDetails" %in% class(connectionDetails))) {
     stop("connectionDetails is not valid.")
   }
 
