@@ -27,6 +27,10 @@
 #'
 #' @export
 getEunomiaConnectionDetails <- function() {
+  rlang::inform('getEunomiaConnectionDetails() will be deprecated in a future release
+Please replace `getEunomiaConnectionDetails()`
+with`DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = Eunomia::eunomiaDir())`',
+  .frequency = "once", .frequency_id = "depredcatwe-getEunomiaConnectionDetails")
   details <- getConnectionDetails(datasetName = "GiBleed")
   return(details)
 }
@@ -60,6 +64,11 @@ getConnectionDetails <- function(datasetName,
                                  databaseFile = tempfile(fileext = paste0(".", dbms))) {
 
   if(dbms != "sqlite") stop("Only `dbms = 'sqlite'` is supported by getConnectionDetails()")
+
+  rlang::inform('getConnectionDetails() will be deprecated in a future release
+Please replace `getConnectionDetails()`
+with `DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = Eunomia::eunomiaDir())`',
+.frequency = "once", .frequency_id = "depredcate-getConnectionDetails")
 
   datasetLocation <- eunomiaDir(datasetName = datasetName,
                                 cdmVersion = cdmVersion,
