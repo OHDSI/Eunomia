@@ -4,9 +4,9 @@
 \name{Eunomia-package}
 \alias{Eunomia}
 \alias{Eunomia-package}
-\title{Eunomia: Standard Dataset Manager For OMOP CDM Sample Datasets}
+\title{Eunomia: Standard Dataset Manager for OMOP CDM Sample Datasets}
 \description{
-Facilitates access to sample datasets from the EunomiaDatasets repository (https://github.com/ohdsi/EunomiaDatasets).
+Facilitates access to sample datasets from the EunomiaDatasets repository (\url{https://github.com/ohdsi/EunomiaDatasets}).
 }
 \seealso{
 Useful links:

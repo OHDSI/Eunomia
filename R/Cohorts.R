@@ -56,9 +56,9 @@ createCohorts <- function(connectionDetails,
   # Create example cohort table
   pathToSql <- system.file("sql", "CreateCohortTable.sql",package = "Eunomia", mustWork = TRUE)
   sql <- readChar(pathToSql, file.info(pathToSql)$size)
-  sql <- gsub("--[a-zA-Z0-9 ]*", "", sql) # remove comments in sql
+  sql <- gsub("--[a-zA-Z0-9 ]*\n", "\n", sql) # remove comments in sql
   sql <- strsplit(gsub("\n", " ", sql), ";")[[1]] # remove newlines, split on semicolon
-  sql <- trimws(sql)
+  sql <- trimws(sql) # trim white space
   sql <- sql[-which(sql == "")] # remove empty lines
 
   for (i in seq_along(sql)) {

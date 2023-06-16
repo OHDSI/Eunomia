@@ -2,9 +2,8 @@
 
 export(createCohorts)
 export(downloadEunomiaData)
-export(eunomiaDir)
 export(extractLoadData)
-export(getConnectionDetails)
+export(getDatabaseFile)
 export(getEunomiaConnectionDetails)
 import(RSQLite)
 importFrom(readr,read_csv)
