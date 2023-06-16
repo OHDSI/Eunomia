@@ -5,6 +5,7 @@ test_that("Dataset not downloaded and not loaded into SQLite", {
   if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
     unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
   }
+  # No error should be thrown
   expect_error(getDatabaseFile(datasetName = "GiBleed"), NA)
 })
 
@@ -51,7 +52,7 @@ test_that("Query", {
 
 test_that("Cohort construction", {
   connectionDetails <- getEunomiaConnectionDetails()
-  capture.output(createCohorts(connectionDetails))
+  x <- createCohorts(connectionDetails)
   connection <- DatabaseConnector::connect(connectionDetails)
 
   sql <- "SELECT COUNT(*)
