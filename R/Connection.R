@@ -27,28 +27,18 @@
 #'
 #' @export
 getEunomiaConnectionDetails <- function() {
-  rlang::inform('getEunomiaConnectionDetails() will be deprecated in a future release
-Please replace `getEunomiaConnectionDetails()`
-with`DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = Eunomia::getDatabaseFile())`',
-  .frequency = "once", .frequency_id = "depredcatwe-getEunomiaConnectionDetails")
 
-  datasetLocation <- getDatabaseFile(datasetName = "GiBleed",
-                                     cdmVersion = "5.3",
-                                     pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                                     dbms = "sqlite",
-                                     databaseFile = tempfile(fileext = ".sqlite"))
+  if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
+    message("The DatabaseConnector package is required but not installed.")
+    if (!isTRUE(utils::askYesNo("Would you like to install DatabaseConnector?"))) {
+      return(invisible(NULL))
+    } else {
+      utils::install.packages("DatabaseConnector")
+    }
+  }
 
-  structure(list(
-    dbms = "sqlite",
-    extraSettings = NULL,
-    oracleDriver = "thin",
-    pathToDriver = NULL,
-    user = function() NULL,
-    password = function() NULL,
-    server = function() rlang::eval_tidy(datasetLocation),
-    port = function() NULL,
-    connectionString = function() NULL),
-    class = c("ConnectionDetails", "DefaultConnectionDetails"))
+  datasetLocation <- getDatabaseFile(datasetName = "GiBleed")
+  DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = datasetLocation)
 }
 
 #' Create a copy of a Eunomia dataset
