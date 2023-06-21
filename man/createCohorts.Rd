@@ -18,7 +18,7 @@ createCohorts(
 
 \item{cohortDatabaseSchema}{Deprecated. The cohort table will be created in the main schema.}
 
-\item{cohortTable}{Deprecated. Cohort table will be named "main".}
+\item{cohortTable}{Deprecated. Cohort table will be named "cohort".}
 }
 \value{
 A data frame listing all created cohorts.

@@ -23,7 +23,7 @@
 #' @param connectionDetails      The connection details to connect to the (Eunomia) database.
 #' @param cdmDatabaseSchema      Deprecated. The cdm must be created in the main schema.
 #' @param cohortDatabaseSchema   Deprecated. The cohort table will be created in the main schema.
-#' @param cohortTable            Deprecated. Cohort table will be named "main".
+#' @param cohortTable            Deprecated. Cohort table will be named "cohort".
 #'
 #' @return
 #' A data frame listing all created cohorts.
