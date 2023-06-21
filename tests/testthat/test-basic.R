@@ -5,7 +5,8 @@ test_that("Dataset not downloaded and not loaded into SQLite", {
   if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
     unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
   }
-  expect_error(getConnectionDetails(datasetName = "GiBleed"), NA)
+  # No error should be thrown
+  expect_error(getDatabaseFile(datasetName = "GiBleed"), NA)
 })
 
 test_that("Dataset downloaded but not loaded into SQLite", {
@@ -13,15 +14,16 @@ test_that("Dataset downloaded but not loaded into SQLite", {
   if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
     unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
   }
-  expect_error(getConnectionDetails(datasetName = "GiBleed"), NA)
+  expect_error(getDatabaseFile(datasetName = "GiBleed"), NA)
 })
 
 test_that("Get connection details", {
   connectionDetails <- getEunomiaConnectionDetails()
-  if (is(connectionDetails, "connectionDetails"))
+  if (is(connectionDetails, "connectionDetails")) {
     expect_s3_class(connectionDetails, "connectionDetails")
-  else
+  } else {
     expect_s3_class(connectionDetails, "ConnectionDetails")
+  }
 })
 
 test_that("Connect", {
@@ -50,7 +52,7 @@ test_that("Query", {
 
 test_that("Cohort construction", {
   connectionDetails <- getEunomiaConnectionDetails()
-  capture.output(createCohorts(connectionDetails))
+  x <- createCohorts(connectionDetails)
   connection <- DatabaseConnector::connect(connectionDetails)
 
   sql <- "SELECT COUNT(*)
@@ -69,11 +71,16 @@ test_that("Cohort construction", {
   expect_false(DatabaseConnector::dbIsValid(connection))
 })
 
+test_that("deprecated arguments in createCohorts", {
+  connectionDetails <- getEunomiaConnectionDetails()
+  expect_error(createCohorts(connectionDetails, cdmDatabaseSchema = "blah"))
+  expect_error(createCohorts(connectionDetails, cohortDatabaseSchema = "blah"))
+  expect_warning(createCohorts(connectionDetails, cohortTable = "blah"))
+})
+
 # getConnectionDetails Tests --------
 test_that("datasetName missing error", {
   expect_error(getConnectionDetails(pathToData = ""))
   expect_error(getConnectionDetails("GiBleed", dbms = ""))
 })
-
-
 
