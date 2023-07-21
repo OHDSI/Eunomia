@@ -86,7 +86,7 @@ getDatabaseFile <- function(datasetName,
 
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     pathToData <- tempdir()
-    warning("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
+    rlang::warn("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.", .frequency = c("once"), .frequency_id = "data_folder")
   }
 
   stopifnot(is.character(dbms), length(dbms) == 1, dbms %in% c("sqlite", "duckdb"))
@@ -122,7 +122,7 @@ getDatabaseFile <- function(datasetName,
     datasetAvailable <- TRUE
   }
 
-  rc <- file.copy(from = datasetLocation, to = databaseFile)
+  rc <- file.copy(from = datasetLocation, to = databaseFile, overwrite = TRUE)
   if (isFALSE(rc)) {
     stop(paste("File copy from", datasetLocation, "to", databaseFile, "failed!"))
   }

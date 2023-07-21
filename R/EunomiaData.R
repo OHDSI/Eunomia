@@ -23,7 +23,7 @@ downloadEunomiaData <- function(datasetName,
                                 overwrite = FALSE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     pathToData <- tempdir()
-    warning("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
+    rlang::warn("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.", .frequency = c("once"), .frequency_id = "data_folder")
   }
 
   if (is.null(datasetName) || is.na(datasetName) || datasetName == "") {
