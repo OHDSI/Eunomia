@@ -7,7 +7,7 @@ test_that("datasetName missing", {
 })
 
 test_that("pathToData missing", {
-  expect_error(downloadEunomiaData(
+  expect_warning(downloadEunomiaData(
     datasetName = "GiBleed",
     pathToData = ""
   ))

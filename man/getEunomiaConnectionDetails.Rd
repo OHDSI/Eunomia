@@ -4,7 +4,16 @@
 \alias{getEunomiaConnectionDetails}
 \title{Get Default Eunomia Connection Details}
 \usage{
-getEunomiaConnectionDetails()
+getEunomiaConnectionDetails(
+  databaseFile = tempfile(fileext = ".sqlite"),
+  dbms = "sqlite"
+)
+}
+\arguments{
+\item{databaseFile}{The path where the database file will be copied to. By default, the database will
+be copied to a temporary folder, and will be deleted at the end of the R session.}
+
+\item{dbms}{The target dialect, by default "sqlite".}
 }
 \value{
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.

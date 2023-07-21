@@ -22,7 +22,8 @@ downloadEunomiaData <- function(datasetName,
                                 pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
                                 overwrite = FALSE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
-    stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
+    pathToData <- tempdir()
+    warning("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
   }
 
   if (is.null(datasetName) || is.na(datasetName) || datasetName == "") {
