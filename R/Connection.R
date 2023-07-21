@@ -22,11 +22,15 @@
 #' that copy. Function provides backwards compatibility to prior releases of Eunomia default (GiBleed)
 #' dataset
 #'
+#' @param databaseFile The path where the database file will be copied to. By default, the database will
+#'                     be copied to a temporary folder, and will be deleted at the end of the R session.
+#' @param dbms         The target dialect, by default "sqlite".
+#'
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
 #' @export
-getEunomiaConnectionDetails <- function() {
+getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite") {
 
   if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
     message("The DatabaseConnector package is required but not installed.")
@@ -37,8 +41,8 @@ getEunomiaConnectionDetails <- function() {
     }
   }
 
-  datasetLocation <- getDatabaseFile(datasetName = "GiBleed")
-  DatabaseConnector::createConnectionDetails(dbms = "sqlite", server = datasetLocation)
+  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile)
+  DatabaseConnector::createConnectionDetails(dbms = dbms, server = datasetLocation)
 }
 
 #' Create a copy of a Eunomia dataset
@@ -75,13 +79,14 @@ getEunomiaConnectionDetails <- function() {
 #' }
 #'
 getDatabaseFile <- function(datasetName,
-                       cdmVersion = "5.3",
-                       pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                       dbms = "sqlite",
-                       databaseFile = tempfile(fileext = paste0(".", dbms))) {
+                            cdmVersion = "5.3",
+                            pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
+                            dbms = "sqlite",
+                            databaseFile = tempfile(fileext = paste0(".", dbms))) {
 
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
-    stop("The pathToData argument must be specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.")
+    pathToData <- tempdir()
+    rlang::warn("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.", .frequency = c("once"), .frequency_id = "data_folder")
   }
 
   stopifnot(is.character(dbms), length(dbms) == 1, dbms %in% c("sqlite", "duckdb"))
@@ -117,7 +122,7 @@ getDatabaseFile <- function(datasetName,
     datasetAvailable <- TRUE
   }
 
-  rc <- file.copy(from = datasetLocation, to = databaseFile)
+  rc <- file.copy(from = datasetLocation, to = databaseFile, overwrite = TRUE)
   if (isFALSE(rc)) {
     stop(paste("File copy from", datasetLocation, "to", databaseFile, "failed!"))
   }
