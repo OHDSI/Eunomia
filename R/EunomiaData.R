@@ -140,6 +140,20 @@ extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) 
     # CDM table and column names should be lowercase: https://github.com/OHDSI/CommonDataModel/issues/509#issuecomment-1315754238
     names(tableData) <- tolower(names(tableData))
     tableName <- tools::file_path_sans_ext(tolower(dataFiles[i]))
+
+    if (dbms == "sqlite") {
+      # Convert dates and datetime to UNIX timestamp for sqlite
+      for (i in seq_len(ncol(tableData))) {
+        column <- tableData[[i]]
+        if (inherits(column, "Date")) {
+          tableData[, i] <- as.numeric(as.POSIXct(as.character(column), origin = "1970-01-01", tz = "GMT"))
+        }
+        if (inherits(column, "POSIXct")) {
+          tableData[, i] <- as.numeric(as.POSIXct(column, origin = "1970-01-01", tz = "GMT"))
+        }
+      }
+    }
+
     DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
     if (verbose) {
       cli::cat_bullet(tableName, bullet = 1)
