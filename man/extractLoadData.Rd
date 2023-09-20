@@ -2,11 +2,18 @@
 % Please edit documentation in R/EunomiaData.R
 \name{extractLoadData}
 \alias{extractLoadData}
-\title{Extract the Eunomia data files and load into a SQLite database
-Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
+\title{Extract the Eunomia data files and load into a database
+Extract files from a .ZIP file and creates a OMOP CDM database that is then stored in the
 same directory as the .ZIP file.}
 \usage{
-extractLoadData(from, to, dbms = "sqlite", verbose = interactive())
+extractLoadData(
+  from,
+  to,
+  dbms = "sqlite",
+  cdmVersion = "5.3",
+  inputFormat = "csv",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{from}{The path to the .ZIP file that contains the csv CDM source files}
@@ -15,11 +22,15 @@ extractLoadData(from, to, dbms = "sqlite", verbose = interactive())
 
 \item{dbms}{The file based database system to use: 'sqlite' (default) or 'duckdb'}
 
-\item{verbose}{Print progress notes? TRUE or FALSE}
+\item{cdmVersion}{The version of the OMOP CDM that are represented in the archive files.}
+
+\item{inputFormat}{The format of the files expected in the archive. (csv or parquet)}
+
+\item{verbose}{Provide additional logging details during execution.}
 }
 \description{
-Extract the Eunomia data files and load into a SQLite database
-Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
+Extract the Eunomia data files and load into a database
+Extract files from a .ZIP file and creates a OMOP CDM database that is then stored in the
 same directory as the .ZIP file.
 }
 \examples{

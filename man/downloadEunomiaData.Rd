@@ -8,7 +8,8 @@ downloadEunomiaData(
   datasetName,
   cdmVersion = "5.3",
   pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-  overwrite = FALSE
+  overwrite = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
 
 \item{overwrite}{Control whether the existing archive file will be overwritten should it already
 exist.}
+
+\item{verbose}{Provide additional logging details during execution.}
 }
 \value{
 Invisibly returns the destination if the download was successful.

@@ -62,6 +62,9 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
 #' @param databaseFile   The path where the database file will be copied to. By default, the database
 #'                       will be copied to a temporary folder, and will be deleted at the end of the R
 #'                       session.
+#' @param inputFormat    The format of the files expected in the archive. (csv or parquet)
+#' @param verbose        Provide additional logging details during execution
+#' @param overwrite      Remove and replace an existing data set.
 #'
 #' @return The file path to the new Eunomia dataset copy
 #' @export
@@ -82,11 +85,13 @@ getDatabaseFile <- function(datasetName,
                             cdmVersion = "5.3",
                             pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
                             dbms = "sqlite",
-                            databaseFile = tempfile(fileext = paste0(".", dbms))) {
+                            databaseFile = tempfile(fileext = paste0(".", dbms)),
+                            inputFormat = "csv",
+                            verbose = FALSE,
+                            overwrite = TRUE) {
 
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     pathToData <- tempdir()
-    rlang::warn("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.", .frequency = c("once"), .frequency_id = "data_folder")
   }
 
   stopifnot(is.character(dbms), length(dbms) == 1, dbms %in% c("sqlite", "duckdb"))
@@ -104,27 +109,57 @@ getDatabaseFile <- function(datasetName,
   # cached sqlite or duckdb file to be copied
   datasetLocation <- file.path(pathToData, datasetFileName)
   datasetAvailable <- file.exists(datasetLocation)
+  if (datasetAvailable && overwrite) {
+    if (verbose) {
+      message("overwrite specified, deleting existing dataset: ", datasetLocation, appendLF = TRUE)
+    }
+    unlink(datasetLocation)
+    datasetAvailable <- FALSE
+  }
+
+  if (verbose) {
+    message("dataset: ",datasetLocation, " available: ",datasetAvailable, appendLF = TRUE)
+  }
 
   # zip archive of csv source files
   archiveName <- paste0(datasetName, "_", cdmVersion, ".zip")
   archiveLocation <- file.path(pathToData, archiveName)
   archiveAvailable <- file.exists(archiveLocation)
 
+  if (archiveAvailable && overwrite) {
+    if (verbose) {
+      message("overwrite specified, deleting existing archive: ", archiveLocation, appendLF = TRUE)
+    }
+    unlink(archiveLocation)
+    archiveAvailable <- FALSE
+  }
+
+  if (verbose) {
+    message("archive: ",archiveLocation," available:",archiveAvailable,appendLF = TRUE)
+  }
+
   if (!datasetAvailable && !archiveAvailable) {
     writeLines(paste("attempting to download", datasetName))
-    downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion)
+    downloadedData <- downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion, pathToData = pathToData, verbose=verbose)
+    if (verbose) {
+      message("downloaded: ",downloadedData,appendLF = TRUE)
+    }
     archiveAvailable <- TRUE
   }
 
   if (!datasetAvailable && archiveAvailable) {
-    writeLines(paste("attempting to extract and load", archiveLocation))
-    extractLoadData(from = archiveLocation, to = datasetLocation, dbms = dbms)
+    message("attempting to extract and load: ", archiveLocation," to: ",datasetLocation,appendLF = TRUE)
+    extractLoadData(from = archiveLocation, to = datasetLocation, dbms = dbms, cdmVersion = cdmVersion, inputFormat=inputFormat, verbose=verbose)
     datasetAvailable <- TRUE
   }
 
-  rc <- file.copy(from = datasetLocation, to = databaseFile, overwrite = TRUE)
-  if (isFALSE(rc)) {
+  if (verbose) {
+    message("copying: ",datasetLocation," to: ", databaseFile, appendLF = TRUE)
+  }
+
+  copySuccess <- file.copy(from = datasetLocation, to = databaseFile, overwrite = overwrite)
+  if (isFALSE(copySuccess)) {
     stop(paste("File copy from", datasetLocation, "to", databaseFile, "failed!"))
   }
-  return(databaseFile)
+  invisible(databaseFile)
 }

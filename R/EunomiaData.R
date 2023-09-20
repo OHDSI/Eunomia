@@ -10,6 +10,7 @@
 #'                      value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
 #' @param overwrite     Control whether the existing archive file will be overwritten should it already
 #'                      exist.
+#' @param verbose       Provide additional logging details during execution.
 #' @return
 #' Invisibly returns the destination if the download was successful.
 #' @examples
@@ -20,24 +21,16 @@
 downloadEunomiaData <- function(datasetName,
                                 cdmVersion = "5.3",
                                 pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
-                                overwrite = FALSE) {
+                                overwrite = FALSE,
+                                verbose = FALSE) {
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     pathToData <- tempdir()
-    rlang::warn("The pathToData argument is not specified. Consider setting the EUNOMIA_DATA_FOLDER environment variable, for example in the .Renviron file.", .frequency = c("once"), .frequency_id = "data_folder")
+    warningContent <- paste("The pathToData argument was not specified and the EUNOMIA_DATA_FOLDER environment variable was not set. Using", pathToData)
+    rlang::warn(warningContent, .frequency = c("once"), .frequency_id = "data_folder")
   }
 
   if (is.null(datasetName) || is.na(datasetName) || datasetName == "") {
     stop("The datasetName argument must be specified.")
-  }
-
-  if (pathToData != Sys.getenv("EUNOMIA_DATA_FOLDER")) {
-      rlang::inform(paste0(
-        "Consider adding `EUNOMIA_DATA_FOLDER='",
-        pathToData,
-        "'` to ",
-        path.expand("~/.Renviron"),
-        " and restarting R."
-      ))
   }
 
   if (!dir.exists(pathToData)) {
@@ -48,12 +41,7 @@ downloadEunomiaData <- function(datasetName,
   zipName <- paste0(datasetNameVersion, ".zip")
 
   if (file.exists(file.path(pathToData, zipName)) && !overwrite) {
-    cat(paste0(
-      "Dataset already exists (",
-      file.path(pathToData, zipName),
-      "). Specify overwrite=T to overwrite existing zip archive."
-    ))
-    invisible()
+    message("Dataset already exists (",file.path(pathToData, zipName),"). Specify overwrite=T to overwrite existing zip archive.", appendLF = TRUE)
   } else {
     # downloads the file from github or user specified location
     baseUrl <- Sys.getenv("EUNOMIA_DATASETS_URL")
@@ -68,18 +56,20 @@ downloadEunomiaData <- function(datasetName,
       )
     )
 
-    invisible(pathToData)
+    invisible(file.path(pathToData, zipName))
   }
 }
 
-#' Extract the Eunomia data files and load into a SQLite database
-#' Extract files from a .ZIP file and creates a SQLite OMOP CDM database that is then stored in the
+#' Extract the Eunomia data files and load into a database
+#' Extract files from a .ZIP file and creates a OMOP CDM database that is then stored in the
 #' same directory as the .ZIP file.
 #'
 #' @param from The path to the .ZIP file that contains the csv CDM source files
 #' @param to The path to the .sqlite or .duckdb file that will be created
 #' @param dbms The file based database system to use: 'sqlite' (default) or 'duckdb'
-#' @param verbose Print progress notes? TRUE or FALSE
+#' @param cdmVersion The version of the OMOP CDM that are represented in the archive files.
+#' @param inputFormat The format of the files expected in the archive. (csv or parquet)
+#' @param verbose Provide additional logging details during execution.
 #' @importFrom tools file_ext
 #' @examples
 #' \dontrun{
@@ -88,87 +78,211 @@ downloadEunomiaData <- function(datasetName,
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(from, to, dbms = "sqlite", verbose = interactive()) {
-  stopifnot(dbms == "sqlite" || dbms == "duckdb", is.logical(verbose), length(verbose) == 1)
+extractLoadData <- function(from, to, dbms = "sqlite",cdmVersion="5.3", inputFormat="csv", verbose = FALSE) {
+  stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(from), length(from) == 1, nchar(from) > 0)
-  stopifnot(is.character(to), length(to) == 1, nchar(from) > 0)
+  stopifnot(is.character(to), length(to) == 1, nchar(to) > 0)
   if (tools::file_ext(from) != "zip") {
     stop("Source must be a .zip file")
   }
   if (!file.exists(from)) {
-    stop(paste0("zipped csv archive '", from, "' not found!"))
+    stop(paste0("zipped archive '", from, "' not found!"))
   }
 
-  tempFileLocation <- tempfile()
-  if(verbose) {
-    cli::cat_line(paste0("Unzipping ", from))
+  unzipLocation <- tempdir()
+  utils::unzip(zipfile = from, exdir = unzipLocation, junkpaths = TRUE)
+  if (verbose) {
+    message("unzipping to: ",unzipLocation,appendLF = TRUE)
   }
-  utils::unzip(zipfile = from, exdir = tempFileLocation, junkpaths = TRUE)
+  loadDataFiles(dataPath = unzipLocation, dbPath = to, dbms = dbms,cdmVersion = cdmVersion, inputFormat=inputFormat, verbose = verbose)
 
+  unlink(unzipLocation)
+}
 
-  # get list of files in directory and load them into the SQLite database
-  dataFiles <- sort(list.files(path = tempFileLocation, pattern = "*.csv"))
+#' Load data files into a database(sqlite or duckdb)
+#'
+#' Load data from csv or parquet files into a database file (sqlite or duckdb).
+#'
+#' @param dataPath       The path to the directory containing CDM source files (csv or parquet)
+#' @param dbPath         The path to the .sqlite or .duckdb file that will be created
+#' @param dbms           The file-based database system to use: 'sqlite' (default) or 'duckdb'
+#' @param inputFormat    The input format of the files to load.  Supported formats include csv, parquet.
+#' @param cdmVersion     The CDM version to create in the resulting database. Supported versions are 5.3 and 5.4
+#' @param cdmDatabaseSchema The schema in which to create the CDM tables. Default is main.
+#' @param verbose        Provide additional logging details during execution.
+#' @param overwrite      Remove and replace an existing data set.
+#' @export
+loadDataFiles <- function(dataPath,
+                      dbPath,
+                      inputFormat = "csv",
+                      cdmVersion="5.3",
+                      cdmDatabaseSchema = "main",
+                      dbms = "sqlite",
+                      verbose = FALSE,
+                      overwrite = FALSE) {
+  stopifnot(inputFormat %in% c("csv","parquet"))
+  stopifnot(dbms == "sqlite" || dbms == "duckdb")
+  stopifnot(is.character(dataPath), length(dataPath) == 1, nchar(dataPath) > 0)
+  stopifnot(is.character(dbPath), length(dbPath) == 1, nchar(dbPath) > 0)
+
+  dataFiles <- sort(list.files(path = dataPath, pattern = paste("*",inputFormat,sep=".")))
   if (length(dataFiles) <= 0) {
-    stop("Data file does not contain .CSV files to load into the database.")
+    stop("Data directory does not contain files to load into the database.")
   }
-  databaseFileName <- paste0(tools::file_path_sans_ext(basename(from)), ".", dbms)
-  databaseFilePath <- file.path(tempFileLocation, databaseFileName)
+
+  if (verbose) {
+    message("connecting to: ", dbms, appendLF = TRUE)
+  }
+
+  if (overwrite) {
+    if (file.exists(dbPath)) {
+      if (verbose) {
+        message("deleting existing file: ", dbPath, appendLF = TRUE)
+      }
+      unlink(dbPath)
+    }
+  }
 
   if (dbms == "sqlite") {
-    connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFilePath)
+    connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = dbPath)
     on.exit(DBI::dbDisconnect(connection), add = TRUE)
   } else if (dbms == "duckdb") {
-    connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = databaseFilePath)
-    # If the function is successful dbDisconnect will be called twice generating a warning.
-    # If this function is unsuccessful, still close connection on exit.
-    on.exit(suppressWarnings(DBI::dbDisconnect(connection, shutdown = TRUE)), add = TRUE)
+    connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = dbPath)
+    on.exit(DBI::dbDisconnect(connection, shutdown = TRUE), add = TRUE)
+    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()), add=TRUE)
   }
 
-  on.exit(unlink(tempFileLocation), add = TRUE)
+  # creating tables via DDL eliminates issues with inferring column types
+  # avoiding use of executeDdl as it requires DatabaseConnector which has some
+  # issues with managing tables in Sqlite & DuckDb
 
-  if(verbose) {
-    cli::cat_rule(paste0("Loading database ", databaseFileName), col = "grey")
+  tempDdlFolder <- tempdir()
+  # when running multiple tests in one session, R returns the same tempdir
+  # if multiple databases are being tested, we need to remove existing ddl
+  # if you unlink the entire tempdir, you can get rid of the database file created before completing tests
+  existingDdlFiles <- sort(list.files(path = tempDdlFolder, full.names = TRUE, pattern = ".*\\.sql$"))
+  for (existingDdlFile in existingDdlFiles) {
+    unlink(existingDdlFile)
+  }
+
+  CommonDataModel::writeDdl(
+    targetDialect = dbms,
+    cdmVersion = cdmVersion,
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    outputfolder = tempDdlFolder
+  )
+
+  ddlFiles <- sort(list.files(path = tempDdlFolder, full.names = TRUE, pattern = ".*\\.sql$"))
+
+  for (ddlFile in ddlFiles) {
+    if (verbose) {
+      message("executing ddl statements from: ", ddlFile, appendLF = TRUE)
+    }
+
+    ddlFileContents <- readChar(ddlFile, file.info(ddlFile)$size)
+    statements <- as.list(strsplit(ddlFileContents, ';')[[1]])
+    for (statement in statements) {
+      DBI::dbExecute(
+        conn = connection,
+        statement = statement
+      )
+    }
   }
 
   for (i in 1:length(dataFiles)) {
-    tableData <- readr::read_csv(
-      file = file.path(tempFileLocation, dataFiles[i]),
-      col_types = readr::cols(),
-      guess_max = 2e6,
-      lazy = FALSE
-    )
-    # CDM table and column names should be lowercase: https://github.com/OHDSI/CommonDataModel/issues/509#issuecomment-1315754238
+    dataFile <- dataFiles[i]
+    if (verbose) {
+      dataFileMessage <- paste("loading file: ", dataFile)
+      message(dataFileMessage, appendLF = TRUE)
+    }
+
+    if (inputFormat == "csv") {
+      tableData <- readr::read_csv(
+        file = file.path(dataPath, dataFiles[i]),
+        show_col_types = FALSE
+      )
+    } else if (inputFormat == "parquet") {
+      tableData <- arrow::read_parquet(
+        file = file.path(dataPath, dataFiles[i])
+      )
+    }
+
     names(tableData) <- tolower(names(tableData))
     tableName <- tools::file_path_sans_ext(tolower(dataFiles[i]))
 
     if (dbms == "sqlite") {
-      # Convert dates and datetime to UNIX timestamp for sqlite
-      for (i in seq_len(ncol(tableData))) {
-        column <- tableData[[i]]
+      for (j in seq_len(ncol(tableData))) {
+        column <- tableData[[j]]
         if (inherits(column, "Date")) {
-          tableData[, i] <- as.numeric(as.POSIXct(as.character(column), origin = "1970-01-01", tz = "GMT"))
+          tableData[, j] <- as.numeric(as.POSIXct(as.character(column), origin = "1970-01-01", tz = "GMT"))
         }
         if (inherits(column, "POSIXct")) {
-          tableData[, i] <- as.numeric(as.POSIXct(column, origin = "1970-01-01", tz = "GMT"))
+          tableData[, j] <- as.numeric(as.POSIXct(column, origin = "1970-01-01", tz = "GMT"))
         }
       }
     }
 
-    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData)
     if (verbose) {
-      cli::cat_bullet(tableName, bullet = 1)
+      message("saving table: ",tableName," (rows: ", nrow(tableData), ")",appendLF = TRUE)
     }
-  }
-  # An open duckdb database file cannot be copied on windows
-  if (dbms == "duckdb") {
-    DBI::dbDisconnect(connection, shutdown = TRUE)
-  }
-  rc <- file.copy(from = databaseFilePath, to = to, overwrite = TRUE)
 
-  if (isFALSE(rc)) {
-    rlang::abort(paste("File copy from", databaseFilePath, "to", to, "failed!"))
+    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append=TRUE)
   }
-  if (verbose) {
-    cli::cat_line("Database load complete", col = "grey")
+}
+
+#' Export data files from a database(sqlite or duckdb)
+#'
+#' Helper function to export data to csv or parquet files from a database file (sqlite or duckdb).
+#'
+#' @param dbPath         The path to the source .sqlite or .duckdb file
+#' @param outputFolder       The path to the export destination directory
+#' @param dbms           The file-based database system to use: 'sqlite' (default) or 'duckdb'
+#' @param outputFormat    The output format for the files.  Supported formats include csv, parquet.
+#' @param verbose       Boolean argument controlling verbose debugging output
+#' @export
+exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sqlite", verbose=FALSE) {
+  stopifnot(outputFormat %in% c("csv","parquet"))
+  stopifnot(dbms %in% c("sqlite", "duckdb"))
+
+  if (dbms == "sqlite") {
+    connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = dbPath)
+    on.exit(DBI::dbDisconnect(connection), add = TRUE)
+  } else if (dbms == "duckdb") {
+    connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = dbPath)
+    on.exit(DBI::dbDisconnect(connection, shutdown = TRUE), add = TRUE)
+    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()),add=TRUE)
+  }
+
+  tableNames <- DBI::dbListTables(connection)
+  message("processing ", length(tableNames), " tables", appendLF = TRUE)
+
+  if (!dir.exists(outputFolder)) {
+    dir.create(
+      path = outputFolder,
+      recursive = T
+    )
+  }
+
+  for (tableName in tableNames) {
+    if (verbose) {
+      message("processing ", tableName, appendLF = TRUE)
+    }
+
+    outputFileName <- file.path(outputFolder,tableName)
+
+    if (outputFormat == "csv") {
+      filePath <- paste(outputFileName, "csv", sep = ".")
+      query <- paste("SELECT * FROM", tableName)
+      result <- DBI::dbSendQuery(connection, query)
+      data <- DBI::dbFetch(result)
+      DBI::dbClearResult(result)
+      write.csv(data, filePath, row.names = T)
+    } else if (outputFormat == "parquet") {
+      filePath <- paste(outputFileName, "parquet", sep = ".")
+      query <- paste0("copy ", tableName, " to '", filePath, "' (FORMAT PARQUET);")
+      DBI::dbExecute(connection,query)
+    } else {
+      message("unknown file format")
+    }
   }
 }

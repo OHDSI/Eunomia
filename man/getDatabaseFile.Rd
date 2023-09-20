@@ -9,7 +9,10 @@ getDatabaseFile(
   cdmVersion = "5.3",
   pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
   dbms = "sqlite",
-  databaseFile = tempfile(fileext = paste0(".", dbms))
+  databaseFile = tempfile(fileext = paste0(".", dbms)),
+  inputFormat = "csv",
+  verbose = FALSE,
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -27,6 +30,12 @@ value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
 \item{databaseFile}{The path where the database file will be copied to. By default, the database
 will be copied to a temporary folder, and will be deleted at the end of the R
 session.}
+
+\item{inputFormat}{The format of the files expected in the archive. (csv or parquet)}
+
+\item{verbose}{Provide additional logging details during execution}
+
+\item{overwrite}{Remove and replace an existing data set.}
 }
 \value{
 The file path to the new Eunomia dataset copy
