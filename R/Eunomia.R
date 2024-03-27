@@ -18,6 +18,7 @@
 "_PACKAGE"
 
 #' @import DatabaseConnector
+#' @import RSQLite
 #' @importFrom utils unzip read.csv write.csv untar
 #' @importFrom readr write_csv
 NULL
