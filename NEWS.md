@@ -1,7 +1,15 @@
+Eunomia 1.0.3
+=============
+
+Changes
+
+- Supporting DatabaseConnector > 6.0.0
+
 Eunomia 1.0.2
 =============
 
 Changes
+
 - switch to readr::write_csv for proper concept_id handling
 - added gender concepts to concept table
 

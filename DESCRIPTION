@@ -1,8 +1,8 @@
 Package: Eunomia
 Type: Package
 Title: A Standard Dataset in the OMOP Common Data Model
-Version: 1.0.2
-Date: 2022-03-25
+Version: 1.0.3
+Date: 2024-03-27
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
@@ -17,10 +17,9 @@ Depends:
   DatabaseConnector (>= 2.2.0)
 Imports:
   SqlRender,
-  RSQLite (> 2.1.1),
   readr
 Suggests:
   testthat
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.1

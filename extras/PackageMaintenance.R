@@ -23,7 +23,7 @@ devtools::spell_check()
 
 # Create manual -----------------------------------------------------------
 unlink("extras/Eunomia.pdf")
-shell("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
+system("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
 
 pkgdown::build_site(examples = FALSE)
 OhdsiRTools::fixHadesLogo()
