@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Eunomia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://ohdsi.github.io/Hades" class="external-link"><img src='https://ohdsi.github.io/Hades/images/hadesMini.png' width=80 height=17 style='vertical-align: top;'></a>
+  <a href="https://ohdsi.github.io/Hades" class="external-link">hadesLogo</a>
 </li>
 <li>
   <a href="https://github.com/OHDSI/Eunomia/" class="external-link">
@@ -52,12 +52,19 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.0" id="eunomia-20">Eunomia 2.0<a class="anchor" aria-label="anchor" href="#eunomia-20"></a></h2>
-<p>Changes - Updated package to no longer contain a dataset rather facilite access to sample datasets stored in the <a href="https://github.com/OHDSI/EunomiaDatasets" class="external-link uri">https://github.com/OHDSI/EunomiaDatasets</a> repository. - Backward compatibility maintained with getEunomiaConnectionDetails function. - New function added for getConnectionDetails - Embedded sample dataset removed.</p>
+<p>Changes - Updated package to no longer contain a dataset rather facilitate access to sample datasets stored in the <a href="https://github.com/OHDSI/EunomiaDatasets" class="external-link uri">https://github.com/OHDSI/EunomiaDatasets</a> repository - Backward compatibility maintained with getEunomiaConnectionDetails function - New function added for getDatabaseFile - Embedded sample dataset removed - Remove dependency on DatabaseConnector and Java</p>
 </div>
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.0.3" id="eunomia-103">Eunomia 1.0.3<a class="anchor" aria-label="anchor" href="#eunomia-103"></a></h2>
+<p>Changes</p>
+<ul><li>Supporting DatabaseConnector &gt; 6.0.0</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.2" id="eunomia-102">Eunomia 1.0.2<a class="anchor" aria-label="anchor" href="#eunomia-102"></a></h2>
-<p>Changes - switch to readr::write_csv for proper concept_id handling - added gender concepts to concept table</p>
-</div>
+<p>Changes</p>
+<ul><li>switch to readr::write_csv for proper concept_id handling</li>
+<li>added gender concepts to concept table</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="eunomia-101">Eunomia 1.0.1<small>2020-11-04</small><a class="anchor" aria-label="anchor" href="#eunomia-101"></a></h2>
 <p>Changes</p>
@@ -77,11 +84,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Frank DeFalco, Martijn Schuemie, Anthony Sena, Natthawut Adulyanukosol, Star Liu.</p>
+  <p></p><p>Developed by Frank DeFalco, Martijn Schuemie, Anthony Sena, Natthawut Adulyanukosol, Star Liu, Adam Black.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
