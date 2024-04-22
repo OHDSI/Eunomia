@@ -22,7 +22,7 @@ Imports:
   rlang,
   RSQLite,
   DBI,
-  arrow,
+  arrow (<= 14.0.0.2),
   CommonDataModel
 Suggests:
   testthat,
