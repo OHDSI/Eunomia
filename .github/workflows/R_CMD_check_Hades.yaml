@@ -86,7 +86,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          packages: url::https://cloud.r-project.org/src/contrib/Archive/arrow/arrow_14.0.0.2.tar.gz
+          packages: url::https://cloud.r-project.org/src/contrib/Archive/arrow/arrow_14.0.0.2.tar.gz, any::sessioninfo
           extra-packages: any::rcmdcheck
           needs: check
 
