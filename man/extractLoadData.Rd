@@ -28,6 +28,9 @@ extractLoadData(
 
 \item{verbose}{Provide additional logging details during execution.}
 }
+\value{
+No return value, called to load archive into a database file.
+}
 \description{
 Extract the Eunomia data files and load into a database
 Extract files from a .ZIP file and creates a OMOP CDM database that is then stored in the

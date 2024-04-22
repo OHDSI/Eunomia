@@ -1,4 +1,5 @@
 Release of 2.0 version of package.
+Resolved CRAN feedback issues
 
 ---
 

@@ -70,6 +70,7 @@ downloadEunomiaData <- function(datasetName,
 #' @param cdmVersion The version of the OMOP CDM that are represented in the archive files.
 #' @param inputFormat The format of the files expected in the archive. (csv or parquet)
 #' @param verbose Provide additional logging details during execution.
+#' @returns No return value, called to load archive into a database file.
 #' @importFrom tools file_ext
 #' @examples
 #' \dontrun{
@@ -111,6 +112,7 @@ extractLoadData <- function(from, to, dbms = "sqlite",cdmVersion="5.3", inputFor
 #' @param cdmDatabaseSchema The schema in which to create the CDM tables. Default is main.
 #' @param verbose        Provide additional logging details during execution.
 #' @param overwrite      Remove and replace an existing data set.
+#' @returns No return value, loads data into database file.
 #' @export
 loadDataFiles <- function(dataPath,
                       dbPath,
@@ -239,6 +241,7 @@ loadDataFiles <- function(dataPath,
 #' @param dbms           The file-based database system to use: 'sqlite' (default) or 'duckdb'
 #' @param outputFormat    The output format for the files.  Supported formats include csv, parquet.
 #' @param verbose       Boolean argument controlling verbose debugging output
+#' @returns No return value, called to export to outputFolder.
 #' @export
 exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sqlite", verbose=FALSE) {
   stopifnot(outputFormat %in% c("csv","parquet"))

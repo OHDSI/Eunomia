@@ -23,6 +23,9 @@ exportDataFiles(
 
 \item{verbose}{Boolean argument controlling verbose debugging output}
 }
+\value{
+No return value, called to export to outputFolder.
+}
 \description{
 Helper function to export data to csv or parquet files from a database file (sqlite or duckdb).
 }

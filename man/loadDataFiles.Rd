@@ -32,6 +32,9 @@ loadDataFiles(
 
 \item{overwrite}{Remove and replace an existing data set.}
 }
+\value{
+No return value, loads data into database file.
+}
 \description{
 Load data from csv or parquet files into a database file (sqlite or duckdb).
 }

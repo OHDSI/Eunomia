@@ -139,7 +139,7 @@ getDatabaseFile <- function(datasetName,
   }
 
   if (!datasetAvailable && !archiveAvailable) {
-    writeLines(paste("attempting to download", datasetName))
+    message(paste("attempting to download", datasetName))
     downloadedData <- downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion, pathToData = pathToData, verbose=verbose)
     if (verbose) {
       message("downloaded: ",downloadedData,appendLF = TRUE)
