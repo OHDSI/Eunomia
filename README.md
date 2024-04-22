@@ -2,7 +2,7 @@ Eunomia
 =======
 
 [![Build Status](https://github.com/OHDSI/Eunomia/workflows/R-CMD-check/badge.svg)](https://github.com/OHDSI/Eunomia/actions?query=workflow%3AR-CMD-check)
-[![codecov.io](https://app.codecov.io/github/OHDSI/Eunomia?branch=main)](https://app.codecov.io/github/OHDSI/Eunomia?branch=main)
+[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=main)](https://app.codecov.io/github/OHDSI/Eunomia?branch=main)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/Eunomia)](https://cran.r-project.org/package=Eunomia)
 [![CRAN_Status_Badge](http://cranlogs.r-pkg.org/badges/Eunomia)](https://cran.r-project.org/package=Eunomia)
 
