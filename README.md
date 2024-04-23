@@ -1,8 +1,8 @@
 Eunomia
 =======
 
-[![Build Status](https://travis-ci.org/OHDSI/Eunomia.svg?branch=main)](https://travis-ci.org/OHDSI/Eunomia)
-[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=main)](https://codecov.io/github/OHDSI/Eunomia?branch=main)
+[![Build Status](https://github.com/OHDSI/Eunomia/workflows/R-CMD-check/badge.svg)](https://github.com/OHDSI/Eunomia/actions?query=workflow%3AR-CMD-check)
+[![codecov.io](https://codecov.io/github/OHDSI/Eunomia/coverage.svg?branch=main)](https://app.codecov.io/github/OHDSI/Eunomia?branch=main)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/Eunomia)](https://cran.r-project.org/package=Eunomia)
 [![CRAN_Status_Badge](http://cranlogs.r-pkg.org/badges/Eunomia)](https://cran.r-project.org/package=Eunomia)
 
@@ -10,14 +10,14 @@ Eunomia is part of [HADES](https://ohdsi.github.io/Hades/).
 
 Introduction
 ============
-Eunomia is a standard dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) for testing and demonstration purposes. Eunomia is used for many of the exercises in [the Book of OHDSI](https://ohdsi.github.io/TheBookOfOhdsi/). For functions that require schema name, use 'main'.
+Eunomia is a standard dataset manager for sample OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) datasets. Eunomia facilitates access to sample datasets from the [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets). Eunomia is used for testing and demonstration purposes, including many of the exercises in [the Book of OHDSI](https://ohdsi.github.io/TheBookOfOhdsi/). For functions that require schema name, use 'main'.
 
 Features
 ========
-- Provides a small simulated dataset in the CDM.
-- Also includes a subset of the Standardized Vocabularies.
+- Download selected sample datasets from [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets), which includes a subset of the Standardized Vocabularies.
 - Interfaces with the DatabaseConnector and SqlRender packages.
-- No need to set up a database server. Eunomia runs in your R instance (using SQLite).
+- No need to set up a database server. Eunomia runs in your R instance (currently using SQLite). 
+- (planned) supports for other databases
 
 Example
 =======
@@ -36,11 +36,11 @@ disconnect(connection)
 
 Technology
 ==========
-Eunomia is an R package containing a SQLite database. 
+Eunomia is an R package providing access to sample datasets at [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets).
 
 System Requirements
 ===================
-Requires R. Some of the packages required by Eunomia require Java. 
+Requires R. Some of the packages required by Eunomia require Java.
 
 Installation
 ============
@@ -52,7 +52,7 @@ Installation
   ```r
   install.packages("Eunomia")
   ```
-  
+
 User Documentation
 ==================
 Documentation can be found on the [package website](https://ohdsi.github.io/Eunomia/).

@@ -14,32 +14,16 @@ createCohorts(
 \arguments{
 \item{connectionDetails}{The connection details to connect to the (Eunomia) database.}
 
-\item{cdmDatabaseSchema}{The name of the database schema holding the CDM data.}
+\item{cdmDatabaseSchema}{Deprecated. The cdm must be created in the main schema.}
 
-\item{cohortDatabaseSchema}{The name of the database schema where the cohorts will be written.}
+\item{cohortDatabaseSchema}{Deprecated. The cohort table will be created in the main schema.}
 
-\item{cohortTable}{The name of the table in the cohortDatabaseSchema where the cohorts
-will be written.}
+\item{cohortTable}{Deprecated. Cohort table will be named "cohort".}
 }
 \value{
 A data frame listing all created cohorts.
 }
 \description{
-Creates a set of predefined cohorts in a cohort table.
-WARNING: this will delete all existing cohorts in the table!
-}
-\examples{
-connectionDetails <- getEunomiaConnectionDetails()
-createCohorts(connectionDetails)
-
-connection <- connect(connectionDetails)
-
-sql <- "SELECT COUNT(*)
-FROM main.cohort
-WHERE cohort_definition_id = 1;"
-
-renderTranslateQuerySql(connection, sql)
-
-disconnect(connection)
-
+Creates a set of predefined cohorts in a cohort table. WARNING: this will delete all existing
+cohorts in the table!
 }

@@ -4,9 +4,9 @@
 \name{Eunomia-package}
 \alias{Eunomia}
 \alias{Eunomia-package}
-\title{Eunomia: A Standard Dataset in the OMOP Common Data Model}
+\title{Eunomia: Standard Dataset Manager for Observational Medical Outcomes Partnership Common Data Model Sample Datasets}
 \description{
-A sample dataset in the OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) format. The CDM enables uniform storage of observational health care data, and is widely used for health care analytics. 'Eunomia' contains simulated data as well as a subset of the OMOP Vocabulary, and enables testing of additional packages and is used for educational and demonstration purposes.
+Facilitates access to sample datasets from the 'EunomiaDatasets' repository (\url{https://github.com/ohdsi/EunomiaDatasets}).
 }
 \seealso{
 Useful links:
@@ -22,6 +22,10 @@ Useful links:
 Authors:
 \itemize{
   \item Martijn Schuemie \email{schuemie@ohdsi.org}
+  \item Anthony Sena \email{sena@ohdsi.org}
+  \item Natthawut Adulyanukosol \email{na339@unc.edu}
+  \item Star Liu \email{sliu197@jhmi.edu}
+  \item Adam Black \email{black@ohdsi.org}
 }
 
 Other contributors:

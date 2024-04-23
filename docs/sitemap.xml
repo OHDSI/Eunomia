@@ -22,12 +22,33 @@
     <loc>/reference/createCohorts.html</loc>
   </url>
   <url>
+    <loc>/reference/downloadEunomiaData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/exportDataFiles.html</loc>
+  </url>
+  <url>
     <loc>/reference/exportToCsv.html</loc>
+  </url>
+  <url>
+    <loc>/reference/extractLoadData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getConnectionDetails.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getDatabaseFile.html</loc>
   </url>
   <url>
     <loc>/reference/getEunomiaConnectionDetails.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loadDataFiles.html</loc>
+  </url>
+  <url>
+    <loc>/reference/supportsJava8.html</loc>
   </url>
 </urlset>

@@ -74,36 +74,6 @@ database.</p></dd>
 
 </dl></div>
 
-    <div id="ref-examples">
-    <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
-<span><span class="co"># For this example we'll create a temp folder:</span></span>
-<span><span class="va">folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">exportToCsv</span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
-<span></span>
-<span> <span class="co">#  [1] "CARE_SITE.csv"             "CDM_SOURCE.csv"            "COHORT.csv"</span></span>
-<span> <span class="co">#  [4] "COHORT_ATTRIBUTE.csv"      "CONCEPT.csv"               "CONCEPT_ANCESTOR.csv"</span></span>
-<span> <span class="co">#  [7] "CONCEPT_CLASS.csv"         "CONCEPT_RELATIONSHIP.csv"  "CONCEPT_SYNONYM.csv"</span></span>
-<span> <span class="co"># [10] "CONDITION_ERA.csv"         "CONDITION_OCCURRENCE.csv"  "COST.csv"</span></span>
-<span> <span class="co"># [13] "DEATH.csv"                 "DEVICE_EXPOSURE.csv"       "DOMAIN.csv"</span></span>
-<span> <span class="co"># [16] "DOSE_ERA.csv"              "DRUG_ERA.csv"              "DRUG_EXPOSURE.csv"</span></span>
-<span> <span class="co"># [19] "DRUG_STRENGTH.csv"         "FACT_RELATIONSHIP.csv"     "LOCATION.csv"</span></span>
-<span> <span class="co"># [22] "MEASUREMENT.csv"           "METADATA.csv"              "NOTE.csv"</span></span>
-<span> <span class="co"># [25] "NOTE_NLP.csv"              "OBSERVATION.csv"           "OBSERVATION_PERIOD.csv"</span></span>
-<span> <span class="co"># [28] "PAYER_PLAN_PERIOD.csv"     "PERSON.csv"                "PROCEDURE_OCCURRENCE.csv"</span></span>
-<span> <span class="co"># [31] "PROVIDER.csv"              "RELATIONSHIP.csv"          "SOURCE_TO_CONCEPT_MAP.csv"</span></span>
-<span> <span class="co"># [34] "SPECIMEN.csv"              "VISIT_DETAIL.csv"          "VISIT_OCCURRENCE.csv"</span></span>
-<span> <span class="co"># [37] "VOCABULARY.csv"</span></span>
-<span></span>
-<span> <span class="co"># Cleaning up the temp folder used in this example:</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">folder</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
-    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -116,7 +86,7 @@ database.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
