@@ -89,6 +89,11 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Install specific version of arrow
+        if: runner.os == 'macOS'
+        run: |
+          Rscript -e "install.packages('arrow', repos = c('https://apache.r-universe.dev'))"
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           args: 'c("--no-manual", "--as-cran")'
