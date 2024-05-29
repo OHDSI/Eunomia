@@ -22,15 +22,16 @@
 #' that copy. Function provides backwards compatibility to prior releases of Eunomia default (GiBleed)
 #' dataset
 #'
-#' @param databaseFile The path where the database file will be copied to. By default, the database will
-#'                     be copied to a temporary folder, and will be deleted at the end of the R session.
-#' @param dbms         The target dialect, by default "sqlite".
-#'
+#' @param databaseFile  The path where the database file will be copied to. By default, the database will
+#'                      be copied to a temporary folder, and will be deleted at the end of the R session.
+#' @param dbms          The target dialect, by default "sqlite".
+#' @param overwrite     Control whether the existing archive file will be overwritten should it already
+#'                      exist.
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
 #' @export
-getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite") {
+getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite", overwrite=FALSE) {
 
   if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
     message("The DatabaseConnector package is required but not installed.")
@@ -41,7 +42,7 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
     }
   }
 
-  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile)
+  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile, overwrite = overwrite)
   DatabaseConnector::createConnectionDetails(dbms = dbms, server = datasetLocation)
 }
 
