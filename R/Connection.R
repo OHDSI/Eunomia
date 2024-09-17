@@ -41,7 +41,7 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
     }
   }
 
-  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile)
+  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile, overwrite = FALSE)
   DatabaseConnector::createConnectionDetails(dbms = dbms, server = datasetLocation)
 }
 
