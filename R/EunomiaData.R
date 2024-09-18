@@ -126,6 +126,9 @@ loadDataFiles <- function(dataPath,
   stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(dataPath), length(dataPath) == 1, nchar(dataPath) > 0)
   stopifnot(is.character(dbPath), length(dbPath) == 1, nchar(dbPath) > 0)
+  stopifnot(cdmVersion == "5.3" || cdmVersion == "5.4")
+  stopifnot(isTRUE(verbose) || isFALSE(verbose))
+  stopifnot(isTRUE(overwrite) || isFALSE(overwrite))
 
   dataFiles <- sort(list.files(path = dataPath, pattern = paste("*",inputFormat,sep=".")))
   if (length(dataFiles) <= 0) {
@@ -191,18 +194,52 @@ loadDataFiles <- function(dataPath,
     }
   }
 
+  # Get the readr short notation for each column type. Use these when we read in csv data.
+  spec <- readr::read_csv(
+    system.file("csv", paste0("OMOP_CDMv", cdmVersion, "_Field_Level.csv"), package = "CommonDataModel"),
+    col_types = "ccc",
+    col_select = c("cdmTableName", "cdmFieldName", "cdmDatatype")
+  )
+
+  spec$readrTypes <- vapply(tolower(spec$cdmDatatype), switch, FUN.VALUE = character(1L),
+    "integer" = "i",
+    "date" = "D",
+    "datetime" = "T",
+    "float" = "d",
+    "c" # otherwise use character
+  )
+
   for (i in 1:length(dataFiles)) {
     dataFile <- dataFiles[i]
+    tableName <- tools::file_path_sans_ext(tolower(dataFile))
+
     if (verbose) {
       dataFileMessage <- paste("loading file: ", dataFile)
       message(dataFileMessage, appendLF = TRUE)
     }
 
+    # The GiBleed condition occurrence csv file has a column ordering that does
+    # not match the spec so for now we ignore types in this file
     if (inputFormat == "csv") {
+      if (tableName %in% unique(spec$cdmTableName) && tableName != "condition_occurrence") {
+        # in the GiBleed dataset there is a cohort_attribute table which is not in the cdm spec csv file
+        # In the cases of tables not in the cdm spec we will use readr's guess for the R datatype
+        colTypes <- paste(spec[spec$cdmTableName == tableName,]$readrTypes, collapse = "")
+      } else {
+        colTypes <- NULL
+      }
+
       tableData <- readr::read_csv(
         file = file.path(dataPath, dataFiles[i]),
-        show_col_types = FALSE
+        show_col_types = FALSE,
+        col_types = colTypes
       )
+
+      if (nrow(readr::problems(tableData)) > 0) {
+        message(paste("Probems with reading correct data types in csv file", dataFile))
+        print(readr::problems(tableData), n = 1e6)
+      }
+
     } else if (inputFormat == "parquet") {
       tableData <- arrow::read_parquet(
         file = file.path(dataPath, dataFiles[i])
@@ -210,7 +247,6 @@ loadDataFiles <- function(dataPath,
     }
 
     names(tableData) <- tolower(names(tableData))
-    tableName <- tools::file_path_sans_ext(tolower(dataFiles[i]))
 
     if (dbms == "sqlite") {
       for (j in seq_len(ncol(tableData))) {
@@ -225,10 +261,10 @@ loadDataFiles <- function(dataPath,
     }
 
     if (verbose) {
-      message("saving table: ",tableName," (rows: ", nrow(tableData), ")",appendLF = TRUE)
+      message("saving table: ", tableName," (rows: ", nrow(tableData), ")", appendLF = TRUE)
     }
 
-    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append=TRUE)
+    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append = TRUE)
   }
 }
 
