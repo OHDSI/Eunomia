@@ -218,8 +218,10 @@ loadDataFiles <- function(dataPath,
       message(dataFileMessage, appendLF = TRUE)
     }
 
+    # The GiBleed condition occurrence csv file has a column ordering that does
+    # not match the spec so for now we ignore types in this file
     if (inputFormat == "csv") {
-      if (tableName %in% unique(spec$cdmTableName)) {
+      if (tableName %in% unique(spec$cdmTableName) && tableName != "condition_occurrence") {
         # in the GiBleed dataset there is a cohort_attribute table which is not in the cdm spec csv file
         # In the cases of tables not in the cdm spec we will use readr's guess for the R datatype
         colTypes <- paste(spec[spec$cdmTableName == tableName,]$readrTypes, collapse = "")
@@ -259,10 +261,10 @@ loadDataFiles <- function(dataPath,
     }
 
     if (verbose) {
-      message("saving table: ",tableName," (rows: ", nrow(tableData), ")",appendLF = TRUE)
+      message("saving table: ", tableName," (rows: ", nrow(tableData), ")", appendLF = TRUE)
     }
 
-    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append=TRUE)
+    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append = TRUE)
   }
 }
 
