@@ -38,31 +38,41 @@ createCohorts <- function(connectionDetails,
     stop("connectionDetails is not valid.")
   }
 
-  if (connectionDetails$dbms != "sqlite") {
-    stop("createCohorts only supports sqlite")
+  if (connectionDetails$dbms != "sqlite" && connectionDetails$dbms != "duckdb") {
+    stop("createCohorts only supports sqlite and duckdb")
   }
 
   if (cdmDatabaseSchema != "main" || cohortDatabaseSchema != "main") {
-    stop("sqlite only supports the main schema")
+    stop("only main schema is supported")
   }
 
   if (cohortTable != "cohort") {
     warning("The cohortTable argument to createCohorts was deprecated in Eunomia v2.1.0")
   }
 
-  connection <- DBI::dbConnect(RSQLite::SQLite(), connectionDetails$server())
-  on.exit(DBI::dbDisconnect(connection))
+  if (connectionDetails$dbms == "sqlite") {
+    connection <- DBI::dbConnect(RSQLite::SQLite(), connectionDetails$server())
+    on.exit(DBI::dbDisconnect(connection))
 
-  # Create example cohort table
-  pathToSql <- system.file("sql", "CreateCohortTable.sql",package = "Eunomia", mustWork = TRUE)
-  sql <- readChar(pathToSql, file.info(pathToSql)$size)
-  sql <- gsub("--[a-zA-Z0-9 ]*", "", sql) # remove comments in sql
-  sql <- strsplit(gsub("\n", " ", sql), ";")[[1]] # remove newlines, split on semicolon
-  sql <- trimws(sql) # trim white space
-  sql <- sql[-which(sql == "")] # remove empty lines
+    # Create example cohort table
+    pathToSql <- system.file("sql", "CreateCohortTable.sql",package = "Eunomia", mustWork = TRUE)
+    sql <- readChar(pathToSql, file.info(pathToSql)$size)
+    sql <- gsub("--[a-zA-Z0-9 ]*", "", sql) # remove comments in sql
+    sql <- strsplit(gsub("\n", " ", sql), ";")[[1]] # remove newlines, split on semicolon
+    sql <- trimws(sql) # trim white space
+    sql <- sql[-which(sql == "")] # remove empty lines
 
-  for (i in seq_along(sql)) {
-    DBI::dbExecute(connection, sql[i])
+    for (i in seq_along(sql)) {
+      DBI::dbExecute(connection, sql[i])
+    }
+  }
+  else {
+    connection <- DatabaseConnector::connect(connectionDetails)
+    on.exit(DatabaseConnector::dbDisconnect(connection))
+
+    # Create example cohort table
+    cohortData <- readRDS(system.file("cohorts.rds", package = "Eunomia", mustWork = T))
+    DatabaseConnector::dbWriteTable(conn = connection, name = cohortTable, value = cohortData, overwrite = TRUE)
   }
 
   # Fetch cohort counts:

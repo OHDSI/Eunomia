@@ -50,8 +50,29 @@ test_that("Query", {
   DatabaseConnector::disconnect(connection)
 })
 
-test_that("Cohort construction", {
+test_that("Cohort construction - sqlite", {
   connectionDetails <- getEunomiaConnectionDetails()
+  x <- createCohorts(connectionDetails)
+  connection <- DatabaseConnector::connect(connectionDetails)
+
+  sql <- "SELECT COUNT(*)
+          FROM main.cohort
+          WHERE cohort_definition_id = 1;"
+  cohortCount <- DatabaseConnector::renderTranslateQuerySql(connection, sql)
+  expect_gt(cohortCount, 0)
+
+  cohort <- DatabaseConnector::dbGetQuery(connection, "SELECT * FROM main.cohort;")
+  expect_false(any(is.na(cohort$cohort_definition_id)))
+  expect_false(any(is.na(cohort$subject_id)))
+  expect_false(any(is.na(cohort$cohort_start_date)))
+  expect_false(any(is.na(cohort$cohort_end_date)))
+
+  DatabaseConnector::disconnect(connection)
+  expect_false(DatabaseConnector::dbIsValid(connection))
+})
+
+test_that("Cohort construction - duckdb", {
+  connectionDetails <- getEunomiaConnectionDetails(dbms = "duckdb")
   x <- createCohorts(connectionDetails)
   connection <- DatabaseConnector::connect(connectionDetails)
 
