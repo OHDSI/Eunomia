@@ -34,7 +34,7 @@ test_that("Connect", {
 
 test_that("Table names and column names case", {
   connection <- DatabaseConnector::connect(getEunomiaConnectionDetails())
-  tableNames <- DatabaseConnector::getTableNames(connection, cast = 'none')
+  tableNames <- DatabaseConnector::getTableNames(connection, cast = "none")
   expect_true(identical(tableNames, tolower(tableNames)))
 
   for (tableName in tableNames) {
@@ -83,4 +83,3 @@ test_that("datasetName missing error", {
   expect_error(getConnectionDetails(pathToData = ""))
   expect_error(getConnectionDetails("GiBleed", dbms = ""))
 })
-

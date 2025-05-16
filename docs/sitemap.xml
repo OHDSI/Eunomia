@@ -1,54 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Eunomia-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Eunomia.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createCohorts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/downloadEunomiaData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/exportDataFiles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/exportToCsv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extractLoadData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getConnectionDetails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getDatabaseFile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getEunomiaConnectionDetails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadDataFiles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/supportsJava8.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ohdsi.github.io/Eunomia/404.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/authors.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/index.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/news/index.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/createCohorts.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/downloadEunomiaData.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/Eunomia-package.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/exportDataFiles.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/exportToCsv.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/extractLoadData.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/getConnectionDetails.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/getDatabaseFile.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/getEunomiaConnectionDetails.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/index.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/loadDataFiles.html</loc></url>
+<url><loc>https://ohdsi.github.io/Eunomia/reference/supportsJava8.html</loc></url>
 </urlset>
+

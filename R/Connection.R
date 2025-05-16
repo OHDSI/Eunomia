@@ -1,4 +1,4 @@
-# Copyright 2023 Observational Health Data Sciences and Informatics
+# Copyright 2025 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -31,8 +31,7 @@
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
 #' @export
-getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite", overwrite=FALSE) {
-
+getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite", overwrite = FALSE) {
   if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
     message("The DatabaseConnector package is required but not installed.")
     if (!isTRUE(utils::askYesNo("Would you like to install DatabaseConnector?"))) {
@@ -72,14 +71,14 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
 #'
 #' @examples
 #' \dontrun{
-#'  conn <- DBI::dbConnect(RSQLite::SQLite(), getDatabaseFile("GiBleed"))
-#'  DBI::dbDisconnect(conn)
+#' conn <- DBI::dbConnect(RSQLite::SQLite(), getDatabaseFile("GiBleed"))
+#' DBI::dbDisconnect(conn)
 #'
-#'  conn <- DBI::dbConnect(duckdb::duckdb(), getDatabaseFile("GiBleed", dbms = "duckdb"))
-#'  DBI::dbDisconnect(conn, shutdown = TRUE)
+#' conn <- DBI::dbConnect(duckdb::duckdb(), getDatabaseFile("GiBleed", dbms = "duckdb"))
+#' DBI::dbDisconnect(conn, shutdown = TRUE)
 #'
-#'  conn <- DatabaseConnector::connect(dbms = "sqlite", server = getDatabaseFile("GiBleed"))
-#'  DatabaseConnector::disconnect(conn)
+#' conn <- DatabaseConnector::connect(dbms = "sqlite", server = getDatabaseFile("GiBleed"))
+#' DatabaseConnector::disconnect(conn)
 #' }
 #'
 getDatabaseFile <- function(datasetName,
@@ -90,7 +89,6 @@ getDatabaseFile <- function(datasetName,
                             inputFormat = "csv",
                             verbose = FALSE,
                             overwrite = TRUE) {
-
   if (is.null(pathToData) || is.na(pathToData) || pathToData == "") {
     pathToData <- tempdir()
   }
@@ -119,7 +117,7 @@ getDatabaseFile <- function(datasetName,
   }
 
   if (verbose) {
-    message("dataset: ",datasetLocation, " available: ",datasetAvailable, appendLF = TRUE)
+    message("dataset: ", datasetLocation, " available: ", datasetAvailable, appendLF = TRUE)
   }
 
   # zip archive of csv source files
@@ -136,26 +134,26 @@ getDatabaseFile <- function(datasetName,
   }
 
   if (verbose) {
-    message("archive: ",archiveLocation," available:",archiveAvailable,appendLF = TRUE)
+    message("archive: ", archiveLocation, " available:", archiveAvailable, appendLF = TRUE)
   }
 
   if (!datasetAvailable && !archiveAvailable) {
     message(paste("attempting to download", datasetName))
-    downloadedData <- downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion, pathToData = pathToData, verbose=verbose)
+    downloadedData <- downloadEunomiaData(datasetName = datasetName, cdmVersion = cdmVersion, pathToData = pathToData, verbose = verbose)
     if (verbose) {
-      message("downloaded: ",downloadedData,appendLF = TRUE)
+      message("downloaded: ", downloadedData, appendLF = TRUE)
     }
     archiveAvailable <- TRUE
   }
 
   if (!datasetAvailable && archiveAvailable) {
-    message("attempting to extract and load: ", archiveLocation," to: ",datasetLocation,appendLF = TRUE)
-    extractLoadData(from = archiveLocation, to = datasetLocation, dbms = dbms, cdmVersion = cdmVersion, inputFormat=inputFormat, verbose=verbose)
+    message("attempting to extract and load: ", archiveLocation, " to: ", datasetLocation, appendLF = TRUE)
+    extractLoadData(from = archiveLocation, to = datasetLocation, dbms = dbms, cdmVersion = cdmVersion, inputFormat = inputFormat, verbose = verbose)
     datasetAvailable <- TRUE
   }
 
   if (verbose) {
-    message("copying: ",datasetLocation," to: ", databaseFile, appendLF = TRUE)
+    message("copying: ", datasetLocation, " to: ", databaseFile, appendLF = TRUE)
   }
 
   copySuccess <- file.copy(from = datasetLocation, to = databaseFile, overwrite = overwrite)

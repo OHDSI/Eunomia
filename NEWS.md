@@ -1,4 +1,8 @@
-Eunomia 2.0
+Eunomia 2.1.0
+=============
+- Prevent redundant download of data sets (#66)
+
+Eunomia 2.0.0
 =============
 Changes
 - Updated package to no longer contain a dataset rather facilitate access to sample datasets

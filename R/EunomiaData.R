@@ -41,7 +41,7 @@ downloadEunomiaData <- function(datasetName,
   zipName <- paste0(datasetNameVersion, ".zip")
 
   if (file.exists(file.path(pathToData, zipName)) && !overwrite) {
-    message("Dataset already exists (",file.path(pathToData, zipName),"). Specify overwrite=T to overwrite existing zip archive.", appendLF = TRUE)
+    message("Dataset already exists (", file.path(pathToData, zipName), "). Specify overwrite=T to overwrite existing zip archive.", appendLF = TRUE)
   } else {
     # downloads the file from github or user specified location
     baseUrl <- Sys.getenv("EUNOMIA_DATASETS_URL")
@@ -79,7 +79,7 @@ downloadEunomiaData <- function(datasetName,
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(from, to, dbms = "sqlite",cdmVersion="5.3", inputFormat="csv", verbose = FALSE) {
+extractLoadData <- function(from, to, dbms = "sqlite", cdmVersion = "5.3", inputFormat = "csv", verbose = FALSE) {
   stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(from), length(from) == 1, nchar(from) > 0)
   stopifnot(is.character(to), length(to) == 1, nchar(to) > 0)
@@ -93,9 +93,9 @@ extractLoadData <- function(from, to, dbms = "sqlite",cdmVersion="5.3", inputFor
   unzipLocation <- tempdir()
   utils::unzip(zipfile = from, exdir = unzipLocation, junkpaths = TRUE)
   if (verbose) {
-    message("unzipping to: ",unzipLocation,appendLF = TRUE)
+    message("unzipping to: ", unzipLocation, appendLF = TRUE)
   }
-  loadDataFiles(dataPath = unzipLocation, dbPath = to, dbms = dbms,cdmVersion = cdmVersion, inputFormat=inputFormat, verbose = verbose)
+  loadDataFiles(dataPath = unzipLocation, dbPath = to, dbms = dbms, cdmVersion = cdmVersion, inputFormat = inputFormat, verbose = verbose)
 
   unlink(unzipLocation)
 }
@@ -115,19 +115,19 @@ extractLoadData <- function(from, to, dbms = "sqlite",cdmVersion="5.3", inputFor
 #' @returns No return value, loads data into database file.
 #' @export
 loadDataFiles <- function(dataPath,
-                      dbPath,
-                      inputFormat = "csv",
-                      cdmVersion="5.3",
-                      cdmDatabaseSchema = "main",
-                      dbms = "sqlite",
-                      verbose = FALSE,
-                      overwrite = FALSE) {
-  stopifnot(inputFormat %in% c("csv","parquet"))
+                          dbPath,
+                          inputFormat = "csv",
+                          cdmVersion = "5.3",
+                          cdmDatabaseSchema = "main",
+                          dbms = "sqlite",
+                          verbose = FALSE,
+                          overwrite = FALSE) {
+  stopifnot(inputFormat %in% c("csv", "parquet"))
   stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(dataPath), length(dataPath) == 1, nchar(dataPath) > 0)
   stopifnot(is.character(dbPath), length(dbPath) == 1, nchar(dbPath) > 0)
 
-  dataFiles <- sort(list.files(path = dataPath, pattern = paste("*",inputFormat,sep=".")))
+  dataFiles <- sort(list.files(path = dataPath, pattern = paste("*", inputFormat, sep = ".")))
   if (length(dataFiles) <= 0) {
     stop("Data directory does not contain files to load into the database.")
   }
@@ -151,7 +151,7 @@ loadDataFiles <- function(dataPath,
   } else if (dbms == "duckdb") {
     connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = dbPath)
     on.exit(DBI::dbDisconnect(connection, shutdown = TRUE), add = TRUE)
-    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()), add=TRUE)
+    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()), add = TRUE)
   }
 
   # creating tables via DDL eliminates issues with inferring column types
@@ -182,7 +182,7 @@ loadDataFiles <- function(dataPath,
     }
 
     ddlFileContents <- readChar(ddlFile, file.info(ddlFile)$size)
-    statements <- as.list(strsplit(ddlFileContents, ';')[[1]])
+    statements <- as.list(strsplit(ddlFileContents, ";")[[1]])
     for (statement in statements) {
       DBI::dbExecute(
         conn = connection,
@@ -225,10 +225,10 @@ loadDataFiles <- function(dataPath,
     }
 
     if (verbose) {
-      message("saving table: ",tableName," (rows: ", nrow(tableData), ")",appendLF = TRUE)
+      message("saving table: ", tableName, " (rows: ", nrow(tableData), ")", appendLF = TRUE)
     }
 
-    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append=TRUE)
+    DBI::dbWriteTable(conn = connection, name = tableName, value = tableData, append = TRUE)
   }
 }
 
@@ -243,8 +243,8 @@ loadDataFiles <- function(dataPath,
 #' @param verbose       Boolean argument controlling verbose debugging output
 #' @returns No return value, called to export to outputFolder.
 #' @export
-exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sqlite", verbose=FALSE) {
-  stopifnot(outputFormat %in% c("csv","parquet"))
+exportDataFiles <- function(dbPath, outputFolder, outputFormat = "csv", dbms = "sqlite", verbose = FALSE) {
+  stopifnot(outputFormat %in% c("csv", "parquet"))
   stopifnot(dbms %in% c("sqlite", "duckdb"))
 
   if (dbms == "sqlite") {
@@ -253,7 +253,7 @@ exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sq
   } else if (dbms == "duckdb") {
     connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = dbPath)
     on.exit(DBI::dbDisconnect(connection, shutdown = TRUE), add = TRUE)
-    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()),add=TRUE)
+    on.exit(duckdb::duckdb_shutdown(duckdb::duckdb()), add = TRUE)
   }
 
   tableNames <- DBI::dbListTables(connection)
@@ -271,7 +271,7 @@ exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sq
       message("processing ", tableName, appendLF = TRUE)
     }
 
-    outputFileName <- file.path(outputFolder,tableName)
+    outputFileName <- file.path(outputFolder, tableName)
 
     if (outputFormat == "csv") {
       filePath <- paste(outputFileName, "csv", sep = ".")
@@ -283,7 +283,7 @@ exportDataFiles <- function(dbPath, outputFolder, outputFormat="csv", dbms = "sq
     } else if (outputFormat == "parquet") {
       filePath <- paste(outputFileName, "parquet", sep = ".")
       query <- paste0("copy ", tableName, " to '", filePath, "' (FORMAT PARQUET);")
-      DBI::dbExecute(connection,query)
+      DBI::dbExecute(connection, query)
     } else {
       message("unknown file format")
     }
