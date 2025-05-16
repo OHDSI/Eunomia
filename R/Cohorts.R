@@ -33,7 +33,6 @@ createCohorts <- function(connectionDetails,
                           cdmDatabaseSchema = "main",
                           cohortDatabaseSchema = "main",
                           cohortTable = "cohort") {
-
   if (!("ConnectionDetails" %in% class(connectionDetails))) {
     stop("connectionDetails is not valid.")
   }
@@ -54,7 +53,7 @@ createCohorts <- function(connectionDetails,
   on.exit(DBI::dbDisconnect(connection))
 
   # Create example cohort table
-  pathToSql <- system.file("sql", "CreateCohortTable.sql",package = "Eunomia", mustWork = TRUE)
+  pathToSql <- system.file("sql", "CreateCohortTable.sql", package = "Eunomia", mustWork = TRUE)
   sql <- readChar(pathToSql, file.info(pathToSql)$size)
   sql <- gsub("--[a-zA-Z0-9 ]*", "", sql) # remove comments in sql
   sql <- strsplit(gsub("\n", " ", sql), ";")[[1]] # remove newlines, split on semicolon

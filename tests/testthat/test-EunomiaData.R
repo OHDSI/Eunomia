@@ -11,7 +11,7 @@ test_that("Overwrite test for downloadEunomiaData", {
 })
 
 test_that("Eunomia works with 5.4", {
-  databaseFile <- getDatabaseFile(datasetName="Synthea27Nj", cdmVersion = "5.4", overwrite = T)
+  databaseFile <- getDatabaseFile(datasetName = "Synthea27Nj", cdmVersion = "5.4", overwrite = T)
   expect_true(file.exists(databaseFile))
 })
 
