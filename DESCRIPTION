@@ -1,8 +1,8 @@
 Package: Eunomia
 Type: Package
 Title: Standard Dataset Manager for Observational Medical Outcomes Partnership Common Data Model Sample Datasets
-Version: 2.0.0
-Date: 2024-04-22
+Version: 2.1.0
+Date: 2025-05-16
 Authors@R: c(
   person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
