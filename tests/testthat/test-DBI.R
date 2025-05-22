@@ -4,7 +4,7 @@ test_that("dbConnect works with sqlite", {
   expect_true("concept" %in% DBI::dbListTables(con))
   df <- DBI::dbGetQuery(con, "select * from main.cdm_source")
   expect_true(is.data.frame(df))
-  DBI::dbDisconnect(con, shutdown=TRUE)
+  DBI::dbDisconnect(con, shutdown = TRUE)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
@@ -15,7 +15,7 @@ test_that("dbConnect works with duckdb", {
   expect_true("concept" %in% DBI::dbListTables(con))
   df <- DBI::dbGetQuery(con, "select * from cdm_source")
   expect_true(is.data.frame(df))
-  DBI::dbDisconnect(con, shutdown=TRUE)
+  DBI::dbDisconnect(con, shutdown = TRUE)
   duckdb::duckdb_shutdown(duckdb::duckdb())
 })
 
@@ -41,5 +41,3 @@ test_that("dbConnect works with duckdb", {
 #   DBI::dbDisconnect(con, shutdown=TRUE)
 #   duckdb::duckdb_shutdown(duckdb::duckdb())
 # })
-
-

@@ -6,7 +6,8 @@
 \usage{
 getEunomiaConnectionDetails(
   databaseFile = tempfile(fileext = ".sqlite"),
-  dbms = "sqlite"
+  dbms = "sqlite",
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -14,6 +15,9 @@ getEunomiaConnectionDetails(
 be copied to a temporary folder, and will be deleted at the end of the R session.}
 
 \item{dbms}{The target dialect, by default "sqlite".}
+
+\item{overwrite}{Control whether the existing archive file will be overwritten should it already
+exist.}
 }
 \value{
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
