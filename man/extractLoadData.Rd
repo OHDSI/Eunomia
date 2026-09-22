@@ -10,7 +10,7 @@ extractLoadData(
   from,
   to,
   dbms = "sqlite",
-  cdmVersion = "5.3",
+  cdmVersion = "5.5",
   inputFormat = "csv",
   verbose = FALSE
 )
@@ -38,7 +38,7 @@ same directory as the .ZIP file.
 }
 \examples{
 \dontrun{
-extractLoadData("c:/strategusData/GiBleed_5.3.zip")
+extractLoadData("c:/strategusData/GiBleed_5.5.zip")
 }
 }
 \seealso{

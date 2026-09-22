@@ -10,6 +10,26 @@ test_that("Overwrite test for downloadEunomiaData", {
   expect_true(file.exists(downloadedData))
 })
 
+test_that("Eunomia defaults to CDM 5.5", {
+  expect_identical(formals(downloadEunomiaData)$cdmVersion, "5.5")
+  expect_identical(formals(extractLoadData)$cdmVersion, "5.5")
+  expect_identical(formals(loadDataFiles)$cdmVersion, "5.5")
+  expect_identical(formals(getDatabaseFile)$cdmVersion, "5.5")
+})
+
+test_that("Eunomia works with 5.5", {
+  databaseFile <- getDatabaseFile(datasetName = "GiBleed", cdmVersion = "5.5", overwrite = T)
+  expect_true(file.exists(databaseFile))
+
+  connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFile)
+  on.exit(DBI::dbDisconnect(connection), add = TRUE)
+  expect_true(all(c("episode", "pack_content", "concept_metadata") %in% DBI::dbListTables(connection)))
+  expect_true("value_as_source_concept_id" %in% DBI::dbListFields(connection, "measurement"))
+  cdmSource <- DBI::dbGetQuery(connection, "SELECT cdm_version, cdm_version_concept_id FROM cdm_source")
+  expect_identical(cdmSource$cdm_version, "v5.5")
+  expect_identical(cdmSource$cdm_version_concept_id, 0L)
+})
+
 test_that("Eunomia works with 5.4", {
   databaseFile <- getDatabaseFile(datasetName = "Synthea27Nj", cdmVersion = "5.4", overwrite = T)
   expect_true(file.exists(databaseFile))

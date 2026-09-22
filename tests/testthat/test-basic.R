@@ -1,9 +1,9 @@
 test_that("Dataset not downloaded and not loaded into SQLite", {
-  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"))) {
-    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.zip"))
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.zip"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.zip"))
   }
-  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
-    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.sqlite"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.sqlite"))
   }
   # No error should be thrown
   expect_error(getDatabaseFile(datasetName = "GiBleed"), NA)
@@ -11,8 +11,8 @@ test_that("Dataset not downloaded and not loaded into SQLite", {
 
 test_that("Dataset downloaded but not loaded into SQLite", {
   downloadEunomiaData(datasetName = "GiBleed")
-  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))) {
-    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.3.sqlite"))
+  if (file.exists(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.sqlite"))) {
+    unlink(file.path(Sys.getenv("EUNOMIA_DATA_FOLDER"), "GiBleed_5.5.sqlite"))
   }
   expect_error(getDatabaseFile(datasetName = "GiBleed"), NA)
 })

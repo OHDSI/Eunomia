@@ -12,6 +12,8 @@ Introduction
 ============
 Eunomia is a standard dataset manager for sample OMOP (Observational Medical Outcomes Partnership) Common Data Model (CDM) datasets. Eunomia facilitates access to sample datasets from the [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets). Eunomia is used for testing and demonstration purposes, including many of the exercises in [the Book of OHDSI](https://ohdsi.github.io/TheBookOfOhdsi/). For functions that require schema name, use 'main'.
 
+The default dataset is GiBleed in OMOP CDM v5.5 format. Earlier supported CDM versions remain available by setting the `cdmVersion` argument explicitly.
+
 Features
 ========
 - Download selected sample datasets from [EunomiaDatasets repository](https://github.com/ohdsi/EunomiaDatasets), which includes a subset of the Standardized Vocabularies.

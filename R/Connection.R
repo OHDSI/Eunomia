@@ -18,9 +18,9 @@
 #' Get Default Eunomia Connection Details
 #'
 #' @description
-#' Creates a copy of the default (GiBleed) Eunomia database, and provides details for connecting to
-#' that copy. Function provides backwards compatibility to prior releases of Eunomia default (GiBleed)
-#' dataset
+#' Creates a copy of the default GiBleed CDM v5.5 Eunomia database, and provides details for connecting
+#' to that copy. Function provides backwards compatibility to prior releases of the Eunomia default
+#' GiBleed dataset.
 #'
 #' @param databaseFile  The path where the database file will be copied to. By default, the database will
 #'                      be copied to a temporary folder, and will be deleted at the end of the R session.
@@ -55,7 +55,7 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
 #' @param datasetName    The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
 #'                       data set name corresponds to the folder with the data set ZIP files
 #' @param cdmVersion     The OMOP CDM version. This version will appear in the suffix of the data file,
-#'                       for example: <datasetName>_<cdmVersion>.zip. Default: '5.3'
+#'                       for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'
 #' @param pathToData     The path where the Eunomia data is stored on the file system., By default the
 #'                       value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
 #' @param dbms           The database system to use. "sqlite" (default) or "duckdb"
@@ -82,7 +82,7 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
 #' }
 #'
 getDatabaseFile <- function(datasetName,
-                            cdmVersion = "5.3",
+                            cdmVersion = "5.5",
                             pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
                             dbms = "sqlite",
                             databaseFile = tempfile(fileext = paste0(".", dbms)),
@@ -94,7 +94,7 @@ getDatabaseFile <- function(datasetName,
   }
 
   stopifnot(is.character(dbms), length(dbms) == 1, dbms %in% c("sqlite", "duckdb"))
-  stopifnot(is.character(cdmVersion), length(cdmVersion) == 1, cdmVersion %in% c("5.3", "5.4"))
+  stopifnot(is.character(cdmVersion), length(cdmVersion) == 1, cdmVersion %in% c("5.3", "5.4", "5.5"))
 
   if (dbms == "duckdb") {
     rlang::check_installed("duckdb")
