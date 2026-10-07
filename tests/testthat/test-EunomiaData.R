@@ -64,3 +64,79 @@ test_that("Stop when ZIP file contains no CSV files", {
   utils::zip(file.path(testDir, "empty.zip"), testFile)
   expect_error(extractLoadData(dataFilePath = file.path(testDir, "empty.zip")))
 })
+
+test_that("exportDataFiles exports SQLite tables to CSV", {
+  databaseFile <- tempfile(fileext = ".sqlite")
+  outputFolder <- tempfile("eunomia_csv_export_")
+  on.exit(unlink(c(databaseFile, outputFolder), recursive = TRUE, force = TRUE), add = TRUE)
+
+  connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFile)
+  DBI::dbWriteTable(
+    connection,
+    "example_table",
+    data.frame(id = c(1L, 2L), label = c("first", "second"))
+  )
+  DBI::dbDisconnect(connection)
+
+  expect_message(
+    exportDataFiles(
+      dbPath = databaseFile,
+      outputFolder = outputFolder,
+      outputFormat = "csv",
+      dbms = "sqlite",
+      verbose = TRUE
+    ),
+    "processing 1 tables"
+  )
+
+  outputFile <- file.path(outputFolder, "example_table.csv")
+  expect_true(file.exists(outputFile))
+  exportedData <- utils::read.csv(outputFile)
+  expect_identical(exportedData$id, c(1L, 2L))
+  expect_identical(exportedData$label, c("first", "second"))
+})
+
+test_that("exportDataFiles exports DuckDB tables to Parquet", {
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("arrow")
+
+  databaseFile <- tempfile(fileext = ".duckdb")
+  outputFolder <- tempfile("eunomia_parquet_export_")
+  on.exit(unlink(c(databaseFile, outputFolder), recursive = TRUE, force = TRUE), add = TRUE)
+
+  connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = databaseFile)
+  DBI::dbWriteTable(
+    connection,
+    "example_table",
+    data.frame(id = c(1L, 2L), label = c("first", "second"))
+  )
+  DBI::dbDisconnect(connection, shutdown = TRUE)
+
+  expect_message(
+    exportDataFiles(
+      dbPath = databaseFile,
+      outputFolder = outputFolder,
+      outputFormat = "parquet",
+      dbms = "duckdb",
+      verbose = TRUE
+    ),
+    "processing 1 tables"
+  )
+
+  outputFile <- file.path(outputFolder, "example_table.parquet")
+  expect_true(file.exists(outputFile))
+  exportedData <- as.data.frame(arrow::read_parquet(outputFile))
+  expect_identical(exportedData$id, c(1L, 2L))
+  expect_identical(exportedData$label, c("first", "second"))
+})
+
+test_that("exportDataFiles validates format and database arguments", {
+  expect_error(
+    exportDataFiles(tempfile(), tempfile(), outputFormat = "json"),
+    "outputFormat %in%"
+  )
+  expect_error(
+    exportDataFiles(tempfile(), tempfile(), dbms = "postgresql"),
+    "dbms %in%"
+  )
+})
