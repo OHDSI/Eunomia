@@ -25,9 +25,20 @@ test_that("Eunomia works with 5.5", {
   on.exit(DBI::dbDisconnect(connection), add = TRUE)
   expect_true(all(c("episode", "pack_content", "concept_metadata") %in% DBI::dbListTables(connection)))
   expect_true("value_as_source_concept_id" %in% DBI::dbListFields(connection, "measurement"))
-  cdmSource <- DBI::dbGetQuery(connection, "SELECT cdm_version, cdm_version_concept_id FROM cdm_source")
+  cdmSource <- DBI::dbGetQuery(
+    connection,
+    "SELECT cdm_release_identifier, cdm_release_date, cdm_version, cdm_version_concept_id FROM cdm_source"
+  )
+  expect_identical(cdmSource$cdm_release_identifier, "v1.2")
+  expect_identical(
+    as.numeric(cdmSource$cdm_release_date),
+    as.numeric(as.POSIXct("2026-08-25", tz = "GMT"))
+  )
   expect_identical(cdmSource$cdm_version, "v5.5")
-  expect_identical(cdmSource$cdm_version_concept_id, 0L)
+  expect_identical(cdmSource$cdm_version_concept_id, 902984L)
+  expect_true(DBI::dbExistsTable(connection, "concept"))
+  versionConcept <- DBI::dbGetQuery(connection, "SELECT concept_name FROM concept WHERE concept_id = 902984")
+  expect_identical(versionConcept$concept_name, "OMOP CDM Version 5.5.0")
 })
 
 test_that("Eunomia works with 5.4", {
