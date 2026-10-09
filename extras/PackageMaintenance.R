@@ -29,6 +29,12 @@ system("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
 # Run pkgdown to verify there are no site build errors ---------
 pkgdown::check_pkgdown()
 
+# Check the reverse dependencies ----------
+require("pak")
+pak::pkg_install("r-lib/revdepcheck")
+#usethis::use_revdep() # One-time repository setup
+revdepcheck::revdep_check(num_workers = 4)
+
 # Release package:
 
 devtools::check_win_devel()
