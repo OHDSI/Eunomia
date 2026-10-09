@@ -1,3 +1,13 @@
+Eunomia 2.2.0
+=============
+
+Changes
+
+- Updated the default GiBleed dataset and CDM version from OMOP CDM v5.3 to v5.5.
+- Now requires the CRAN release of CommonDataModel version 1.1.0 or higher.
+- Added an example script for loading the GiBleed v5.5 dataset into PostgreSQL.
+- Expanded test coverage for CDM v5.5 loading and data export functionality.
+
 Eunomia 2.1.0
 =============
 - Prevent redundant download of data sets (#66)
