@@ -19,7 +19,7 @@ URL: https://ohdsi.github.io/Eunomia/, https://github.com/OHDSI/Eunomia
 BugReports: https://github.com/OHDSI/Eunomia/issues
 Imports:
   arrow,
-  CommonDataModel,
+  CommonDataModel (>= 1.1.0),
   DBI,
   readr,
   rlang,
@@ -29,8 +29,6 @@ Suggests:
   duckdb,
   testthat,
   withr
-Remotes:
-  OHDSI/CommonDataModel@release-prep-v1.1.0
 Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.1.0
