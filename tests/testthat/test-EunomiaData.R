@@ -10,6 +10,37 @@ test_that("Overwrite test for downloadEunomiaData", {
   expect_true(file.exists(downloadedData))
 })
 
+test_that("Eunomia defaults to CDM 5.5", {
+  expect_identical(formals(downloadEunomiaData)$cdmVersion, "5.5")
+  expect_identical(formals(extractLoadData)$cdmVersion, "5.5")
+  expect_identical(formals(loadDataFiles)$cdmVersion, "5.5")
+  expect_identical(formals(getDatabaseFile)$cdmVersion, "5.5")
+})
+
+test_that("Eunomia works with 5.5", {
+  databaseFile <- getDatabaseFile(datasetName = "GiBleed", cdmVersion = "5.5", overwrite = T)
+  expect_true(file.exists(databaseFile))
+
+  connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFile)
+  on.exit(DBI::dbDisconnect(connection), add = TRUE)
+  expect_true(all(c("episode", "pack_content", "concept_metadata") %in% DBI::dbListTables(connection)))
+  expect_true("value_as_source_concept_id" %in% DBI::dbListFields(connection, "measurement"))
+  cdmSource <- DBI::dbGetQuery(
+    connection,
+    "SELECT cdm_release_identifier, cdm_release_date, cdm_version, cdm_version_concept_id FROM cdm_source"
+  )
+  expect_identical(cdmSource$cdm_release_identifier, "v1.2")
+  expect_identical(
+    as.numeric(cdmSource$cdm_release_date),
+    as.numeric(as.POSIXct("2026-08-25", tz = "GMT"))
+  )
+  expect_identical(cdmSource$cdm_version, "v5.5")
+  expect_identical(cdmSource$cdm_version_concept_id, 902984L)
+  expect_true(DBI::dbExistsTable(connection, "concept"))
+  versionConcept <- DBI::dbGetQuery(connection, "SELECT concept_name FROM concept WHERE concept_id = 902984")
+  expect_identical(versionConcept$concept_name, "OMOP CDM Version 5.5.0")
+})
+
 test_that("Eunomia works with 5.4", {
   databaseFile <- getDatabaseFile(datasetName = "Synthea27Nj", cdmVersion = "5.4", overwrite = T)
   expect_true(file.exists(databaseFile))
@@ -32,4 +63,80 @@ test_that("Stop when ZIP file contains no CSV files", {
   readr::write_csv(x = data.frame(y = 1), file = testFile)
   utils::zip(file.path(testDir, "empty.zip"), testFile)
   expect_error(extractLoadData(dataFilePath = file.path(testDir, "empty.zip")))
+})
+
+test_that("exportDataFiles exports SQLite tables to CSV", {
+  databaseFile <- tempfile(fileext = ".sqlite")
+  outputFolder <- tempfile("eunomia_csv_export_")
+  on.exit(unlink(c(databaseFile, outputFolder), recursive = TRUE, force = TRUE), add = TRUE)
+
+  connection <- DBI::dbConnect(RSQLite::SQLite(), dbname = databaseFile)
+  DBI::dbWriteTable(
+    connection,
+    "example_table",
+    data.frame(id = c(1L, 2L), label = c("first", "second"))
+  )
+  DBI::dbDisconnect(connection)
+
+  expect_message(
+    exportDataFiles(
+      dbPath = databaseFile,
+      outputFolder = outputFolder,
+      outputFormat = "csv",
+      dbms = "sqlite",
+      verbose = TRUE
+    ),
+    "processing 1 tables"
+  )
+
+  outputFile <- file.path(outputFolder, "example_table.csv")
+  expect_true(file.exists(outputFile))
+  exportedData <- utils::read.csv(outputFile)
+  expect_identical(exportedData$id, c(1L, 2L))
+  expect_identical(exportedData$label, c("first", "second"))
+})
+
+test_that("exportDataFiles exports DuckDB tables to Parquet", {
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("arrow")
+
+  databaseFile <- tempfile(fileext = ".duckdb")
+  outputFolder <- tempfile("eunomia_parquet_export_")
+  on.exit(unlink(c(databaseFile, outputFolder), recursive = TRUE, force = TRUE), add = TRUE)
+
+  connection <- DBI::dbConnect(duckdb::duckdb(), dbdir = databaseFile)
+  DBI::dbWriteTable(
+    connection,
+    "example_table",
+    data.frame(id = c(1L, 2L), label = c("first", "second"))
+  )
+  DBI::dbDisconnect(connection, shutdown = TRUE)
+
+  expect_message(
+    exportDataFiles(
+      dbPath = databaseFile,
+      outputFolder = outputFolder,
+      outputFormat = "parquet",
+      dbms = "duckdb",
+      verbose = TRUE
+    ),
+    "processing 1 tables"
+  )
+
+  outputFile <- file.path(outputFolder, "example_table.parquet")
+  expect_true(file.exists(outputFile))
+  exportedData <- as.data.frame(arrow::read_parquet(outputFile))
+  expect_identical(exportedData$id, c(1L, 2L))
+  expect_identical(exportedData$label, c("first", "second"))
+})
+
+test_that("exportDataFiles validates format and database arguments", {
+  expect_error(
+    exportDataFiles(tempfile(), tempfile(), outputFormat = "json"),
+    "outputFormat %in%"
+  )
+  expect_error(
+    exportDataFiles(tempfile(), tempfile(), dbms = "postgresql"),
+    "dbms %in%"
+  )
 })

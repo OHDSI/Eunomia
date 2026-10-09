@@ -1,4 +1,4 @@
-# Copyright 2025 Observational Health Data Sciences and Informatics
+# Copyright 2026 Observational Health Data Sciences and Informatics
 #
 # This file is part of Eunomia
 #
@@ -26,8 +26,8 @@ styler::style_pkg()
 unlink("extras/Eunomia.pdf")
 system("R CMD Rd2pdf ./ --output=extras/Eunomia.pdf")
 
-pkgdown::build_site(examples = FALSE)
-OhdsiRTools::fixHadesLogo()
+# Run pkgdown to verify there are no site build errors ---------
+pkgdown::check_pkgdown()
 
 # Release package:
 

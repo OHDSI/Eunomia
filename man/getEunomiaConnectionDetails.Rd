@@ -23,7 +23,7 @@ exist.}
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 }
 \description{
-Creates a copy of the default (GiBleed) Eunomia database, and provides details for connecting to
-that copy. Function provides backwards compatibility to prior releases of Eunomia default (GiBleed)
-dataset
+Creates a copy of the default GiBleed CDM v5.5 Eunomia database, and provides details for connecting
+to that copy. Function provides backwards compatibility to prior releases of the Eunomia default
+GiBleed dataset.
 }
