@@ -7,6 +7,7 @@ Changes
 - Now requires the CRAN release of CommonDataModel version 1.1.0 or higher.
 - Added an example script for loading the GiBleed v5.5 dataset into PostgreSQL.
 - Expanded test coverage for CDM v5.5 loading and data export functionality.
+- New maintainer: Anthony Sena
 
 Eunomia 2.1.0
 =============
