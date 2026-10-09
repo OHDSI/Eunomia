@@ -13,3 +13,4 @@ statement_*.sql
 errorReport.txt
 work/*
 
+docs
