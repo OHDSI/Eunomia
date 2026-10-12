@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/OHDSI/Eunomia/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/OHDSI/Eunomia/blob/v2.2.0/DESCRIPTION)
 
 Sena A, DeFalco F, Schuemie M, Adulyanukosol N, Liu S, Black A (2026).
 *Eunomia: Standard Dataset Manager for Observational Medical Outcomes
