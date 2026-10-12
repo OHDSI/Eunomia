@@ -8,7 +8,7 @@ loadDataFiles(
   dataPath,
   dbPath,
   inputFormat = "csv",
-  cdmVersion = "5.3",
+  cdmVersion = "5.5",
   cdmDatabaseSchema = "main",
   dbms = "sqlite",
   verbose = FALSE,
@@ -22,7 +22,7 @@ loadDataFiles(
 
 \item{inputFormat}{The input format of the files to load.  Supported formats include csv, parquet.}
 
-\item{cdmVersion}{The CDM version to create in the resulting database. Supported versions are 5.3 and 5.4}
+\item{cdmVersion}{The CDM version to create in the resulting database. Supported versions are 5.3, 5.4, and 5.5}
 
 \item{cdmDatabaseSchema}{The schema in which to create the CDM tables. Default is main.}
 

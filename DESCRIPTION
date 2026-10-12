@@ -1,34 +1,34 @@
 Package: Eunomia
 Type: Package
 Title: Standard Dataset Manager for Observational Medical Outcomes Partnership Common Data Model Sample Datasets
-Version: 2.1.0
-Date: 2025-05-16
+Version: 2.2.0
+Date: 2026-10-07
 Authors@R: c(
-  person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut", "cre")),
+  person("Anthony", "Sena", , "sena@ohdsi.org", role=c("aut", "cre")),
+  person("Frank", "DeFalco", , "fdefalco@ohdsi.org", role = c("aut")),
   person("Martijn", "Schuemie", , "schuemie@ohdsi.org", role = c("aut")),
-  person("Anthony", "Sena", , "sena@ohdsi.org", role=c("aut")),
   person("Natthawut", "Adulyanukosol", , "na339@unc.edu", role=c("aut")),
   person("Star", "Liu", , "sliu197@jhmi.edu", role=c("aut")),
   person("Adam", "Black", , "black@ohdsi.org", role = c("aut")),
   person("Observational Health Data Science and Informatics", role = c("cph"))
   )
-Maintainer: Frank DeFalco <fdefalco@ohdsi.org>
+Maintainer: Anthony Sena <sena@ohdsi.org>
 Description: Facilitates access to sample datasets from the 'EunomiaDatasets' repository (<https://github.com/ohdsi/EunomiaDatasets>).
 License: Apache License 2.0
 URL: https://ohdsi.github.io/Eunomia/, https://github.com/OHDSI/Eunomia
 BugReports: https://github.com/OHDSI/Eunomia/issues
 Imports:
+  arrow,
+  CommonDataModel (>= 1.1.0),
+  DBI,
   readr,
   rlang,
-  RSQLite,
-  DBI,
-  arrow,
-  CommonDataModel
+  RSQLite
 Suggests:
-  testthat,
-  withr,
+  DatabaseConnector,
   duckdb,
-  DatabaseConnector
+  testthat,
+  withr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+Config/roxygen2/version: 8.1.0

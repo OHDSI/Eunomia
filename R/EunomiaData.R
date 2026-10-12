@@ -5,7 +5,7 @@
 #' @param datasetName   The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
 #'                      data set name corresponds to the folder with the data set ZIP files
 #' @param cdmVersion    The OMOP CDM version. This version will appear in the suffix of the data file,
-#'                      for example: <datasetName>_<cdmVersion>.zip. Default: '5.3'
+#'                      for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'
 #' @param pathToData    The path where the Eunomia data is stored on the file system., By default the
 #'                      value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
 #' @param overwrite     Control whether the existing archive file will be overwritten should it already
@@ -19,7 +19,7 @@
 #' }
 #' @export
 downloadEunomiaData <- function(datasetName,
-                                cdmVersion = "5.3",
+                                cdmVersion = "5.5",
                                 pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
                                 overwrite = FALSE,
                                 verbose = FALSE) {
@@ -74,12 +74,12 @@ downloadEunomiaData <- function(datasetName,
 #' @importFrom tools file_ext
 #' @examples
 #' \dontrun{
-#' extractLoadData("c:/strategusData/GiBleed_5.3.zip")
+#' extractLoadData("c:/strategusData/GiBleed_5.5.zip")
 #' }
 #' @seealso
 #' \code{\link[Eunomia]{downloadEunomiaData}}
 #' @export
-extractLoadData <- function(from, to, dbms = "sqlite", cdmVersion = "5.3", inputFormat = "csv", verbose = FALSE) {
+extractLoadData <- function(from, to, dbms = "sqlite", cdmVersion = "5.5", inputFormat = "csv", verbose = FALSE) {
   stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(from), length(from) == 1, nchar(from) > 0)
   stopifnot(is.character(to), length(to) == 1, nchar(to) > 0)
@@ -108,7 +108,7 @@ extractLoadData <- function(from, to, dbms = "sqlite", cdmVersion = "5.3", input
 #' @param dbPath         The path to the .sqlite or .duckdb file that will be created
 #' @param dbms           The file-based database system to use: 'sqlite' (default) or 'duckdb'
 #' @param inputFormat    The input format of the files to load.  Supported formats include csv, parquet.
-#' @param cdmVersion     The CDM version to create in the resulting database. Supported versions are 5.3 and 5.4
+#' @param cdmVersion     The CDM version to create in the resulting database. Supported versions are 5.3, 5.4, and 5.5
 #' @param cdmDatabaseSchema The schema in which to create the CDM tables. Default is main.
 #' @param verbose        Provide additional logging details during execution.
 #' @param overwrite      Remove and replace an existing data set.
@@ -117,7 +117,7 @@ extractLoadData <- function(from, to, dbms = "sqlite", cdmVersion = "5.3", input
 loadDataFiles <- function(dataPath,
                           dbPath,
                           inputFormat = "csv",
-                          cdmVersion = "5.3",
+                          cdmVersion = "5.5",
                           cdmDatabaseSchema = "main",
                           dbms = "sqlite",
                           verbose = FALSE,
@@ -126,6 +126,12 @@ loadDataFiles <- function(dataPath,
   stopifnot(dbms == "sqlite" || dbms == "duckdb")
   stopifnot(is.character(dataPath), length(dataPath) == 1, nchar(dataPath) > 0)
   stopifnot(is.character(dbPath), length(dbPath) == 1, nchar(dbPath) > 0)
+  if (!(cdmVersion %in% CommonDataModel::listSupportedVersions())) {
+    stop(
+      "CDM version ", cdmVersion, " is not supported by the installed CommonDataModel package. ",
+      "Install a CommonDataModel release that supports CDM ", cdmVersion, "."
+    )
+  }
 
   dataFiles <- sort(list.files(path = dataPath, pattern = paste("*", inputFormat, sep = ".")))
   if (length(dataFiles) <= 0) {
@@ -184,6 +190,9 @@ loadDataFiles <- function(dataPath,
     ddlFileContents <- readChar(ddlFile, file.info(ddlFile)$size)
     statements <- as.list(strsplit(ddlFileContents, ";")[[1]])
     for (statement in statements) {
+      if (!nzchar(trimws(statement))) {
+        next
+      }
       DBI::dbExecute(
         conn = connection,
         statement = statement

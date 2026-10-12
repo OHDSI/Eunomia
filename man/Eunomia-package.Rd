@@ -11,18 +11,20 @@ Facilitates access to sample datasets from the 'EunomiaDatasets' repository (\ur
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://ohdsi.github.io/Eunomia/}
   \item \url{https://github.com/OHDSI/Eunomia}
   \item Report bugs at \url{https://github.com/OHDSI/Eunomia/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Frank DeFalco \email{fdefalco@ohdsi.org}
+\strong{Maintainer}: Anthony Sena \email{sena@ohdsi.org}
 
 Authors:
 \itemize{
-  \item Martijn Schuemie \email{schuemie@ohdsi.org}
   \item Anthony Sena \email{sena@ohdsi.org}
+  \item Frank DeFalco \email{fdefalco@ohdsi.org}
+  \item Martijn Schuemie \email{schuemie@ohdsi.org}
   \item Natthawut Adulyanukosol \email{na339@unc.edu}
   \item Star Liu \email{sliu197@jhmi.edu}
   \item Adam Black \email{black@ohdsi.org}
