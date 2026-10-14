@@ -22,8 +22,9 @@ data set name corresponds to the folder with the data set ZIP files}
 \item{cdmVersion}{The OMOP CDM version. This version will appear in the suffix of the data file,
 for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'}
 
-\item{pathToData}{The path where the Eunomia data is stored on the file system., By default the
-value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
+\item{pathToData}{The directory where source archives and cached database files are stored. By
+default, the value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
+If the variable is not set, the current R session's temporary directory is used.}
 
 \item{dbms}{The database system to use. "sqlite" (default) or "duckdb"}
 
@@ -35,26 +36,35 @@ session.}
 
 \item{verbose}{Provide additional logging details during execution}
 
-\item{overwrite}{Remove and replace an existing data set.}
+\item{overwrite}{Whether to recreate cached files and overwrite \code{databaseFile}. Set to
+\code{FALSE} to reuse an existing archive or cached database.}
 }
 \value{
 The file path to the new Eunomia dataset copy
 }
 \description{
-Creates a copy of a Eunomia database, and returns the path to the new database file.
-If the dataset does not yet exist on the user's computer it will attempt to download the source data
-to the the path defined by the EUNOMIA_DATA_FOLDER environment variable.
+Creates a copy of a query-ready Eunomia database and returns the path to the new database file.
+If the database is not cached, the function downloads the source archive, extracts it, and loads
+its data into SQLite or DuckDB before copying the database to \code{databaseFile}. Cached source
+archives and databases are stored in \code{pathToData}.
 }
 \examples{
 \dontrun{
-conn <- DBI::dbConnect(RSQLite::SQLite(), getDatabaseFile("GiBleed"))
-DBI::dbDisconnect(conn)
+databaseFile <- getDatabaseFile(
+  datasetName = "GiBleed",
+  cdmVersion = "5.5",
+  dbms = "sqlite",
+  overwrite = FALSE
+)
+connection <- DBI::dbConnect(RSQLite::SQLite(), databaseFile)
+DBI::dbGetQuery(connection, "SELECT COUNT(*) AS person_count FROM person;")
+DBI::dbDisconnect(connection)
 
-conn <- DBI::dbConnect(duckdb::duckdb(), getDatabaseFile("GiBleed", dbms = "duckdb"))
-DBI::dbDisconnect(conn, shutdown = TRUE)
-
-conn <- DatabaseConnector::connect(dbms = "sqlite", server = getDatabaseFile("GiBleed"))
-DatabaseConnector::disconnect(conn)
+duckdbFile <- getDatabaseFile("GiBleed", dbms = "duckdb", overwrite = FALSE)
+connection <- DBI::dbConnect(duckdb::duckdb(), duckdbFile)
+DBI::dbDisconnect(connection, shutdown = TRUE)
 }
-
+}
+\seealso{
+\code{\link{downloadEunomiaData}}, \code{\link{getEunomiaConnectionDetails}}
 }

@@ -21,3 +21,20 @@ navbar:
       text: hadesLogo
       href: https://ohdsi.github.io/Hades
       aria-label: hadesLogo
+
+reference:
+- title: Download and connect
+  desc: Download Eunomia datasets and connect to local database files.
+  contents:
+  - downloadEunomiaData
+  - getDatabaseFile
+  - getEunomiaConnectionDetails
+- title: Import and export
+  desc: Load source files into a local database or export database tables.
+  contents:
+  - extractLoadData
+  - loadDataFiles
+  - exportDataFiles
+- title: Cohorts
+  contents:
+  - createCohorts
