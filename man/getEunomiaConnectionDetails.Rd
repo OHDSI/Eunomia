@@ -16,8 +16,8 @@ be copied to a temporary folder, and will be deleted at the end of the R session
 
 \item{dbms}{The target dialect, by default "sqlite".}
 
-\item{overwrite}{Control whether the existing archive file will be overwritten should it already
-exist.}
+\item{overwrite}{Whether to recreate the cached archive and database and overwrite
+\code{databaseFile}. By default, \code{FALSE}.}
 }
 \value{
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
@@ -26,4 +26,19 @@ A ConnectionDetails object, to be used with the \code{DatabaseConnector} package
 Creates a copy of the default GiBleed CDM v5.5 Eunomia database, and provides details for connecting
 to that copy. Function provides backwards compatibility to prior releases of the Eunomia default
 GiBleed dataset.
+}
+\details{
+The \code{DatabaseConnector} package must be installed to create and use the returned connection
+details.
+}
+\examples{
+\dontrun{
+connectionDetails <- getEunomiaConnectionDetails()
+connection <- DatabaseConnector::connect(connectionDetails)
+DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
+DatabaseConnector::disconnect(connection)
+}
+}
+\seealso{
+\code{\link{getDatabaseFile}}, \code{\link{downloadEunomiaData}}
 }

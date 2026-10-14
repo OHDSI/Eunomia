@@ -1,22 +1,34 @@
-#' Download Eunomia data files
+#' Download a Eunomia dataset archive
 #'
-#' Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
+#' Downloads a ZIP archive containing the source files for a dataset from
+#' https://github.com/OHDSI/EunomiaDatasets. This function downloads the raw archive only; it does
+#' not create a query-ready database. Use \code{\link{getDatabaseFile}} to download and load a dataset
+#' into SQLite or DuckDB.
 #'
 #' @param datasetName   The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
 #'                      data set name corresponds to the folder with the data set ZIP files
 #' @param cdmVersion    The OMOP CDM version. This version will appear in the suffix of the data file,
 #'                      for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'
-#' @param pathToData    The path where the Eunomia data is stored on the file system., By default the
-#'                      value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
-#' @param overwrite     Control whether the existing archive file will be overwritten should it already
-#'                      exist.
+#' @param pathToData    The directory where Eunomia archives are stored. By default, the value of the
+#'                      environment variable "EUNOMIA_DATA_FOLDER" is used. If the variable is not set,
+#'                      the current R session's temporary directory is used.
+#' @param overwrite     Whether to replace an existing archive. By default, \code{FALSE}.
 #' @param verbose       Provide additional logging details during execution.
 #' @return
-#' Invisibly returns the destination if the download was successful.
+#' Invisibly returns the path to the downloaded ZIP archive.
 #' @examples
 #' \dontrun{
-#' downloadEunomiaData("GiBleed")
+#' dataFolder <- file.path(tempdir(), "eunomia-data")
+#' archiveFile <- downloadEunomiaData(
+#'   datasetName = "GiBleed",
+#'   cdmVersion = "5.5",
+#'   pathToData = dataFolder,
+#'   overwrite = FALSE
+#' )
+#' archiveFile
 #' }
+#' @seealso
+#' \code{\link{getDatabaseFile}}, \code{\link{getEunomiaConnectionDetails}}
 #' @export
 downloadEunomiaData <- function(datasetName,
                                 cdmVersion = "5.5",

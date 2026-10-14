@@ -2,7 +2,7 @@
 % Please edit documentation in R/EunomiaData.R
 \name{downloadEunomiaData}
 \alias{downloadEunomiaData}
-\title{Download Eunomia data files}
+\title{Download a Eunomia dataset archive}
 \usage{
 downloadEunomiaData(
   datasetName,
@@ -19,22 +19,35 @@ data set name corresponds to the folder with the data set ZIP files}
 \item{cdmVersion}{The OMOP CDM version. This version will appear in the suffix of the data file,
 for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'}
 
-\item{pathToData}{The path where the Eunomia data is stored on the file system., By default the
-value of the environment variable "EUNOMIA_DATA_FOLDER" is used.}
+\item{pathToData}{The directory where Eunomia archives are stored. By default, the value of the
+environment variable "EUNOMIA_DATA_FOLDER" is used. If the variable is not set,
+the current R session's temporary directory is used.}
 
-\item{overwrite}{Control whether the existing archive file will be overwritten should it already
-exist.}
+\item{overwrite}{Whether to replace an existing archive. By default, \code{FALSE}.}
 
 \item{verbose}{Provide additional logging details during execution.}
 }
 \value{
-Invisibly returns the destination if the download was successful.
+Invisibly returns the path to the downloaded ZIP archive.
 }
 \description{
-Download the Eunomia data files from https://github.com/OHDSI/EunomiaDatasets
+Downloads a ZIP archive containing the source files for a dataset from
+https://github.com/OHDSI/EunomiaDatasets. This function downloads the raw archive only; it does
+not create a query-ready database. Use \code{\link{getDatabaseFile}} to download and load a dataset
+into SQLite or DuckDB.
 }
 \examples{
 \dontrun{
-downloadEunomiaData("GiBleed")
+dataFolder <- file.path(tempdir(), "eunomia-data")
+archiveFile <- downloadEunomiaData(
+  datasetName = "GiBleed",
+  cdmVersion = "5.5",
+  pathToData = dataFolder,
+  overwrite = FALSE
+)
+archiveFile
 }
+}
+\seealso{
+\code{\link{getDatabaseFile}}, \code{\link{getEunomiaConnectionDetails}}
 }

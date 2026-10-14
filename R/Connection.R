@@ -25,11 +25,24 @@
 #' @param databaseFile  The path where the database file will be copied to. By default, the database will
 #'                      be copied to a temporary folder, and will be deleted at the end of the R session.
 #' @param dbms          The target dialect, by default "sqlite".
-#' @param overwrite     Control whether the existing archive file will be overwritten should it already
-#'                      exist.
+#' @param overwrite     Whether to recreate the cached archive and database and overwrite
+#'                      \code{databaseFile}. By default, \code{FALSE}.
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
+#' @details
+#' The \code{DatabaseConnector} package must be installed to create and use the returned connection
+#' details.
+#'
+#' @examples
+#' \dontrun{
+#' connectionDetails <- getEunomiaConnectionDetails()
+#' connection <- DatabaseConnector::connect(connectionDetails)
+#' DatabaseConnector::querySql(connection, "SELECT COUNT(*) FROM main.person;")
+#' DatabaseConnector::disconnect(connection)
+#' }
+#' @seealso
+#' \code{\link{getDatabaseFile}}, \code{\link{downloadEunomiaData}}
 #' @export
 getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite", overwrite = FALSE) {
   if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
@@ -48,39 +61,48 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
 #' Create a copy of a Eunomia dataset
 #'
 #' @description
-#' Creates a copy of a Eunomia database, and returns the path to the new database file.
-#' If the dataset does not yet exist on the user's computer it will attempt to download the source data
-#' to the the path defined by the EUNOMIA_DATA_FOLDER environment variable.
+#' Creates a copy of a query-ready Eunomia database and returns the path to the new database file.
+#' If the database is not cached, the function downloads the source archive, extracts it, and loads
+#' its data into SQLite or DuckDB before copying the database to \code{databaseFile}. Cached source
+#' archives and databases are stored in \code{pathToData}.
 #'
 #' @param datasetName    The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
 #'                       data set name corresponds to the folder with the data set ZIP files
 #' @param cdmVersion     The OMOP CDM version. This version will appear in the suffix of the data file,
 #'                       for example: <datasetName>_<cdmVersion>.zip. Default: '5.5'
-#' @param pathToData     The path where the Eunomia data is stored on the file system., By default the
-#'                       value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
+#' @param pathToData     The directory where source archives and cached database files are stored. By
+#'                       default, the value of the environment variable "EUNOMIA_DATA_FOLDER" is used.
+#'                       If the variable is not set, the current R session's temporary directory is used.
 #' @param dbms           The database system to use. "sqlite" (default) or "duckdb"
 #' @param databaseFile   The path where the database file will be copied to. By default, the database
 #'                       will be copied to a temporary folder, and will be deleted at the end of the R
 #'                       session.
 #' @param inputFormat    The format of the files expected in the archive. (csv or parquet)
 #' @param verbose        Provide additional logging details during execution
-#' @param overwrite      Remove and replace an existing data set.
+#' @param overwrite      Whether to recreate cached files and overwrite \code{databaseFile}. Set to
+#'                       \code{FALSE} to reuse an existing archive or cached database.
 #'
 #' @return The file path to the new Eunomia dataset copy
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' conn <- DBI::dbConnect(RSQLite::SQLite(), getDatabaseFile("GiBleed"))
-#' DBI::dbDisconnect(conn)
+#' databaseFile <- getDatabaseFile(
+#'   datasetName = "GiBleed",
+#'   cdmVersion = "5.5",
+#'   dbms = "sqlite",
+#'   overwrite = FALSE
+#' )
+#' connection <- DBI::dbConnect(RSQLite::SQLite(), databaseFile)
+#' DBI::dbGetQuery(connection, "SELECT COUNT(*) AS person_count FROM person;")
+#' DBI::dbDisconnect(connection)
 #'
-#' conn <- DBI::dbConnect(duckdb::duckdb(), getDatabaseFile("GiBleed", dbms = "duckdb"))
-#' DBI::dbDisconnect(conn, shutdown = TRUE)
-#'
-#' conn <- DatabaseConnector::connect(dbms = "sqlite", server = getDatabaseFile("GiBleed"))
-#' DatabaseConnector::disconnect(conn)
+#' duckdbFile <- getDatabaseFile("GiBleed", dbms = "duckdb", overwrite = FALSE)
+#' connection <- DBI::dbConnect(duckdb::duckdb(), duckdbFile)
+#' DBI::dbDisconnect(connection, shutdown = TRUE)
 #' }
-#'
+#' @seealso
+#' \code{\link{downloadEunomiaData}}, \code{\link{getEunomiaConnectionDetails}}
 getDatabaseFile <- function(datasetName,
                             cdmVersion = "5.5",
                             pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"),
