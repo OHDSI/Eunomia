@@ -15,23 +15,32 @@
 # limitations under the License.
 
 
-#' Get Default Eunomia Connection Details
+#' Get Eunomia Connection Details
 #'
 #' @description
-#' Creates a copy of the default GiBleed CDM v5.5 Eunomia database, and provides details for connecting
-#' to that copy. Function provides backwards compatibility to prior releases of the Eunomia default
-#' GiBleed dataset.
+#' Creates a copy of a Eunomia database and provides details for connecting to that copy. By default,
+#' the function uses the GiBleed CDM v5.5 dataset for backwards compatibility with prior releases of
+#' Eunomia.
 #'
 #' @param databaseFile  The path where the database file will be copied to. By default, the database will
 #'                      be copied to a temporary folder, and will be deleted at the end of the R session.
 #' @param dbms          The target dialect, by default "sqlite".
 #' @param overwrite     Control whether the existing archive file will be overwritten should it already
 #'                      exist.
+#' @param datasetName   The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
+#'                      data set name corresponds to the folder with the data set ZIP files. By default,
+#'                      "GiBleed".
+#' @param cdmVersion    The OMOP CDM version. This version will appear in the suffix of the data file,
+#'                      for example: <datasetName>_<cdmVersion>.zip. By default, "5.5".
 #' @return
 #' A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 #'
 #' @export
-getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"), dbms = "sqlite", overwrite = FALSE) {
+getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqlite"),
+                                        dbms = "sqlite",
+                                        overwrite = FALSE,
+                                        datasetName = "GiBleed",
+                                        cdmVersion = "5.5") {
   if (interactive() & !("DatabaseConnector" %in% rownames(utils::installed.packages()))) {
     message("The DatabaseConnector package is required but not installed.")
     if (!isTRUE(utils::askYesNo("Would you like to install DatabaseConnector?"))) {
@@ -41,7 +50,13 @@ getEunomiaConnectionDetails <- function(databaseFile = tempfile(fileext = ".sqli
     }
   }
 
-  datasetLocation <- getDatabaseFile(datasetName = "GiBleed", dbms = dbms, databaseFile = databaseFile, overwrite = overwrite)
+  datasetLocation <- getDatabaseFile(
+    datasetName = datasetName,
+    cdmVersion = cdmVersion,
+    dbms = dbms,
+    databaseFile = databaseFile,
+    overwrite = overwrite
+  )
   DatabaseConnector::createConnectionDetails(dbms = dbms, server = datasetLocation)
 }
 
