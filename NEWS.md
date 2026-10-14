@@ -1,3 +1,9 @@
+Eunomia (development version)
+=============================
+
+- `getEunomiaConnectionDetails()` now accepts `datasetName` and `cdmVersion`, while retaining
+  GiBleed and CDM v5.5 as the defaults (#79).
+
 Eunomia 2.2.0
 =============
 

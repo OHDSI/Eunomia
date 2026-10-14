@@ -2,12 +2,14 @@
 % Please edit documentation in R/Connection.R
 \name{getEunomiaConnectionDetails}
 \alias{getEunomiaConnectionDetails}
-\title{Get Default Eunomia Connection Details}
+\title{Get Eunomia Connection Details}
 \usage{
 getEunomiaConnectionDetails(
   databaseFile = tempfile(fileext = ".sqlite"),
   dbms = "sqlite",
-  overwrite = FALSE
+  overwrite = FALSE,
+  datasetName = "GiBleed",
+  cdmVersion = "5.5"
 )
 }
 \arguments{
@@ -18,12 +20,19 @@ be copied to a temporary folder, and will be deleted at the end of the R session
 
 \item{overwrite}{Control whether the existing archive file will be overwritten should it already
 exist.}
+
+\item{datasetName}{The data set name as found on https://github.com/OHDSI/EunomiaDatasets. The
+data set name corresponds to the folder with the data set ZIP files. By default,
+"GiBleed".}
+
+\item{cdmVersion}{The OMOP CDM version. This version will appear in the suffix of the data file,
+for example: <datasetName>_<cdmVersion>.zip. By default, "5.5".}
 }
 \value{
 A ConnectionDetails object, to be used with the \code{DatabaseConnector} package.
 }
 \description{
-Creates a copy of the default GiBleed CDM v5.5 Eunomia database, and provides details for connecting
-to that copy. Function provides backwards compatibility to prior releases of the Eunomia default
-GiBleed dataset.
+Creates a copy of a Eunomia database and provides details for connecting to that copy. By default,
+the function uses the GiBleed CDM v5.5 dataset for backwards compatibility with prior releases of
+Eunomia.
 }
